@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/adclientnew" />
+            <option value="$PROJECT_DIR$/adsimple" />
+            <option value="$PROJECT_DIR$/library_adclient" />
+            <option value="$PROJECT_DIR$/library_adclient_v2" />
+            <option value="$PROJECT_DIR$/library_adclient_v3" />
+            <option value="$PROJECT_DIR$/library_adcode_v2" />
+            <option value="$PROJECT_DIR$/library_adcode_v3" />
+            <option value="$PROJECT_DIR$/paintwindow" />
+          </set>
+        </option>
+        <option name="resolveModulePerSourceSet" value="false" />
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

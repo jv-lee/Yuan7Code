@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Yuan7Code.iml" filepath="$PROJECT_DIR$/Yuan7Code.iml" />
+      <module fileurl="file://$PROJECT_DIR$/adclientnew/adclientnew.iml" filepath="$PROJECT_DIR$/adclientnew/adclientnew.iml" />
+      <module fileurl="file://$PROJECT_DIR$/adsimple/adsimple.iml" filepath="$PROJECT_DIR$/adsimple/adsimple.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library_adclient/library_adclient.iml" filepath="$PROJECT_DIR$/library_adclient/library_adclient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library_adclient_v2/library_adclient_v2.iml" filepath="$PROJECT_DIR$/library_adclient_v2/library_adclient_v2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library_adclient_v3/library_adclient_v3.iml" filepath="$PROJECT_DIR$/library_adclient_v3/library_adclient_v3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library_adcode_v2/library_adcode_v2.iml" filepath="$PROJECT_DIR$/library_adcode_v2/library_adcode_v2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library_adcode_v3/library_adcode_v3.iml" filepath="$PROJECT_DIR$/library_adcode_v3/library_adcode_v3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/paintwindow/paintwindow.iml" filepath="$PROJECT_DIR$/paintwindow/paintwindow.iml" />
+    </modules>
+  </component>
+</project>
