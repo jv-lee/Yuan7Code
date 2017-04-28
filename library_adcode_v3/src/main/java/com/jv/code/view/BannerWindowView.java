@@ -68,6 +68,10 @@ public class BannerWindowView extends BaseWindowView implements WindowRequest {
         return mInstance;
     }
 
+    public void setFlag(boolean flag) {
+        this.flag = flag;
+    }
+
     public void sendBanner() {
         flag = true;
         initBanner();
@@ -160,7 +164,7 @@ public class BannerWindowView extends BaseWindowView implements WindowRequest {
             //删除数据库当前广告
             adDao.delete(adBean.getNoid());
 //            LogUtil.i("delete Ad success , this day showCount ++ -> return;");
-
+            flag = false;
             SDKService.mHandler.sendEmptyMessage(SDKService.SEND_BANNER);//重新发起广告
             return;
         }

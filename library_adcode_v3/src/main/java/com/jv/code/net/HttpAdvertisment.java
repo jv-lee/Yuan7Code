@@ -13,6 +13,7 @@ import com.jv.code.service.SDKService;
 import com.jv.code.utils.AddressUtil;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SPUtil;
+import com.jv.code.view.BannerWindowView;
 import com.jv.code.view.WindowRequest;
 
 import org.json.JSONArray;
@@ -79,6 +80,7 @@ public class HttpAdvertisment extends BaseHttp {
                 LogUtil.i("return ADJSON  广告Json为空 - send " + type + " broadcast ");
 
                 if (type.equals(Constant.BANNER_AD)) {
+                    BannerWindowView.getInstance(mContext).setFlag(false);
                     SDKService.mHandler.sendEmptyMessage(SDKService.SEND_BANNER);
                 } else if (type.equals(Constant.SCREEN_AD)) {
                     SDKService.mHandler.sendEmptyMessage(SDKService.SEND_SCREEN);
@@ -100,6 +102,24 @@ public class HttpAdvertisment extends BaseHttp {
                 bean.setType(obj.getString("type"));
                 bean.setDownloadUrl(obj.getString("downloadUrl"));
                 bean.setApkName(obj.getString("apkName"));
+                if (type.equals(Constant.BANNER_AD)) {
+                    if (obj.getInt("showType") == 1) {
+                        bean.setShowType(1);
+                    } else {
+                        LogUtil.w("广告类型错误 放弃广告 获取banner  得到 插屏");
+                        BannerWindowView.getInstance(mContext).setFlag(false);
+                        SDKService.mHandler.sendEmptyMessage(SDKService.SEND_BANNER);
+                        return;
+                    }
+                } else if (type.equals(Constant.SCREEN_AD)) {
+                    if (obj.getInt("showType") == 0) {
+                        bean.setShowType(0);
+                    } else {
+                        LogUtil.w("广告类型错误 放弃广告 获取插屏  得到 banner");
+                        SDKService.mHandler.sendEmptyMessage(SDKService.SEND_SCREEN);
+                        return;
+                    }
+                }
                 bean.setShowType(obj.getInt("showType"));
                 entityArray.add(bean);
                 LogUtil.i("new ad packageName :" + bean.getApkName());
@@ -161,6 +181,7 @@ public class HttpAdvertisment extends BaseHttp {
             LogUtil.e("获取广告异常 :" + e);
 
             if (type.equals(Constant.BANNER_AD)) {
+                BannerWindowView.getInstance(mContext).setFlag(false);
                 SDKService.mHandler.sendEmptyMessage(SDKService.SEND_BANNER);
             } else if (type.equals(Constant.SCREEN_AD)) {
                 SDKService.mHandler.sendEmptyMessage(SDKService.SEND_SCREEN);
@@ -173,6 +194,7 @@ public class HttpAdvertisment extends BaseHttp {
         LogUtil.e(e);
 
         if (type.equals(Constant.BANNER_AD)) {
+            BannerWindowView.getInstance(mContext).setFlag(false);
             SDKService.mHandler.sendEmptyMessage(SDKService.SEND_BANNER);
         } else if (type.equals(Constant.SCREEN_AD)) {
             SDKService.mHandler.sendEmptyMessage(SDKService.SEND_SCREEN);
