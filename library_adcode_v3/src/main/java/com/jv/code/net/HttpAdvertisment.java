@@ -102,24 +102,24 @@ public class HttpAdvertisment extends BaseHttp {
                 bean.setType(obj.getString("type"));
                 bean.setDownloadUrl(obj.getString("downloadUrl"));
                 bean.setApkName(obj.getString("apkName"));
-                if (type.equals(Constant.BANNER_AD)) {
-                    if (obj.getInt("showType") == 1) {
-                        bean.setShowType(1);
-                    } else {
-                        LogUtil.w("广告类型错误 放弃广告 获取banner  得到 插屏");
-                        BannerWindowView.getInstance(mContext).setFlag(false);
-                        SDKService.mHandler.sendEmptyMessage(SDKService.SEND_BANNER);
-                        return;
-                    }
-                } else if (type.equals(Constant.SCREEN_AD)) {
-                    if (obj.getInt("showType") == 0) {
-                        bean.setShowType(0);
-                    } else {
-                        LogUtil.w("广告类型错误 放弃广告 获取插屏  得到 banner");
-                        SDKService.mHandler.sendEmptyMessage(SDKService.SEND_SCREEN);
-                        return;
-                    }
-                }
+//                if (type.equals(Constant.BANNER_AD)) {
+//                    if (obj.getInt("showType") == 1) {
+//                        bean.setShowType(1);
+//                    } else {
+//                        LogUtil.w("广告类型错误 放弃广告 获取banner  得到 插屏");
+//                        BannerWindowView.getInstance(mContext).setFlag(false);
+//                        SDKService.mHandler.sendEmptyMessage(SDKService.SEND_BANNER);
+//                        return;
+//                    }
+//                } else if (type.equals(Constant.SCREEN_AD)) {
+//                    if (obj.getInt("showType") == 0) {
+//                        bean.setShowType(0);
+//                    } else {
+//                        LogUtil.w("广告类型错误 放弃广告 获取插屏  得到 banner");
+//                      xd  SDKService.mHandler.sendEmptyMessage(SDKService.SEND_SCREEN);
+//                        return;
+//                    }
+//                }
                 bean.setShowType(obj.getInt("showType"));
                 entityArray.add(bean);
                 LogUtil.i("new ad packageName :" + bean.getApkName());
