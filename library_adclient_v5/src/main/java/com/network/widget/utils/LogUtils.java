@@ -1,4 +1,4 @@
-package com.agnle.me.utils;
+package com.network.widget.utils;
 
 import android.util.Log;
 
@@ -7,7 +7,7 @@ import android.util.Log;
  */
 public class LogUtils {
 
-    private final static boolean IS_DEBUG = true;
+    private final static boolean IS_DEBUG = false;
     private final static String TAG = "lee";
 
     public static void i(String msg) {

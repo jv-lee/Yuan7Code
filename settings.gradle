@@ -1,1 +1,1 @@
-include ':library_adclient', ':adclientnew', ':paintwindow', ':library_adcode_v2', ':library_adcode_v3', ':adsimple', ':library_adclient_v2', ':library_adclient_v3'
+include ':library_adclient', ':adclientnew', ':paintwindow', ':library_adcode_v2', ':library_adcode_v3', ':adsimple', ':library_adclient_v2', ':library_adclient_v3', ':library_adclient_v4', ':library_adclient_v5'

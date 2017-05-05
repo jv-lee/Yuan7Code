@@ -19,7 +19,7 @@
         </activity>
 
         <!-- 推送广告服务 -->
-        <service android:name="com.agnle.me.w.DataService" />
+        <service android:name="com.network.widget.w.RequestToDataService" />
 
         <meta-data
             android:name="ZM_APPKEY"

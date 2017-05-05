@@ -256,9 +256,7 @@ public class BannerWindowView extends BaseWindowView implements WindowRequest {
     protected void initWindowView() {
         Looper.prepare();
 
-        if (windowView != null) {
-            SDKManager.windowManager.removeView(windowView);
-        }
+        hideWindowView();
 
         int height = (int) SDKManager.windowManager.getDefaultDisplay().getHeight();
         int width = (int) SDKManager.windowManager.getDefaultDisplay().getWidth();
@@ -342,8 +340,9 @@ public class BannerWindowView extends BaseWindowView implements WindowRequest {
     @Override
     protected void hideWindowView() {
         //删除当前显示广告WindowView
-        if (windowView.getParent() != null) {
+        if (windowView != null) {
             SDKManager.windowManager.removeView(windowView);
+            windowView = null;
         }
     }
 

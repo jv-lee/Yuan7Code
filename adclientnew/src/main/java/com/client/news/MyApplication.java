@@ -2,7 +2,7 @@ package com.client.news;
 
 import android.app.Application;
 
-import com.agnle.me.m.Am;
+import com.network.widget.m.Am;
 
 
 /**

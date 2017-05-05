@@ -1,4 +1,4 @@
-package com.agnle.me.utils;
+package com.hash.pre.utils;
 
 import android.util.Log;
 
