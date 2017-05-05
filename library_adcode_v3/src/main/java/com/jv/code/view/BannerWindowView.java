@@ -2,6 +2,7 @@ package com.jv.code.view;
 
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
@@ -226,8 +227,13 @@ public class BannerWindowView extends BaseWindowView implements WindowRequest {
             wmParams = (WindowManager.LayoutParams) tnParamsField.get(mTN);
 
             //banner广告显示
-            wmParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-            wmParams.height = (int) (height * 0.1);
+            if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) { //竖屏
+                wmParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+                wmParams.height = (int) (height * 0.1);
+            } else if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) { //横屏
+                wmParams.width = (int) (width * 0.5);
+                wmParams.height = (int) (height * 0.1);
+            }
             wmParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                     | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE; //不抢占焦点 但是可以获取显示焦点点击
             toast.setGravity(Gravity.BOTTOM, 0, 0);
@@ -265,8 +271,13 @@ public class BannerWindowView extends BaseWindowView implements WindowRequest {
         wmParams.format = PixelFormat.TRANSLUCENT; //支持透明
 
         //banner广告显示
-        wmParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        wmParams.height = (int) (height * 0.1);
+        if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) { //竖屏
+            wmParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+            wmParams.height = (int) (height * 0.1);
+        } else if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) { //横屏
+            wmParams.width = (int) (width * 0.5);
+            wmParams.height = (int) (height * 0.1);
+        }
         wmParams.gravity = Gravity.BOTTOM;
         wmParams.flags |= WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE; //不抢占焦点
         windowView = createView();
