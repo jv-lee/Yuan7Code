@@ -4,13 +4,12 @@ package com.jv.code.component;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import com.jv.code.bean.AdBean;
-import com.jv.code.bean.AppBean;
 import com.jv.code.constant.Constant;
-import com.jv.code.db.dao.AppDaoImpl;
+import com.jv.code.http.interfaces.RequestBeanCallback;
 import com.jv.code.http.interfaces.RequestJsonCallback;
+import com.jv.code.http.interfaces.RequestPicCallback;
 import com.jv.code.manager.HttpManager;
 import com.jv.code.manager.SDKManager;
 import com.jv.code.service.SDKService;
@@ -18,17 +17,10 @@ import com.jv.code.utils.HttpUtil;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;
 import com.jv.code.utils.SPUtil;
+import com.jv.code.view.ScreenWindowView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Administrator on 2017/4/9.
@@ -55,7 +47,6 @@ public class ScreenComponent {
     }
 
     public static AdBean screenBean;
-    public static Bitmap screenBitmap;
     public Context mContext;
     //当前Time换算值
     public final int TIME_MS = 1000;
@@ -87,6 +78,7 @@ public class ScreenComponent {
                     @Override
                     public void onResponse(String response) {
                         try {
+                            LogUtil.i("update config ->" + response);
                             HttpUtil.saveConfigJson(response);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -146,13 +138,11 @@ public class ScreenComponent {
                 });
             }
         }, time * TIME_MS);
-
-
     }
 
     public void sendScreen() {
-        if (screenBean != null) {
-            HttpManager.doPostAdvertisement(Constant.SCREEN_AD, new RequestJsonCallback() {
+        if (screenBean == null) {
+            HttpManager.doPostAdvertisement(Constant.SCREEN_AD, new RequestBeanCallback() {
                 @Override
                 public void onFailed(String message) {
                     LogUtil.w(message);
@@ -160,55 +150,10 @@ public class ScreenComponent {
                 }
 
                 @Override
-                public void onResponse(String response) {
-                    List<AdBean> entityArray = new ArrayList<AdBean>();//获取广告集合
-                    try {
-                        JSONArray jsonArray = new JSONObject(response).getJSONArray("advertisements");
-
-                        // 如果广告信息为空，跳出
-                        if (jsonArray.length() == 0) {
-                            LogUtil.i("return AdJson  广告Json为空 - send screen broadcast ");
-                            condition();
-                            return;
-                        }
-                        screenBean = HttpUtil.saveBeanJson(jsonArray);
-                        SDKManager.screenBean = screenBean;
-                        //将获取的广告列表数据 存入数据库
-                        HttpUtil.saveConfigJson(response);
-
-                        //判断当前apk是否安装过
-                        if (SDKUtil.hasInstalled(mContext, screenBean.getApkName()) && !screenBean.getType().equals("web")) {
-                            LogUtil.i("apk is extents -> delete Ad , showCount + 1");//已安装 直接删除广告 做已显示操作
-                            String pref = SDKUtil.getAdShowDate();//获取当天时间存储 次数
-                            int timeCount = (Integer) SPUtil.get(pref, 0);//当天已显示的次数
-                            timeCount++;
-                            SPUtil.save(pref, timeCount);
-
-                            //删除数据库当前广告
-                            screenBean = null;
-                            LogUtil.i("delete Ad success , this day showCount ++ -> return;");
-                            condition();
-                            return;
-                        }
-
-                        //保存包信息
-                        AppBean appBean = new AppBean(screenBean.getId(), screenBean.getApkName(), screenBean.getSendRecordId());
-                        try {
-                            new AppDaoImpl(mContext).deleteByPackageName(appBean.getPackageName());
-                            new AppDaoImpl(mContext).insert(appBean);
-                        } catch (Exception e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                            condition();
-                        }
-                        requestPic();
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        LogUtil.e("获取广告异常 :" + e);
-                        condition();
-                    }
-
+                public void onResponse(AdBean response) {
+                    screenBean = response;
+                    SDKManager.screenBean = response;
+                    requestPic();
                 }
             });
         } else {
@@ -217,29 +162,18 @@ public class ScreenComponent {
     }
 
     public void requestPic() {
-        new Thread() {
+        HttpManager.doGetPic(screenBean.getImage(), new RequestPicCallback() {
             @Override
-            public void run() {
-                try {
-                    HttpURLConnection conn = (HttpURLConnection) new URL(screenBean.getImage()).openConnection();
-                    conn.setRequestMethod("GET");
-                    conn.setConnectTimeout(Constant.CONNECT_TIME_OUT);
-                    conn.setReadTimeout(Constant.READ_TIME_OUT);
-                    if (conn.getResponseCode() == 200) {
-                        screenBitmap = BitmapFactory.decodeStream(new BufferedInputStream(conn.getInputStream()));
-
-
-                    } else {
-                        LogUtil.e("bitmap responseCode ->" + conn.getResponseCode());
-                        condition();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    LogUtil.e("download Bitmap request -> is error :" + e.getMessage());
-                    condition();
-                }
+            public void onFailed(String message) {
+                LogUtil.e(message);
+                condition();
             }
-        }.start();
+
+            @Override
+            public void onResponse(final Bitmap response) {
+                new ScreenWindowView(mContext, screenBean, response).condition();
+            }
+        });
     }
 
 }

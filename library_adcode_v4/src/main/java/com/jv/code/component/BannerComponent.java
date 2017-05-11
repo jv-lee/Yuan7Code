@@ -1,13 +1,19 @@
 package com.jv.code.component;
 
+import android.content.Intent;
+
+import com.jv.code.bean.AdBean;
 import com.jv.code.constant.Constant;
-import com.jv.code.db.dao.AdDaoImpl;
-import com.jv.code.db.dao.IAdDao;
+import com.jv.code.http.interfaces.RequestJsonCallback;
+import com.jv.code.manager.HttpManager;
 import com.jv.code.service.SDKService;
+import com.jv.code.utils.HttpUtil;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;
 import com.jv.code.utils.SPUtil;
 import com.jv.code.view.BannerWindowView;
+
+import org.json.JSONException;
 
 /**
  * Created by Administrator on 2017/4/21.
@@ -31,16 +37,12 @@ public class BannerComponent {
         return mInstance;
     }
 
-    //广告数据库实列声明
-    public IAdDao mDao;
-    //当前日期
-    public String currentDate;
     //当前Time换算值
     public final int TIME_MS = 1000;
 
     public boolean BANNER_FLAG = true;
 
-    public void sendBanner() {
+    public void condition() {
 
         int time = (int) SPUtil.get(Constant.BANNER_FIRST_TIME, 30);
         if (BANNER_FLAG) {
@@ -54,39 +56,85 @@ public class BannerComponent {
         SDKService.mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                HttpManager.doPostAppConfig(new RequestJsonCallback() {
+                    @Override
+                    public void onFailed(String message) {
+                        LogUtil.e(message);
+                        condition();
+                    }
 
-                mDao = new AdDaoImpl(SDKService.mContext);//实列化广告持久层DAO
-                currentDate = (String) SPUtil.get(Constant.CURRENT_DATE, "FIRST");//app每日首次启动，获取最近存储时间
-
-                //如果当前日期不是最近日期,就重新保存 当天日期
-                if (!currentDate.equals(SDKUtil.getDate()) || currentDate.equals("FIRST")) {
-                    SPUtil.save(Constant.CURRENT_DATE, SDKUtil.getDate());//保存当前时间
-                    LogUtil.i("save this DATE :" + SDKUtil.getDate());
-
-                }
-
-                //获取插屏广告 当前条数 Constant.SCREEN_AD  =  1
-                int bannerAdCount = mDao.getCount(Constant.BANNER_ID);//获取当前广告长度
-                int showLimit = (Integer) SPUtil.get(Constant.SHOW_LIMIT, 5);//获取每天最大显示量
-                int timeCount = (Integer) SPUtil.get(SDKUtil.getAdShowDate(), 0);//当天已显示的次数
-
-                //继续发送
-                if (timeCount < showLimit) {
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            super.run();
-                            LogUtil.w("new bannerWindowView() ->");
-                            BannerWindowView.getInstance(SDKService.mContext).sendBanner();
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            LogUtil.i("update config ->" + response);
+                            HttpUtil.saveConfigJson(response);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            condition();
                         }
-                    }.start();
-                } else {
-                    SDKService.mHandler.sendEmptyMessage(SDKService.CLOSE_SDK_SERVICE);
-                }
+
+                        int showLimit = (Integer) SPUtil.get(Constant.SHOW_LIMIT, 5);//获取每天最大显示量
+                        int timeCount = (Integer) SPUtil.get(SDKUtil.getAdShowDate(), 0);//当天已显示的次数
+
+                        //继续发送
+                        if (timeCount < showLimit) {
+                            if (SDKService.hasBannerShowFirst) {
+                                SDKService.bannerShowCount = (int) SPUtil.get(Constant.BANNER_SHOW_COUNT, 5);
+                                SDKService.hasBannerShowFirst = false;
+                            }
+
+                            switch ((int) SPUtil.get(Constant.BANNER_ENABLED, 3)) {
+                                case 1: //应用内显示
+                                    LogUtil.i("banner 显示模式:应用 - 内显示");
+                                    if (SDKUtil.isThisAppRuningOnTop(SDKService.mContext)) {
+                                        sendBanner();
+                                    } else {
+                                        BannerComponent.getInstance().condition();
+                                    }
+                                    break;
+                                case 2: //应用外显示
+                                    LogUtil.i("banner 显示模式:应用 - 外显示");
+                                    if (!SDKUtil.isThisAppRuningOnTop(SDKService.mContext)) {
+                                        if (SDKService.bannerShowCount == 0) {
+                                            LogUtil.w("不在当前应用 -> 频闭次数 =  0 ， 发起banner 推送");
+                                            sendBanner();
+                                        } else {
+                                            SPUtil.save(Constant.BANNER_TIME, SPUtil.get(Constant.BANNER_SHOW_TIME, 10));
+                                            //不在应用内 不推送广告 减少当前频闭次数
+                                            SDKService.bannerShowCount--;
+                                            LogUtil.w("不在应用内 -> 频闭次数剩余 ：" + SDKService.bannerShowCount);
+                                            BannerComponent.getInstance().condition();
+                                        }
+                                    } else {
+                                        SDKService.bannerShowCount = (int) SPUtil.get(Constant.BANNER_SHOW_COUNT, 5);
+                                        LogUtil.w(" 回到应用内 重置 频闭次数 -> bannerShowCount -> " + SDKService.bannerShowCount);
+//                                hideWindow();
+
+                                        BannerComponent.getInstance().condition();
+                                    }
+                                    break;
+                                case 3: //应用内外显示
+                                    LogUtil.i("banner 显示模式:应用 - 内外显示");
+                                    sendBanner();
+                                    break;
+                            }
+                        } else {
+                            LogUtil.i("当前发送达标 关闭服务");
+                            SDKService.mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
+                        }
+
+                    }
+                });
+
 
             }
         }, time * TIME_MS);
 
+    }
+
+
+    private void sendBanner() {
+        BannerWindowView.getInstance(SDKService.mContext).condition();
     }
 
 }

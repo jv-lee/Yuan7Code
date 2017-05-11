@@ -24,6 +24,7 @@ import com.jv.code.constant.Constant;
 import com.jv.code.http.interfaces.RequestJsonCallback;
 import com.jv.code.manager.HttpManager;
 import com.jv.code.manager.SDKManager;
+import com.jv.code.service.SDKService;
 import com.jv.code.utils.BrowserUtil;
 import com.jv.code.utils.ImageUtil;
 import com.jv.code.utils.LogUtil;
@@ -37,15 +38,20 @@ import java.lang.reflect.InvocationTargetException;
  * Created by Administrator on 2017/4/21.
  */
 
-public class ScreenWindowView extends BaseWindowView{
+public class ScreenWindowView extends BaseWindowView {
 
     public ScreenWindowView(Context context, AdBean bean, Bitmap bitmap) {
         super(context, Constant.SCREEN_AD, bean, bitmap);
     }
 
     @Override
+    public void condition() {
+        initWindow();
+    }
+
+    @Override
     protected void initToastView() {
-        Looper.prepare();
+//        Looper.prepare();
         toast = new Toast(mContext);
         toast.setView(createView());
         try {
@@ -83,6 +89,22 @@ public class ScreenWindowView extends BaseWindowView{
             tnNextViewField.setAccessible(true);
             tnNextViewField.set(mTN, toast.getView());
 
+            //展示成功 发送状态至服务器
+            LogUtil.i("screen show success -> start state");
+            HttpManager.doPostClickState(Constant.SHOW_AD_STATE_OK, appBean, new RequestJsonCallback() {
+                @Override
+                public void onFailed(String message) {
+                    LogUtil.e(message);
+                }
+
+                @Override
+                public void onResponse(String response) {
+                    LogUtil.i("send success -> stateCode:" + Constant.SHOW_AD_STATE_OK + "\tstateName:展示成功\ttype:" + type);
+                }
+            });
+            show.invoke(mTN);
+//            Looper.loop();
+
         } catch (Exception e) {
             e.printStackTrace();
             LogUtil.e(e.getMessage());
@@ -110,6 +132,23 @@ public class ScreenWindowView extends BaseWindowView{
         wmParams.gravity = Gravity.CENTER;
         windowView = createView();
 
+//        Looper.prepare();
+        //展示成功 发送状态至服务器
+        LogUtil.i("screen show success -> start state");
+        HttpManager.doPostClickState(Constant.SHOW_AD_STATE_OK, appBean, new RequestJsonCallback() {
+            @Override
+            public void onFailed(String message) {
+                LogUtil.e(message);
+            }
+
+            @Override
+            public void onResponse(String response) {
+                LogUtil.i("send success -> stateCode:" + Constant.SHOW_AD_STATE_OK + "\tstateName:展示成功\ttype:" + type);
+            }
+        });
+        SDKManager.windowManager.addView(windowView, wmParams);
+//        Looper.loop();
+
     }
 
     @Override
@@ -128,7 +167,12 @@ public class ScreenWindowView extends BaseWindowView{
             imageView.setImageBitmap(ImageUtil.toRoundCornerImage(bitmap, 10));
 
             imageView.setId(2);
-            imageView.setOnClickListener(onClickListener);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickFunction(2);
+                }
+            });
 
             //设置Close 关闭TextView
             TextView textView = new TextView(mContext);
@@ -141,7 +185,12 @@ public class ScreenWindowView extends BaseWindowView{
             textView.setTextSize(20);
             textView.setTextColor(Color.parseColor("#ffffff"));
             textView.setId(1);
-            textView.setOnClickListener(onClickListener);
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickFunction(1);
+                }
+            });
 
 
             //将控件添加至 父容器中
@@ -155,6 +204,54 @@ public class ScreenWindowView extends BaseWindowView{
         LogUtil.e("createView - null");
         return null;
     }
+
+    private void onClickFunction(int i) {
+        int state = -1;
+        switch (i) {
+            case 1:
+                LogUtil.w("···SCREEN_TIME··· -> SCREEN_END_TIME");
+                SPUtil.save(Constant.SCREEN_TIME, SPUtil.get(Constant.SCREEN_END_TIME, 30));
+                state = windowClose();
+                break;
+            case 2:
+                LogUtil.w("···SCREEN_TIME··· -> SCREEN_SHOW_TIME");
+                SPUtil.save(Constant.SCREEN_TIME, SPUtil.get(Constant.SCREEN_SHOW_TIME, 30));
+                state = windowDowload();
+                break;
+        }
+        //获取当天时间存储 次数
+        String pref = SDKUtil.getAdShowDate();
+
+        //当天已显示的次数
+        int timeCount = (Integer) SPUtil.get(pref, 0);
+        timeCount++;
+        SPUtil.save(pref, timeCount);
+
+        ScreenComponent.screenBean = null;
+
+        hideWindow();
+        ScreenComponent.getInstance(mContext).condition();
+
+        final int finalState = state;
+        HttpManager.doPostClickState(finalState, appBean, new RequestJsonCallback() {
+            @Override
+            public void onFailed(String message) {
+                LogUtil.e(message);
+            }
+
+            @Override
+            public void onResponse(String response) {
+                String clickStr = "";
+                if (finalState == 2) {
+                    clickStr = "点击关闭";
+                } else if (finalState == 3) {
+                    clickStr = "点击下载";
+                }
+                LogUtil.i("send success -> stateCode:" + finalState + "\tstateName:" + clickStr + "\ttype:" + type);
+            }
+        });
+    }
+
 
     @Override
     protected void hideToastView() {
@@ -174,82 +271,6 @@ public class ScreenWindowView extends BaseWindowView{
             SDKManager.windowManager.removeView(windowView);
         }
     }
-
-    @Override
-    protected void showToastView() {
-        try {
-            show.invoke(mTN);
-            Looper.loop();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    protected void showWindowView() {
-        Looper.prepare();
-        //展示成功 发送状态至服务器
-        LogUtil.i("screen show success -> start state");
-        SDKManager.windowManager.addView(windowView, wmParams);
-
-        Looper.loop();
-    }
-
-
-    View.OnClickListener onClickListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            int state = -1;
-            switch (v.getId()) {
-                case 1:
-                    LogUtil.w("···SCREEN_TIME··· -> SCREEN_END_TIME");
-                    SPUtil.save(Constant.SCREEN_TIME, SPUtil.get(Constant.SCREEN_END_TIME, 30));
-                    state = windowClose();
-                    break;
-                case 2:
-                    LogUtil.w("···SCREEN_TIME··· -> SCREEN_SHOW_TIME");
-                    SPUtil.save(Constant.SCREEN_TIME, SPUtil.get(Constant.SCREEN_SHOW_TIME, 30));
-                    state = windowDowload();
-                    break;
-            }
-            //获取当天时间存储 次数
-            String pref = SDKUtil.getAdShowDate();
-
-            //当天已显示的次数
-            int timeCount = (Integer) SPUtil.get(pref, 0);
-            timeCount++;
-            SPUtil.save(pref, timeCount);
-
-            ScreenComponent.screenBean = null;
-            LogUtil.i("clickStatus URL address ->" + API.ADVERTISMENT_STATE);
-
-            hideWindow();
-            ScreenComponent.getInstance(mContext).condition();
-
-            final int finalState = state;
-            HttpManager.doPostClickState(finalState, appBean, new RequestJsonCallback() {
-                @Override
-                public void onFailed(String message) {
-                    LogUtil.e(message);
-                }
-
-                @Override
-                public void onResponse(String response) {
-                    String clickStr = "";
-                    if (finalState == 2) {
-                        clickStr = "点击关闭";
-                    } else if (finalState == 3) {
-                        clickStr = "点击下载";
-                    }
-                    LogUtil.w("NETWORK :" + API.ADVERTISMENT_STATE + " ClickStatus send Success->" + finalState + ":" + type + clickStr);
-                }
-            });
-
-        }
-    };
 
     /**
      * 点击广告窗口执行下载apk逻辑
@@ -284,7 +305,6 @@ public class ScreenWindowView extends BaseWindowView{
     private int windowClose() {
         //0位直接關閉
         if (adBean.getSwitchMode() == 0) {
-//            SDKManager.PackageAddState = false; //当前为普通展示状态
             return Constant.SHOW_AD_STATE_CLOSE;
             //1.為直接下
         } else if (adBean.getSwitchMode() == 1) {

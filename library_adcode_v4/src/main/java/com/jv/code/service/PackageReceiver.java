@@ -11,7 +11,6 @@ import com.jv.code.db.dao.AppDaoImpl;
 import com.jv.code.db.dao.IAppDao;
 import com.jv.code.http.interfaces.RequestJsonCallback;
 import com.jv.code.manager.HttpManager;
-import com.jv.code.net.HttpClickState;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;
 
@@ -42,7 +41,7 @@ public class PackageReceiver {
                         LogUtil.i("this insert packageName:" + packageName + " -> this ad packageName:" + apkName);
                         if (apkName.equals(packageName)) {
 
-                            LogUtil.i("start http request statu - >" + Constant.SHOW_AD_STATE_ADD);
+                            LogUtil.i("start http request state - >" + Constant.SHOW_AD_STATE_ADD);
                             dao.deleteByPackageName(bean.getPackageName());
                             SDKUtil.deletePackageApk(context, apkName);
                             HttpManager.doPostClickState(Constant.SHOW_AD_STATE_ADD, bean, new RequestJsonCallback() {
@@ -53,7 +52,7 @@ public class PackageReceiver {
 
                                 @Override
                                 public void onResponse(String response) {
-                                    LogUtil.w("NETWORK :" + API.ADVERTISMENT_STATE + " ClickStatus send Success->" + 5 + ":" + "安装成功");
+                                    LogUtil.i("send success -> stateCode:" + 5 + "\tstateName:安装成功  ");
                                 }
                             });
                             return;

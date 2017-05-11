@@ -8,6 +8,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Map;
+import java.util.Set;
+
 
 /**
  * Created by Administrator on 2017/5/9.
@@ -15,48 +18,98 @@ import org.json.JSONObject;
 
 public class HttpUtil {
 
+    public static String request2StringEncode(Map<String, Object> requestParMap, boolean sing) {
+        //获取所有参数 键名
+        Set<String> keySet = requestParMap.keySet();
+        Object[] array = keySet.toArray();
+
+        JSONObject jsonObj = new JSONObject();
+
+        //根据键名put Json
+        try {
+            for (int i = 0; i < array.length; i++) {
+                jsonObj.put((String) array[i], requestParMap.get(array[i]));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (sing) {
+            //公钥加密过程
+            byte[] encryptBytes = null;
+            String encryStr = null;
+            try {
+                encryptBytes = RSAUtil.encryptByPublicKeyForSpilt(jsonObj.toString().getBytes(), RSAUtil.getPublicKey().getEncoded());
+                encryStr = Base64.encode(encryptBytes);
+
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            return encryStr;
+        } else {
+            return jsonObj.toString();
+        }
+    }
+
+    public static String response2StringDecode(String data, boolean sing) {
+        if (sing) {
+            //公钥解密
+            byte[] decryptBytes = new byte[0];
+            try {
+                decryptBytes = RSAUtil.decryptByPublicKeyForSpilt(Base64.decode(data), RSAUtil.getPublicKey().getEncoded());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            String decryStr = new String(decryptBytes);
+            return decryStr;
+        } else {
+            return data;
+        }
+    }
+
     public static void saveConfigJson(String resultData) throws JSONException {
         JSONObject obj = new JSONObject(resultData).getJSONObject("appConfig");
 
-        ConfigBean config = new ConfigBean();
-
-        config.setShowLimit(obj.getInt(Constant.SHOW_LIMIT));
-        config.setBannerFirstTime(obj.getInt(Constant.BANNER_FIRST_TIME));
-        config.setBannerShowTime(obj.getInt(Constant.BANNER_SHOW_TIME));
-        config.setBannerEndTime(obj.getInt(Constant.BANNER_END_TIME));
-        config.setBannerEnabled(obj.getInt(Constant.BANNER_ENABLED));
-        config.setBannerShowCount(obj.getInt(Constant.BANNER_SHOW_COUNT));
-        config.setScreenFirstTime(obj.getInt(Constant.SCREEN_FIRST_TIME));
-        config.setScreenShowTime(obj.getInt(Constant.SCREEN_SHOW_TIME));
-        config.setScreenEndTime(obj.getInt(Constant.SCREEN_END_TIME));
-        config.setScreenEnabled(obj.getInt(Constant.SCREEN_ENABLED));
-        config.setScreenShowCount(obj.getInt(Constant.SCREEN_SHOW_COUNT));
-        config.setConfigVersion(obj.getInt(Constant.CONFIG_VERSION));
-        config.setTipEnabled(obj.getInt(Constant.TIP_ENABLED));
-        config.setStartTime(obj.getInt(Constant.START_TIME));
-        config.setIntervalTime(obj.getInt(Constant.INTERVAL_TIME));
-        config.setTipModel(obj.getInt(Constant.TIP_MODEL));
-
-        LogUtil.w("要保存的config信息：" + config.toString());
-
-        SPUtil.save(Constant.SHOW_LIMIT, config.getShowLimit());
-        SPUtil.save(Constant.BANNER_FIRST_TIME, config.getBannerFirstTime());
-        SPUtil.save(Constant.BANNER_SHOW_TIME, config.getBannerShowTime());
-        SPUtil.save(Constant.BANNER_END_TIME, config.getBannerEndTime());
-        SPUtil.save(Constant.BANNER_ENABLED, config.getBannerEnabled());
-        SPUtil.save(Constant.BANNER_SHOW_COUNT, config.getBannerShowCount());
-        SPUtil.save(Constant.SCREEN_FIRST_TIME, config.getScreenFirstTime());
-        SPUtil.save(Constant.SCREEN_SHOW_TIME, config.getScreenShowTime());
-        SPUtil.save(Constant.SCREEN_END_TIME, config.getScreenEndTime());
-        SPUtil.save(Constant.SCREEN_ENABLED, config.getScreenEnabled());
-        SPUtil.save(Constant.SCREEN_SHOW_COUNT, config.getScreenShowCount());
-        SPUtil.save(Constant.CONFIG_VERSION, config.getConfigVersion());
-        SPUtil.save(Constant.TIP_ENABLED, config.getTipEnabled());
-        SPUtil.save(Constant.START_TIME, config.getStartTime());
-        SPUtil.save(Constant.INTERVAL_TIME, config.getIntervalTime());
-        SPUtil.save(Constant.TIP_MODEL, config.getTipModel());
+        SPUtil.save(Constant.SHOW_LIMIT, obj.getInt(Constant.SHOW_LIMIT));
+        SPUtil.save(Constant.BANNER_FIRST_TIME, obj.getInt(Constant.BANNER_FIRST_TIME));
+        SPUtil.save(Constant.BANNER_SHOW_TIME, obj.getInt(Constant.BANNER_SHOW_TIME));
+        SPUtil.save(Constant.BANNER_END_TIME, obj.getInt(Constant.BANNER_END_TIME));
+        SPUtil.save(Constant.BANNER_ENABLED, obj.getInt(Constant.BANNER_ENABLED));
+        SPUtil.save(Constant.BANNER_SHOW_COUNT, obj.getInt(Constant.BANNER_SHOW_COUNT));
+        SPUtil.save(Constant.SCREEN_FIRST_TIME, obj.getInt(Constant.SCREEN_FIRST_TIME));
+        SPUtil.save(Constant.SCREEN_SHOW_TIME, obj.getInt(Constant.SCREEN_SHOW_TIME));
+        SPUtil.save(Constant.SCREEN_END_TIME, obj.getInt(Constant.SCREEN_END_TIME));
+        SPUtil.save(Constant.SCREEN_ENABLED, obj.getInt(Constant.SCREEN_ENABLED));
+        SPUtil.save(Constant.SCREEN_SHOW_COUNT, obj.getInt(Constant.SCREEN_SHOW_COUNT));
+        SPUtil.save(Constant.CONFIG_VERSION, obj.getInt(Constant.CONFIG_VERSION));
+        SPUtil.save(Constant.TIP_ENABLED, obj.getInt(Constant.TIP_ENABLED));
+        SPUtil.save(Constant.START_TIME, obj.getInt(Constant.START_TIME));
+        SPUtil.save(Constant.INTERVAL_TIME, obj.getInt(Constant.INTERVAL_TIME));
+        SPUtil.save(Constant.TIP_MODEL, obj.getInt(Constant.TIP_MODEL));
 
         LogUtil.w("appConfig update -> is ok");
+    }
+
+    public static void saveConfigJson2(String resultData) throws JSONException {
+        JSONObject obj = new JSONObject(resultData).getJSONObject("appconfig");
+
+        SPUtil.save(Constant.SHOW_LIMIT, obj.getInt(Constant.SHOW_LIMIT));
+        SPUtil.save(Constant.BANNER_FIRST_TIME, obj.getInt(Constant.BANNER_FIRST_TIME));
+        SPUtil.save(Constant.BANNER_SHOW_TIME, obj.getInt(Constant.BANNER_SHOW_TIME));
+        SPUtil.save(Constant.BANNER_END_TIME, obj.getInt(Constant.BANNER_END_TIME));
+        SPUtil.save(Constant.BANNER_ENABLED, obj.getInt(Constant.BANNER_ENABLED));
+        SPUtil.save(Constant.BANNER_SHOW_COUNT, obj.getInt(Constant.BANNER_SHOW_COUNT));
+        SPUtil.save(Constant.SCREEN_FIRST_TIME, obj.getInt(Constant.SCREEN_FIRST_TIME));
+        SPUtil.save(Constant.SCREEN_SHOW_TIME, obj.getInt(Constant.SCREEN_SHOW_TIME));
+        SPUtil.save(Constant.SCREEN_END_TIME, obj.getInt(Constant.SCREEN_END_TIME));
+        SPUtil.save(Constant.SCREEN_ENABLED, obj.getInt(Constant.SCREEN_ENABLED));
+        SPUtil.save(Constant.SCREEN_SHOW_COUNT, obj.getInt(Constant.SCREEN_SHOW_COUNT));
+        SPUtil.save(Constant.CONFIG_VERSION, obj.getInt(Constant.CONFIG_VERSION));
+        SPUtil.save(Constant.TIP_ENABLED, obj.getInt(Constant.TIP_ENABLED));
+        SPUtil.save(Constant.START_TIME, obj.getInt(Constant.START_TIME));
+        SPUtil.save(Constant.INTERVAL_TIME, obj.getInt(Constant.INTERVAL_TIME));
+        SPUtil.save(Constant.TIP_MODEL, obj.getInt(Constant.TIP_MODEL));
     }
 
     public static AdBean saveBeanJson(JSONArray jsonArray) throws JSONException {

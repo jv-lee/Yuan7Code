@@ -6,7 +6,7 @@ import com.jv.code.api.API;
 import com.jv.code.bean.AppBean;
 import com.jv.code.constant.Constant;
 import com.jv.code.http.RequestHttp;
-import com.jv.code.http.interfaces.RequestCallback;
+import com.jv.code.http.base.RequestCallback;
 import com.jv.code.utils.AddressUtil;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;
@@ -58,7 +58,7 @@ public class HttpManager {
                 .withRequestType(RequestHttp.RequestType.SEND_JSON)
                 .withResponseCallback(requestCallback)
                 .build();
-        http.initConnection();
+        http.request();
     }
 
     public static void doPostAppConfig(RequestCallback requestCallback) {
@@ -74,7 +74,7 @@ public class HttpManager {
                 .withRequestType(RequestHttp.RequestType.SEND_JSON)
                 .withResponseCallback(requestCallback)
                 .build();
-        http.initConnection();
+        http.request();
     }
 
     public static void doPostAdvertisement(String type, RequestCallback requestCallback) {
@@ -91,10 +91,10 @@ public class HttpManager {
                 .withRequestMethod("POST")
                 .withRequestParMap(parMap)
                 .withTime(Constant.CONNECT_TIME_OUT, Constant.READ_TIME_OUT)
-                .withRequestType(RequestHttp.RequestType.SEND_JSON)
+                .withRequestType(RequestHttp.RequestType.SEND_BEAN)
                 .withResponseCallback(requestCallback)
                 .build();
-        http.initConnection();
+        http.request();
     }
 
     public static void doPostClickState(int state, AppBean bean, RequestCallback requestCallback) {
@@ -114,7 +114,7 @@ public class HttpManager {
                 .withRequestType(RequestHttp.RequestType.SEND_JSON)
                 .withResponseCallback(requestCallback)
                 .build();
-        http.initConnection();
+        http.request();
     }
 
     public static void doPostServiceTime(String startTime, String endTime, RequestCallback requestCallback) {
@@ -133,7 +133,20 @@ public class HttpManager {
                 .withRequestType(RequestHttp.RequestType.SEND_JSON)
                 .withResponseCallback(requestCallback)
                 .build();
-        http.initConnection();
+        http.request();
+    }
+
+    public static void doGetPic(String url, RequestCallback requestCallback) {
+        LogUtil.w("URL address ->" + url);
+        RequestHttp http = new RequestHttp.Builder()
+                .withApi(url)
+                .withHasSingData(false)
+                .withRequestMethod("GET")
+                .withTime(Constant.CONNECT_TIME_OUT, Constant.READ_TIME_OUT)
+                .withRequestType(RequestHttp.RequestType.SEND_PIC)
+                .withResponseCallback(requestCallback)
+                .build();
+        http.request();
     }
 
 

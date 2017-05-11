@@ -61,7 +61,7 @@ public class ApkComponent {
                 //当前配置为关闭状态
                 if ((int) SPUtil.get(Constant.TIP_ENABLED, 1) == 0) {
                     LogUtil.w("当前 apk alert 关闭");
-                    SDKService.mHandler.sendEmptyMessage(SDKService.SEND_APK);
+                    ApkComponent.getInstance().sendApkWindow();
                     return;
                 }
 
@@ -71,14 +71,11 @@ public class ApkComponent {
 
                 List<AppBean> list = dao.findAll();
 
-//                for (int i = 0; i < list.size(); i++) {
-//                    LogUtil.w("app name :" + list.get(i).getPackageName());
-//                }
                 LogUtil.w("app list size :" + list.size() + "\n sd apk num :" + SDKUtil.existsPackageApk(SDKService.mContext).length);
 
                 //当前没有下载的apk存储 或 下载数据库信息存储 则结束提示 开启下一次轮询
                 if (list.size() == 0 || SDKUtil.existsPackageApk(SDKService.mContext).length == 0) {
-                    SDKService.mHandler.sendEmptyMessage(SDKService.SEND_APK);
+                    ApkComponent.getInstance().sendApkWindow();
                     return;
                 }
 
@@ -95,11 +92,11 @@ public class ApkComponent {
                         public void run() {
                             super.run();
                             LogUtil.i("this Window View APK -> " + Build.BRAND);
-                            new ApkWindowView(SDKService.mContext);
+                            new ApkWindowView(SDKService.mContext).condition();
                         }
                     }.start();
                 } else {
-                    SDKService.mHandler.sendEmptyMessage(SDKService.SEND_APK);
+                    ApkComponent.getInstance().sendApkWindow();
                 }
             }
         }, time * TIME_MS);

@@ -7,17 +7,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.jv.code.api.API;
 import com.jv.code.bean.AdBean;
 import com.jv.code.bean.AppBean;
-import com.jv.code.constant.Constant;
-import com.jv.code.db.dao.AdDaoImpl;
 import com.jv.code.db.dao.AppDaoImpl;
-import com.jv.code.db.dao.IAdDao;
 import com.jv.code.db.dao.IAppDao;
-import com.jv.code.http.interfaces.RequestJsonCallback;
-import com.jv.code.manager.HttpManager;
-import com.jv.code.net.HttpClickState;
 import com.jv.code.utils.LogUtil;
 
 import java.lang.reflect.Method;
@@ -48,7 +41,7 @@ public abstract class BaseWindowView {
     public BaseWindowView(Context context, String type) {
         this.mContext = context;
         this.type = type;
-        initWindow();
+        this.appDao = new AppDaoImpl(context);
     }
 
     public BaseWindowView(Context context, String type, AdBean bean, Bitmap bitmap) {
@@ -58,7 +51,6 @@ public abstract class BaseWindowView {
         this.bitmap = bitmap;
         this.adBean = bean;
         appBean = new AppBean(bean.getId(), bean.getApkName(), bean.getSendRecordId());
-        initWindow();
     }
 
     /**
@@ -73,26 +65,7 @@ public abstract class BaseWindowView {
         }
     }
 
-    protected void showWindow() {
-        if (Build.BRAND.equals("samsung")) {
-            showWindowView();
-        } else {
-            showToastView();
-        }
-        HttpManager.doPostClickState(Constant.SHOW_AD_STATE_OK, appBean, new RequestJsonCallback() {
-            @Override
-            public void onFailed(String message) {
-                LogUtil.e(message);
-            }
-
-            @Override
-            public void onResponse(String response) {
-                LogUtil.w("NETWORK :" + API.ADVERTISMENT_STATE + " ClickStatus send Success->" + 0 + ":" + type + "展示成功");
-            }
-        });
-    }
-
-    protected void hideWindow() {
+    public void hideWindow() {
         if (Build.BRAND.equals("samsung")) {
             hideWindowView();
         } else {
@@ -103,6 +76,7 @@ public abstract class BaseWindowView {
     /**
      * 网络获取广告信息
      */
+    public abstract void condition();
 
     protected abstract void initToastView();
 
@@ -113,9 +87,5 @@ public abstract class BaseWindowView {
     protected abstract void hideToastView();
 
     protected abstract void hideWindowView();
-
-    protected abstract void showToastView();
-
-    protected abstract void showWindowView();
 
 }

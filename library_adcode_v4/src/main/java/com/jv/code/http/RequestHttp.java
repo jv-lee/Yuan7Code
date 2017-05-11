@@ -1,22 +1,16 @@
 package com.jv.code.http;
 
 
-import android.os.AsyncTask;
-
-import com.jv.code.http.interfaces.RequestCallback;
+import com.jv.code.http.base.RequestCallback;
+import com.jv.code.http.interfaces.RequestBeanCallback;
 import com.jv.code.http.interfaces.RequestJsonCallback;
+import com.jv.code.http.interfaces.RequestPicCallback;
+import com.jv.code.http.task.AdBeanTask;
+import com.jv.code.http.task.GetPicTask;
 import com.jv.code.http.task.PostJsonTask;
-import com.jv.code.utils.Base64;
-import com.jv.code.utils.RSAUtil;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by Administrator on 2017/5/9.
@@ -24,123 +18,53 @@ import java.util.Set;
 
 public class RequestHttp {
 
-    private String requestMethod;
-    private String requestApi;
-    private int connectTimeout;
-    private int readTimeout;
-    private Map<String, Object> requestParMap;
-    private RequestType requestType;
+
     private RequestCallback requestCallback;
-    private boolean hasSignData;
+    private Builder builder;
 
     public enum RequestType {
-        SEND_JSON
+        SEND_JSON, SEND_PIC, SEND_BEAN
     }
 
     public RequestHttp(Builder builder) {
-        this.requestMethod = builder.requestMethod == null ? "GET" : builder.requestMethod;
-        this.connectTimeout = builder.connectTime == 0 ? 15000 : builder.connectTime;
-        this.readTimeout = builder.readTime == 0 ? 15000 : builder.readTime;
-        this.requestParMap = builder.requestParMap == null ? null : builder.requestParMap;
-        this.requestType = builder.requestType == null ? RequestType.SEND_JSON : builder.requestType;
-        this.requestCallback = builder.requestCallback;
-        this.hasSignData = builder.hasSignData == true ? true : false;
-        if (builder.requestApi == null) {
-            throw new NullPointerException("api == null");
+        if (builder == null) {
+            new NullPointerException("RequestHttp builder == null ");
         } else {
-            this.requestApi = builder.requestApi;
+            this.builder = builder;
+        }
+        if (builder.requestCallback == null) {
+            new NullPointerException("RequestHttp requestCallback == null ");
+        } else {
+            this.requestCallback = builder.requestCallback;
+        }
+        if (builder.requestType == null) {
+            new NullPointerException("RequestHttp requestType == null ");
         }
     }
 
-    private HttpURLConnection setType(HttpURLConnection conn) {
-        switch (requestType) {
+    public void request() {
+        switch (builder.requestType) {
             case SEND_JSON:
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-                conn.setUseCaches(false);
-                conn.setRequestProperty("Charset", "UTF-8");
-                conn.setRequestProperty("Content-Type", "application/json");
+                new PostJsonTask((RequestJsonCallback) requestCallback, builder).execute();
+                break;
+            case SEND_PIC:
+                new GetPicTask((RequestPicCallback) requestCallback, builder).execute();
+                break;
+            case SEND_BEAN:
+                new AdBeanTask((RequestBeanCallback) requestCallback, builder).execute();
                 break;
         }
-        return conn;
-    }
-
-    public void initConnection() {
-        HttpURLConnection conn = null;
-        try {
-            conn = (HttpURLConnection) new URL(requestApi).openConnection();
-            conn.setRequestMethod(requestMethod);
-            conn.setReadTimeout(readTimeout);
-            conn.setConnectTimeout(connectTimeout);
-            setType(conn);
-
-            if (requestParMap != null) {
-                String data = requestParToString(requestParMap);
-                conn.getOutputStream().write(data != null ? data.getBytes() : new byte[0]);
-                conn.getOutputStream().flush();
-                conn.getOutputStream().close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (conn == null) {
-            throw new NullPointerException("HttpURLConnection == null");
-        }
-
-        switch (requestType) {
-            case SEND_JSON:
-                new PostJsonTask((RequestJsonCallback) requestCallback, hasSignData).execute(conn);
-                break;
-        }
-
-    }
-
-    public String requestParToString(Map<String, Object> requestParMap) {
-        //获取所有参数 键名
-        Set<String> keySet = requestParMap.keySet();
-        Object[] array = keySet.toArray();
-
-        JSONObject jsonObj = new JSONObject();
-
-        //根据键名put Json
-        try {
-            for (int i = 0; i < array.length; i++) {
-                jsonObj.put((String) array[i], requestParMap.get(array[i]));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        if (hasSignData) {
-            //公钥加密过程
-            byte[] encryptBytes = null;
-            String encryStr = null;
-            try {
-                encryptBytes = RSAUtil.encryptByPublicKeyForSpilt(jsonObj.toString().getBytes(), RSAUtil.getPublicKey().getEncoded());
-                encryStr = Base64.encode(encryptBytes);
-
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            return encryStr;
-        } else {
-            return jsonObj.toString();
-        }
-
-
     }
 
     public static class Builder {
-        private RequestType requestType;
-        private String requestMethod;
-        private Map<String, Object> requestParMap;
-        private int connectTime;
-        private int readTime;
-        private String requestApi;
-        private RequestCallback requestCallback;
-        private boolean hasSignData;
+        public RequestType requestType;
+        public String requestMethod;
+        public Map<String, Object> requestParMap;
+        public int connectTime;
+        public int readTime;
+        public String requestApi;
+        public RequestCallback requestCallback;
+        public boolean hasSignData;
 
 
         public Builder() {

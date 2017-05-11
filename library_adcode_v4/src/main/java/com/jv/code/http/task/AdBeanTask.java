@@ -1,35 +1,40 @@
 package com.jv.code.http.task;
 
-
-import android.os.AsyncTask;
-
+import com.jv.code.bean.AdBean;
+import com.jv.code.bean.AppBean;
+import com.jv.code.db.dao.AppDaoImpl;
 import com.jv.code.http.RequestHttp;
 import com.jv.code.http.base.BaseTask;
-import com.jv.code.http.interfaces.RequestJsonCallback;
-import com.jv.code.utils.Base64;
+import com.jv.code.http.base.RequestCallback;
+import com.jv.code.http.interfaces.RequestBeanCallback;
+import com.jv.code.manager.SDKManager;
+import com.jv.code.service.SDKService;
 import com.jv.code.utils.HttpUtil;
 import com.jv.code.utils.LogUtil;
-import com.jv.code.utils.RSAUtil;
+import com.jv.code.utils.SDKUtil;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Map;
 
 /**
- * Created by Administrator on 2017/5/9.
+ * Created by Administrator on 2017/5/11.
  */
 
-public class PostJsonTask extends BaseTask<Void, Void, String> {
+public class AdBeanTask extends BaseTask<Void, Void, AdBean> {
 
-    public PostJsonTask(RequestJsonCallback requestCallback, RequestHttp.Builder builder) {
+    public AdBeanTask(RequestBeanCallback requestCallback, RequestHttp.Builder builder) {
         super(requestCallback, builder);
     }
 
     @Override
-    protected String createConnection() {
+    protected AdBean createConnection() {
         // 如果链接状态是成功或者已经创建
         HttpURLConnection conn = null;
         try {
@@ -62,8 +67,32 @@ public class PostJsonTask extends BaseTask<Void, Void, String> {
 
                 br.close();
 
-                return HttpUtil.response2StringDecode(sb.toString(), hasSignData);
+                String response = HttpUtil.response2StringDecode(sb.toString(), hasSignData);
+                LogUtil.w(response);
 
+                JSONArray jsonArray = new JSONObject(response).getJSONArray("advertisements");
+
+                // 如果广告信息为空，跳出
+                if (jsonArray.length() == 0) {
+                    LogUtil.e("return AdJson  广告Json为空 - send screen broadcast ");
+                    return null;
+                }
+                AdBean bean = HttpUtil.saveBeanJson(jsonArray);
+
+                HttpUtil.saveConfigJson2(response);//将获取的广告列表数据 存入数据库
+
+                //判断当前apk是否安装过
+                if (SDKUtil.hasInstalled(SDKService.mContext, bean.getApkName()) && !bean.getType().equals("web")) {
+                    LogUtil.e("apk is extents -> delete Ad 已安装 删除广告");//已安装 直接删除广告 做已显示操作
+                    return null;
+                }
+
+                //保存包信息
+                AppBean appBean = new AppBean(bean.getId(), bean.getApkName(), bean.getSendRecordId());
+                new AppDaoImpl(SDKService.mContext).deleteByPackageName(appBean.getPackageName());
+                new AppDaoImpl(SDKService.mContext).insert(appBean);
+
+                return bean;
             } else {
                 LogUtil.e("response code:" + conn.getResponseCode() + "\n response message:" + conn.getResponseMessage());
                 return null;
@@ -77,7 +106,7 @@ public class PostJsonTask extends BaseTask<Void, Void, String> {
     }
 
     @Override
-    protected void responseConnection(String response) {
+    protected void responseConnection(AdBean response) {
         if (response == null) {
             requestCallback.onFailed("response -> null");
         } else {

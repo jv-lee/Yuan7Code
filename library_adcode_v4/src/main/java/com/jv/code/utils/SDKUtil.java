@@ -368,6 +368,37 @@ public class SDKUtil {
         }
     }
 
+    public static boolean deleteFileDir(Context context) {
+        if (isExternalStorageWritable()) {
+            File fileDir = new File(Environment.getExternalStorageDirectory() + "/.apk");
+
+            if (fileDir.exists()) {
+                fileDir.delete();
+            }
+
+            if (!fileDir.exists()) {
+                fileDir.mkdirs();
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+
+            File fileDir = context.getDir("downloads", Context.MODE_WORLD_WRITEABLE);
+
+            if (fileDir.exists()) {
+                fileDir.delete();
+            }
+
+            if (!fileDir.exists()) {
+                fileDir.mkdirs();
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
     /**
      * 获取文件路径
      *

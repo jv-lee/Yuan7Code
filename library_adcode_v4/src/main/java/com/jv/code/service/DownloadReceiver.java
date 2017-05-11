@@ -89,7 +89,7 @@ public class DownloadReceiver {
 
                         @Override
                         public void onResponse(String response) {
-                            LogUtil.w("NETWORK :" + API.ADVERTISMENT_STATE + " ClickStatus send Success->" + 4 + ":" + "下载成功");
+                            LogUtil.i("send success -> stateCode:" + 4 + "\tstateName:下载成功  ");
                         }
                     });
                 }

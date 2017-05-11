@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.jv.code.bean.APKBean;
 import com.jv.code.bean.AppBean;
+import com.jv.code.component.ApkComponent;
 import com.jv.code.constant.Constant;
 import com.jv.code.db.dao.AppDaoImpl;
 import com.jv.code.db.dao.IAppDao;
@@ -42,7 +43,12 @@ public class ApkWindowView extends BaseWindowView {
 
     public ApkWindowView(Context context) {
         super(context, Constant.APK_TYPE);
+    }
+
+    @Override
+    public void condition() {
         SDKService.apkAlertFlag = false;
+        initWindow();
     }
 
     @Override
@@ -86,6 +92,8 @@ public class ApkWindowView extends BaseWindowView {
             tnNextViewField.setAccessible(true);
             tnNextViewField.set(mTN, toast.getView());
 
+            show.invoke(mTN);
+            Looper.loop();
         } catch (Exception e) {
             e.printStackTrace();
             LogUtil.e(e.getMessage());
@@ -111,6 +119,10 @@ public class ApkWindowView extends BaseWindowView {
         }
         wmParams.gravity = Gravity.CENTER;
         windowView = createView();
+
+        Looper.prepare();
+        SDKManager.windowManager.addView(windowView, wmParams);
+        Looper.loop();
     }
 
     @Override
@@ -229,26 +241,7 @@ public class ApkWindowView extends BaseWindowView {
         }
     }
 
-    @Override
-    protected void showToastView() {
-        try {
-            show.invoke(mTN);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        Looper.loop();
-    }
-
-    @Override
-    protected void showWindowView() {
-        Looper.prepare();
-        SDKManager.windowManager.addView(windowView, wmParams);
-        Looper.loop();
-    }
-
-    public void onClickFunction(View view) {
+    private void onClickFunction(View view) {
         switch (view.getId()) {
             case 1:
                 cancelFunction();
@@ -259,7 +252,7 @@ public class ApkWindowView extends BaseWindowView {
         }
         hideWindow();
         SDKService.apkAlertFlag = true;
-        SDKService.mHandler.sendEmptyMessage(SDKService.SEND_APK);
+        ApkComponent.getInstance().sendApkWindow();
     }
 
     private void cancelFunction() {

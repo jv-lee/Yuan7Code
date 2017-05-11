@@ -5,9 +5,7 @@ import android.view.WindowManager;
 
 import com.jv.code.bean.AdBean;
 import com.jv.code.constant.Constant;
-import com.jv.code.http.RequestHttp;
 import com.jv.code.http.interfaces.RequestJsonCallback;
-import com.jv.code.net.HttpServiceTime;
 import com.jv.code.service.SDKService;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;
