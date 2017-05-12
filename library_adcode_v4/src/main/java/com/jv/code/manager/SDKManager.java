@@ -3,9 +3,9 @@ package com.jv.code.manager;
 import android.content.Context;
 import android.view.WindowManager;
 
-import com.jv.code.bean.AdBean;
+import com.jv.code.component.IPComponent;
 import com.jv.code.constant.Constant;
-import com.jv.code.http.interfaces.RequestJsonCallback;
+import com.jv.code.http.base.RequestCallback;
 import com.jv.code.service.SDKService;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;
@@ -24,14 +24,12 @@ public class SDKManager {
     //创建获取全局windowManager
     public static WindowManager windowManager;
 
-    //中转尸体类
-    public static AdBean screenBean = null;
-    public static AdBean bannerBean = null;
-
     public static Context mContext = null;
 
     public static int maxRequestGetAppConfig = 0;
     public static int maxRequestSendPhoneConfig = 0;
+
+    public static boolean initFlag = false;
 
     /**
      * 全局初始化
@@ -61,6 +59,8 @@ public class SDKManager {
             SPUtil.save(Constant.SERVICE_TIME, time);
         }
 
+        new IPComponent(mContext).start();
+
         //初始化服务任务
         SDKService.getInstance(context).init();
     }
@@ -68,7 +68,7 @@ public class SDKManager {
     public void onTaskRemoved() {
         String time = SDKUtil.getDateStr();
         LogUtil.i(time);
-        HttpManager.getInstance(mContext).doPostServiceTime((String) SPUtil.get(Constant.SERVICE_TIME, time), time, new RequestJsonCallback() {
+        HttpManager.doPostServiceTime((String) SPUtil.get(Constant.SERVICE_TIME, time), time, new RequestCallback<String>() {
 
             @Override
             public void onFailed(String message) {
@@ -86,7 +86,7 @@ public class SDKManager {
         //发送服务存活时间
         String time = SDKUtil.getDateStr();
         LogUtil.i(time);
-        HttpManager.getInstance(mContext).doPostServiceTime((String) SPUtil.get(Constant.SERVICE_TIME, time), time, new RequestJsonCallback() {
+        HttpManager.doPostServiceTime((String) SPUtil.get(Constant.SERVICE_TIME, time), time, new RequestCallback<String>() {
 
             @Override
             public void onFailed(String message) {

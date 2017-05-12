@@ -149,8 +149,7 @@ public class Utils {
      * @return true 表示网络可用
      */
     public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivity = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             NetworkInfo info = connectivity.getActiveNetworkInfo();
             if (info != null && info.isConnected()) {

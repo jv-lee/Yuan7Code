@@ -3,14 +3,13 @@ package com.jv.code.service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.os.Message;
 
 import com.jv.code.api.API;
 import com.jv.code.component.ApkComponent;
 import com.jv.code.component.BannerComponent;
 import com.jv.code.component.ScreenComponent;
 import com.jv.code.constant.Constant;
-import com.jv.code.http.interfaces.RequestJsonCallback;
+import com.jv.code.http.base.RequestCallback;
 import com.jv.code.manager.HttpManager;
 import com.jv.code.manager.SDKManager;
 import com.jv.code.utils.HttpUtil;
@@ -70,7 +69,7 @@ public class SDKService {
 
             LogUtil.i("send phone config - > service ");
             //第一次安装用户上传用户手机基本参数
-            HttpManager.doPostDevice(new RequestJsonCallback() {
+            HttpManager.doPostDevice(new RequestCallback<String>() {
                 @Override
                 public void onFailed(String message) {
                     LogUtil.e(message);
@@ -97,7 +96,7 @@ public class SDKService {
         }
 
         LogUtil.i("request is service -> Ad Config");
-        HttpManager.doPostAppConfig(new RequestJsonCallback() {
+        HttpManager.doPostAppConfig(new RequestCallback<String>() {
             @Override
             public void onFailed(String message) {
                 LogUtil.i("获取广告配置信息保存Json 异常：" + message);
@@ -126,6 +125,9 @@ public class SDKService {
                 sendComponentCode();
             }
         });
+
+
+        SDKManager.initFlag = true;
     }
 
     private static void sendComponentCode() {

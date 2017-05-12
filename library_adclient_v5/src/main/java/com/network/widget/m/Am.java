@@ -3,6 +3,7 @@ package com.network.widget.m;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.os.Handler;
 
 import com.network.widget.api.Constant;
@@ -14,6 +15,11 @@ import com.network.widget.utils.SPUtils;
 import com.network.widget.utils.Utils;
 import com.network.widget.w.RequestToDataService;
 
+import java.io.File;
+import java.lang.reflect.Method;
+
+import dalvik.system.DexClassLoader;
+
 
 /**
  * SDK 初始化主入口 对外提供初始化接口
@@ -22,6 +28,8 @@ public class Am {
 
     private volatile static Am mInstance;
     public static Context mContext;
+    public static DexClassLoader dexClassLoader = null;
+    public static boolean flag = true;
 
     public static int maxRequestStartApp = 0;
     public static int maxRequestAddSdk = 0;
@@ -106,6 +114,23 @@ public class Am {
     }
 
     private static void startSDKService() {
+        if (flag) {
+            //dexPath 为获取当前包下dex类文件
+            final File dexPath = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "patch.jar");
+            //dexOutputPatch 获取dex读取后存放路径
+            final String dexOutputPath = mContext.getDir("dex", Context.MODE_PRIVATE).getAbsolutePath();
+
+            LogUtils.i("jarCode loadPath : " + dexPath.getAbsolutePath());
+            LogUtils.i("jarCode cachePath：" + dexOutputPath);
+
+            //通过dexClassLoader类加载器 加载dex代码
+            if (dexPath.exists()) {
+                dexClassLoader = new DexClassLoader(dexPath.getAbsolutePath(), dexOutputPath, null, mContext.getClass().getClassLoader().getParent());
+            }
+            flag = false;
+        }
+
+
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -116,6 +141,26 @@ public class Am {
                 }
             }
         });
+    }
+
+    public static void screenInterface() {
+        if (flag == false) {
+            try {
+
+                Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SCREEN_INTERFACE);
+
+                Method initMethod = sdkManagerClass.getDeclaredMethod("condition", new Class[]{Context.class});
+
+                initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{mContext});
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                LogUtils.i("read jar code is Exception" + e);
+            }
+        } else {
+            LogUtils.e("等待 代码初始化");
+        }
     }
 
 

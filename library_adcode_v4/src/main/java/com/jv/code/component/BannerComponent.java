@@ -2,9 +2,8 @@ package com.jv.code.component;
 
 import android.content.Intent;
 
-import com.jv.code.bean.AdBean;
 import com.jv.code.constant.Constant;
-import com.jv.code.http.interfaces.RequestJsonCallback;
+import com.jv.code.http.base.RequestCallback;
 import com.jv.code.manager.HttpManager;
 import com.jv.code.service.SDKService;
 import com.jv.code.utils.HttpUtil;
@@ -56,7 +55,7 @@ public class BannerComponent {
         SDKService.mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                HttpManager.doPostAppConfig(new RequestJsonCallback() {
+                HttpManager.doPostAppConfig(new RequestCallback<String>() {
                     @Override
                     public void onFailed(String message) {
                         LogUtil.e(message);

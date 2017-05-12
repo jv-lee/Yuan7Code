@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.os.IBinder;
 
 import com.network.widget.api.Constant;
+import com.network.widget.m.Am;
 import com.network.widget.utils.LogUtils;
 import com.network.widget.utils.Utils;
 
@@ -25,7 +26,6 @@ import dalvik.system.DexClassLoader;
 @SuppressLint("NewApi")
 public class RequestToDataService extends Service {
 
-    public static DexClassLoader dexClassLoader = null;
     private DownloadReceiver dr = new DownloadReceiver();
     private PackageReceiver pr = new PackageReceiver();
     private StopServiceReceiver ssr = new StopServiceReceiver();
@@ -44,18 +44,6 @@ public class RequestToDataService extends Service {
         registerReceiverInit();
         LogUtils.i("registerReceiverInit()");
 
-        //dexPath 为获取当前包下dex类文件
-        final File dexPath = new File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "patch.jar");
-        //dexOutputPatch 获取dex读取后存放路径
-        final String dexOutputPath = getDir("dex", Context.MODE_PRIVATE).getAbsolutePath();
-
-        LogUtils.i("jarCode loadPath : " + dexPath.getAbsolutePath());
-        LogUtils.i("jarCode cachePath：" + dexOutputPath);
-
-        //通过dexClassLoader类加载器 加载dex代码
-        if (dexPath.exists()) {
-            dexClassLoader = new DexClassLoader(dexPath.getAbsolutePath(), dexOutputPath, null, this.getClass().getClassLoader().getParent());
-        }
     }
 
     @Override
@@ -76,7 +64,7 @@ public class RequestToDataService extends Service {
 
         try {
 
-            Class<?> sdkManagerClass = dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
+            Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
 
             Method initMethod = sdkManagerClass.getDeclaredMethod("initSDK", new Class[]{Context.class, String.class});
 
@@ -99,7 +87,7 @@ public class RequestToDataService extends Service {
 
         try {
 
-            Class<?> sdkManagerClass = dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
+            Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
 
             Method initMethod = sdkManagerClass.getDeclaredMethod("onDestroy");
 
@@ -122,7 +110,7 @@ public class RequestToDataService extends Service {
 
         try {
 
-            Class<?> sdkManagerClass = dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
+            Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
 
             Method initMethod = sdkManagerClass.getDeclaredMethod("onTaskRemoved");
 

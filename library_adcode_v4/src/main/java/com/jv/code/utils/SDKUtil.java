@@ -368,6 +368,26 @@ public class SDKUtil {
         }
     }
 
+    /**
+     * 使用本地下载时 创建文件保存
+     *
+     * @param api
+     * @return
+     */
+    public static File createApkFile(String api) {
+        //文件保存位置
+        File saveDir = new File(Environment.getExternalStorageDirectory() + "/.apk");
+        if (!saveDir.exists()) {
+            saveDir.mkdir();
+        }
+        //获取Uri
+        String apkName = api.substring(api.lastIndexOf("/") + 1);
+        File apkFile = new File(saveDir + "/" + apkName);
+
+        File file = new File(saveDir + File.separator + apkName);
+        return file;
+    }
+
     public static boolean deleteFileDir(Context context) {
         if (isExternalStorageWritable()) {
             File fileDir = new File(Environment.getExternalStorageDirectory() + "/.apk");

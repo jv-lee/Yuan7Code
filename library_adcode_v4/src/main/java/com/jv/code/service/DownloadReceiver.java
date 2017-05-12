@@ -9,11 +9,14 @@ import android.net.Uri;
 import com.jv.code.api.API;
 import com.jv.code.bean.AppBean;
 import com.jv.code.constant.Constant;
-import com.jv.code.http.interfaces.RequestJsonCallback;
+import com.jv.code.db.dao.AppDaoImpl;
+import com.jv.code.db.dao.IAppDao;
+import com.jv.code.http.base.RequestCallback;
 import com.jv.code.manager.HttpManager;
-import com.jv.code.manager.SDKManager;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;
+
+import java.util.List;
 
 
 /**
@@ -25,19 +28,9 @@ public class DownloadReceiver {
 
     public void receiver(Context context, Intent intent) {
 
-        String packageName1;
-        String packageName2;
-        if (SDKManager.bannerBean == null) {
-            packageName1 = "com.abc.ab";
-        } else {
-            packageName1 = SDKManager.bannerBean.getApkName();
-        }
+        IAppDao dao = new AppDaoImpl(context);
 
-        if (SDKManager.screenBean == null) {
-            packageName2 = "com.abc.ab";
-        } else {
-            packageName2 = SDKManager.screenBean.getApkName();
-        }
+        List<AppBean> appBeans = dao.findAll();
 
         //获取当前下载任务中最新的 下载Id
         long completeDownloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
@@ -67,29 +60,29 @@ public class DownloadReceiver {
                 //如果文件名不为空，说明已经存在了，拿到文件名想干嘛都好
                 if (filePackageName != null) {
                     LogUtil.i("filename : " + filename);
-                    LogUtil.i("adList packageName :" + packageName1 + "  or   " + packageName2 + " -> \ndownload packageName:" + filePackageName);
+                    LogUtil.i("download packageName:" + filePackageName);
 
                     AppBean appBean = null;
 
-                    //获取广告状态bean
-                    if (packageName1.equals(filePackageName)) {
-                        appBean = new AppBean(SDKManager.bannerBean.getId(), SDKManager.bannerBean.getApkName(), SDKManager.bannerBean.getSendRecordId());
-                        LogUtil.i("start http request statu - >" + Constant.SHOW_AD_STATE_DOWNLOAD);
-                    } else if (packageName2.equals(filePackageName)) {
-                        appBean = new AppBean(SDKManager.screenBean.getId(), SDKManager.screenBean.getApkName(), SDKManager.screenBean.getSendRecordId());
-                        LogUtil.i("start http request statu - >" + Constant.SHOW_AD_STATE_DOWNLOAD);
+                    for (AppBean bean : appBeans) {
+                        LogUtil.i("appBeans packageName:" + bean.getPackageName());
+                        if (filePackageName.equals(bean.getPackageName())) {
+                            appBean = bean;
+                            LogUtil.i("start http request state - >" + Constant.SHOW_AD_STATE_DOWNLOAD);
+                        }
                     }
 
                     //发送广告状态
-                    HttpManager.doPostClickState(Constant.SHOW_AD_STATE_DOWNLOAD, appBean, new RequestJsonCallback() {
+                    HttpManager.doPostClickState(Constant.SHOW_AD_STATE_DOWNLOAD, appBean, new RequestCallback<String>() {
                         @Override
                         public void onFailed(String message) {
-                            LogUtil.e(message);
+                            LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_DOWNLOAD + "\ttip:" + "下载成功" + "\t->" + Constant.SEND_SERVICE_STATE_ERROR);
+                            LogUtil.e("错误代码:" + message);
                         }
 
                         @Override
                         public void onResponse(String response) {
-                            LogUtil.i("send success -> stateCode:" + 4 + "\tstateName:下载成功  ");
+                            LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_DOWNLOAD + "\ttip:" + "下载成功" + "\t->" + Constant.SEND_SERVICE_STATE_SUCCESS);
                         }
                     });
                 }

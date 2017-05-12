@@ -6,19 +6,15 @@ import com.jv.code.db.dao.AppDaoImpl;
 import com.jv.code.http.RequestHttp;
 import com.jv.code.http.base.BaseTask;
 import com.jv.code.http.base.RequestCallback;
-import com.jv.code.http.interfaces.RequestBeanCallback;
-import com.jv.code.manager.SDKManager;
 import com.jv.code.service.SDKService;
 import com.jv.code.utils.HttpUtil;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -29,7 +25,7 @@ import java.net.URL;
 
 public class AdBeanTask extends BaseTask<Void, Void, AdBean> {
 
-    public AdBeanTask(RequestBeanCallback requestCallback, RequestHttp.Builder builder) {
+    public AdBeanTask(RequestCallback<AdBean> requestCallback, RequestHttp.Builder builder) {
         super(requestCallback, builder);
     }
 

@@ -31,6 +31,10 @@ public interface Constant {
     String SHOW_TIME_COUNT_PREF_PREFIX = "show_times_pref_prefix";// 记录每天显示的常量 会在后面拼接 年+天
     String DOWNLOAD_PREF = "notification_downloads"; //下载任务通知键
 
+    String SEND_SERVICE_STATE = "向服务器推送状态";
+    String SEND_SERVICE_STATE_SUCCESS = "推送成功";
+    String SEND_SERVICE_STATE_ERROR = "推送失败";
+
     /**
      * 网络请求
      */

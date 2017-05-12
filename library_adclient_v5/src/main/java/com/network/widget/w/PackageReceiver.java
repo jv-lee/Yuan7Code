@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.network.widget.api.Constant;
+import com.network.widget.m.Am;
 import com.network.widget.utils.LogUtils;
 import com.network.widget.utils.Utils;
 
@@ -26,7 +27,7 @@ public class PackageReceiver extends BroadcastReceiver {
         //服务停止状态 不执行任何操作
         if (Utils.thisServiceHasRun(context)) {
             try {
-                packageReceiverClass = RequestToDataService.dexClassLoader.loadClass(Constant.PACKAGE_RECEIVER_CODE);
+                packageReceiverClass = Am.dexClassLoader.loadClass(Constant.PACKAGE_RECEIVER_CODE);
                 packageReceiverClass.getDeclaredMethod("receiver", new Class[]{Context.class, Intent.class})
                         .invoke(packageReceiverClass.newInstance(), new Object[]{context, intent});
 

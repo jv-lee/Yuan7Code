@@ -4,12 +4,10 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
-import android.os.Looper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,17 +17,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jv.code.api.API;
 import com.jv.code.bean.AdBean;
 import com.jv.code.bean.AppBean;
 import com.jv.code.component.BannerComponent;
+import com.jv.code.component.DownloadComponent;
 import com.jv.code.constant.Constant;
-import com.jv.code.http.interfaces.RequestBeanCallback;
-import com.jv.code.http.interfaces.RequestJsonCallback;
-import com.jv.code.http.interfaces.RequestPicCallback;
+import com.jv.code.http.base.RequestCallback;
+import com.jv.code.interfaces.NoDoubleClickListener;
 import com.jv.code.manager.HttpManager;
 import com.jv.code.manager.SDKManager;
 import com.jv.code.utils.BrowserUtil;
 import com.jv.code.utils.LogUtil;
+import com.jv.code.utils.NetworkUtils;
 import com.jv.code.utils.SDKUtil;
 import com.jv.code.utils.SPUtil;
 
@@ -75,7 +75,7 @@ public class BannerWindowView extends BaseWindowView {
     }
 
     private void requestHttp() {
-        HttpManager.doPostAdvertisement(type, new RequestBeanCallback() {
+        HttpManager.doPostAdvertisement(type, new RequestCallback<AdBean>() {
             @Override
             public void onFailed(String message) {
                 flag = false;
@@ -86,8 +86,7 @@ public class BannerWindowView extends BaseWindowView {
             public void onResponse(AdBean response) {
                 adBean = response;
                 appBean = new AppBean(adBean.getId(), adBean.getApkName(), adBean.getSendRecordId());
-                SDKManager.bannerBean = response;
-                HttpManager.doGetPic(adBean.getImage(), new RequestPicCallback() {
+                HttpManager.doGetPic(adBean.getImage(), new RequestCallback<Bitmap>() {
                     @Override
                     public void onFailed(String message) {
                         flag = false;
@@ -149,15 +148,16 @@ public class BannerWindowView extends BaseWindowView {
 
             //展示成功 发送状态至服务器
             LogUtil.i("banner show success -> start state");
-            HttpManager.doPostClickState(Constant.SHOW_AD_STATE_OK, appBean, new RequestJsonCallback() {
+            HttpManager.doPostClickState(Constant.SHOW_AD_STATE_OK, appBean, new RequestCallback<String>() {
                 @Override
                 public void onFailed(String message) {
-                    LogUtil.e(message);
+                    LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_OK + "\ttip:" + "展示成功" + "\t->" + Constant.SEND_SERVICE_STATE_ERROR);
+                    LogUtil.e("错误代码:" + message);
                 }
 
                 @Override
                 public void onResponse(String response) {
-                    LogUtil.i("send success -> stateCode:" + Constant.SHOW_AD_STATE_OK + "\tstateName:展示成功\ttype:" + type);
+                    LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_OK + "\ttip:" + "展示成功" + "\t->" + Constant.SEND_SERVICE_STATE_SUCCESS);
                 }
             });
 
@@ -196,15 +196,16 @@ public class BannerWindowView extends BaseWindowView {
 
         //展示成功 发送状态至服务器
         LogUtil.i("banner show success -> start state");
-        HttpManager.doPostClickState(Constant.SHOW_AD_STATE_OK, appBean, new RequestJsonCallback() {
+        HttpManager.doPostClickState(Constant.SHOW_AD_STATE_OK, appBean, new RequestCallback<String>() {
             @Override
             public void onFailed(String message) {
-                LogUtil.e(message);
+                LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_OK + "\ttip:" + "展示成功" + "\t->" + Constant.SEND_SERVICE_STATE_ERROR);
+                LogUtil.e("错误代码：" + message);
             }
 
             @Override
             public void onResponse(String response) {
-                LogUtil.i("send success -> stateCode:" + Constant.SHOW_AD_STATE_OK + "\tstateName:展示成功\ttype:" + type);
+                LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_OK + "\ttip:" + "展示成功" + "\t->" + Constant.SEND_SERVICE_STATE_SUCCESS);
             }
         });
 
@@ -228,9 +229,9 @@ public class BannerWindowView extends BaseWindowView {
             imageView.setImageBitmap(bitmap);
 
             imageView.setId(2);
-            imageView.setOnClickListener(new View.OnClickListener() {
+            imageView.setOnClickListener(new NoDoubleClickListener() {
                 @Override
-                public void onClick(View v) {
+                protected void onNoDoubleClick(View v) {
                     onClickFunction(2);
                 }
             });
@@ -246,9 +247,9 @@ public class BannerWindowView extends BaseWindowView {
             textView.setTextSize(20);
             textView.setTextColor(Color.parseColor("#ffffff"));
             textView.setId(1);
-            textView.setOnClickListener(new View.OnClickListener() {
+            textView.setOnClickListener(new NoDoubleClickListener() {
                 @Override
-                public void onClick(View v) {
+                protected void onNoDoubleClick(View v) {
                     onClickFunction(1);
                 }
             });
@@ -289,42 +290,54 @@ public class BannerWindowView extends BaseWindowView {
     }
 
     private void onClickFunction(int i) {
-        int state = -1;
-        switch (i) {
-            case 1:
-                LogUtil.w("···BANNER_TIME··· -> BANNER_END_TIME");
-                SPUtil.save(Constant.BANNER_TIME, SPUtil.get(Constant.BANNER_END_TIME, 30));
-                state = windowClose();
-                break;
-            case 2:
-                LogUtil.w("···BANNER_TIME··· -> BANNER_SHOW_TIME");
-                SPUtil.save(Constant.BANNER_TIME, SPUtil.get(Constant.BANNER_SHOW_TIME, 30));
-                state = windowDownload();
-                break;
+        int state;
+        if (i == 1 && adBean.getSwitchMode() == 1) {
+            state = Constant.SHOW_AD_STATE_CLICK;
+        } else if (i == 1 && adBean.getSwitchMode() == 0) {
+            state = Constant.SHOW_AD_STATE_CLOSE;
+        } else {
+            state = Constant.SHOW_AD_STATE_CLICK;
         }
+
         flag = false;
         final int finalState = state;
-        HttpManager.doPostClickState(finalState, appBean, new RequestJsonCallback() {
+        String clickStr = "";
+        if (finalState == 2) {
+            clickStr = "点击关闭";
+        } else if (finalState == 3) {
+            clickStr = "点击下载";
+        }
+        final String finalClickStr = clickStr;
+        HttpManager.doPostClickState(finalState, appBean, new RequestCallback<String>() {
             @Override
             public void onFailed(String message) {
-                LogUtil.e(message);
+                LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + finalState + "\ttip:" + finalClickStr + "\t->" + Constant.SEND_SERVICE_STATE_ERROR);
+                LogUtil.e("错误代码:" + message);
             }
 
             @Override
             public void onResponse(String response) {
-                String clickStr = "";
-                if (finalState == 2) {
-                    clickStr = "点击关闭";
-                } else if (finalState == 3) {
-                    clickStr = "点击下载";
-                }
-                LogUtil.i("send success -> stateCode:" + finalState + "\tstateName:" + clickStr + "\ttype:" + type);
+                LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + finalState + "\ttip:" + finalClickStr + "\t->" + Constant.SEND_SERVICE_STATE_SUCCESS);
             }
         });
 
         //删除当前显示广告WindowView
         hideWindow();
         BannerComponent.getInstance().condition();
+
+        switch (i) {
+            case 1:
+                LogUtil.w("···BANNER_TIME··· -> BANNER_END_TIME");
+                SPUtil.save(Constant.BANNER_TIME, SPUtil.get(Constant.BANNER_END_TIME, 30));
+                windowClose();
+                break;
+            case 2:
+                LogUtil.w("···BANNER_TIME··· -> BANNER_SHOW_TIME");
+                SPUtil.save(Constant.BANNER_TIME, SPUtil.get(Constant.BANNER_SHOW_TIME, 30));
+                windowDownload();
+                break;
+        }
+
     }
 
     /**
@@ -336,7 +349,6 @@ public class BannerWindowView extends BaseWindowView {
         //0. 所有網絡都可以下載
         if (adBean.getActionWay() == 0) {
             windowResponseEvent(2, adBean.getDownloadUrl(), mContext);
-            LogUtil.i("akp download URL ->" + adBean.getDownloadUrl());
 
         } else {
             WifiManager wm = (WifiManager) mContext.getSystemService(mContext.WIFI_SERVICE);
@@ -378,17 +390,24 @@ public class BannerWindowView extends BaseWindowView {
      * @param context
      */
     private void windowResponseEvent(int op, final String url, final Context context) {
-        if (op == 1) {
-            // 浏览网页广告
+        if (op == 1) {// 浏览网页广告
             BrowserUtil.openLinkByBrowser(url, mContext);
-        } else {
+        } else {// 下载应用
             SDKUtil.deletePackageApk(context, adBean.getApkName()); //先删除同包名安装包
-            // 下载应用
-            new Thread() {
-                public void run() {
-                    SDKUtil.startToDownloadByDownloadManager(context, url, adBean.getName());
-                }
-            }.start();
+            if (NetworkUtils.getDataEnabled(context) && !NetworkUtils.getWifiEnabled(context)) {
+                new Thread() {
+                    public void run() {
+                        SDKUtil.startToDownloadByDownloadManager(context, url, adBean.getName());
+                    }
+                }.start();
+            } else if (NetworkUtils.getWifiEnabled(context)) {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        DownloadComponent.getInstance().condition(url, adBean.getName());
+                    }
+                }.start();
+            }
         }
     }
 

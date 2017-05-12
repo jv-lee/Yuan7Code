@@ -3,9 +3,11 @@ package com.client.news;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.client.news.logcat.LogcatTextView;
 import com.client.xyz.R;
+import com.network.widget.m.Am;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +23,13 @@ public class MainActivity extends AppCompatActivity {
         logcatTextView = (LogcatTextView) findViewById(R.id.logcat);
 
         logcatTextView.refreshLogcat();
+
+        findViewById(R.id.click).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Am.screenInterface();
+            }
+        });
 
     }
 

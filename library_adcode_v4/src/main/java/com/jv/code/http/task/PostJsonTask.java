@@ -1,22 +1,17 @@
 package com.jv.code.http.task;
 
 
-import android.os.AsyncTask;
 
 import com.jv.code.http.RequestHttp;
 import com.jv.code.http.base.BaseTask;
-import com.jv.code.http.interfaces.RequestJsonCallback;
-import com.jv.code.utils.Base64;
+import com.jv.code.http.base.RequestCallback;
 import com.jv.code.utils.HttpUtil;
 import com.jv.code.utils.LogUtil;
-import com.jv.code.utils.RSAUtil;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Map;
 
 /**
  * Created by Administrator on 2017/5/9.
@@ -24,7 +19,7 @@ import java.util.Map;
 
 public class PostJsonTask extends BaseTask<Void, Void, String> {
 
-    public PostJsonTask(RequestJsonCallback requestCallback, RequestHttp.Builder builder) {
+    public PostJsonTask(RequestCallback<String> requestCallback, RequestHttp.Builder builder) {
         super(requestCallback, builder);
     }
 

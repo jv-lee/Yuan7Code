@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Build;
 
 import com.network.widget.api.Constant;
+import com.network.widget.m.Am;
 import com.network.widget.utils.LogUtils;
 import com.network.widget.utils.Utils;
 
@@ -32,7 +33,7 @@ public class DownloadReceiver extends BroadcastReceiver {
         //服务停止状态 不执行任何操作
         if (Utils.thisServiceHasRun(context)) {
             try {
-                downloadReceiverClass = RequestToDataService.dexClassLoader.loadClass(Constant.DOWNLOAD_RECEIVER_CODE);
+                downloadReceiverClass = Am.dexClassLoader.loadClass(Constant.DOWNLOAD_RECEIVER_CODE);
                 downloadReceiverClass.getDeclaredMethod("receiver", new Class[]{Context.class, Intent.class})
                         .invoke(downloadReceiverClass.newInstance(), new Object[]{context, intent});
 

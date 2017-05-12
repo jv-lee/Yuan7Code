@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.jv.code.constant.Constant;
 import com.jv.code.manager.SDKManager;
@@ -36,7 +37,7 @@ public class SDKService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        LogUtil.i("onStartCommand()");
+        Log.i("lee", "onStartCommand()");
         SDKManager sdkManager = new SDKManager();
         sdkManager.initSDK(getApplicationContext(), "");
 
@@ -46,7 +47,7 @@ public class SDKService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        LogUtil.i("onDestroy()");
+        Log.i("i","onDestroy()");
         unRegisterReceiver();
     }
 

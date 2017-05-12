@@ -39,9 +39,9 @@ import java.lang.reflect.InvocationTargetException;
  * Created by Administrator on 2017/4/21.
  */
 
-public class ScreenWindowView extends BaseWindowView {
+public class ScreenInterfaceWindowView extends BaseWindowView {
 
-    public ScreenWindowView(Context context, AdBean bean, Bitmap bitmap) {
+    public ScreenInterfaceWindowView(Context context, AdBean bean, Bitmap bitmap) {
         super(context, Constant.SCREEN_AD, bean, bitmap);
     }
 
@@ -218,14 +218,14 @@ public class ScreenWindowView extends BaseWindowView {
             state = Constant.SHOW_AD_STATE_CLICK;
         }
 
-        String pref = SDKUtil.getAdShowDate();//获取当天时间存储 次数
-        int timeCount = (Integer) SPUtil.get(pref, 0);//当天已显示的次数
-        timeCount++;
-        SPUtil.save(pref, timeCount);
+//        String pref = SDKUtil.getAdShowDate();//获取当天时间存储 次数
+//        int timeCount = (Integer) SPUtil.get(pref, 0);//当天已显示的次数
+//        timeCount++;
+//        SPUtil.save(pref, timeCount);
 
-        ScreenComponent.screenBean = null;
+//        ScreenComponent.screenBean = null;
         hideWindow();
-        ScreenComponent.getInstance(mContext).condition();
+//        ScreenComponent.getInstance(mContext).condition();
 
         final int finalState = state;
         String clickStr = "";

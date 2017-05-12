@@ -22,14 +22,12 @@ import java.net.URL;
 
 public class IPComponent extends Thread {
     private Context context;
-    private Handler handler;
 
     private String api = "http://1212.ip138.com/ic.asp";
     private String ip = "http://restapi.amap.com/v3/ip?key=5be80400c33d4359ec265304457ff96f&ip=";
 
-    public IPComponent(Context context, Handler handler) {
+    public IPComponent(Context context) {
         this.context = context;
-        this.handler = handler;
     }
 
     @Override
@@ -91,7 +89,7 @@ public class IPComponent extends Thread {
                 SPUtil.save(Constant.PROVINCE, province);
                 SPUtil.save(Constant.CITY, city);
 
-                LogUtil.i(province + city);
+                LogUtil.i(province +","+ city);
             }
 
         } catch (IOException e) {

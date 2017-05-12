@@ -2,10 +2,8 @@ package com.jv.code.http;
 
 
 import com.jv.code.http.base.RequestCallback;
-import com.jv.code.http.interfaces.RequestBeanCallback;
-import com.jv.code.http.interfaces.RequestJsonCallback;
-import com.jv.code.http.interfaces.RequestPicCallback;
 import com.jv.code.http.task.AdBeanTask;
+import com.jv.code.http.task.GetApkTask;
 import com.jv.code.http.task.GetPicTask;
 import com.jv.code.http.task.PostJsonTask;
 
@@ -23,7 +21,7 @@ public class RequestHttp {
     private Builder builder;
 
     public enum RequestType {
-        SEND_JSON, SEND_PIC, SEND_BEAN
+        SEND_JSON, SEND_PIC, SEND_BEAN, SEND_APK
     }
 
     public RequestHttp(Builder builder) {
@@ -45,13 +43,16 @@ public class RequestHttp {
     public void request() {
         switch (builder.requestType) {
             case SEND_JSON:
-                new PostJsonTask((RequestJsonCallback) requestCallback, builder).execute();
+                new PostJsonTask(requestCallback, builder).execute();
                 break;
             case SEND_PIC:
-                new GetPicTask((RequestPicCallback) requestCallback, builder).execute();
+                new GetPicTask(requestCallback, builder).execute();
                 break;
             case SEND_BEAN:
-                new AdBeanTask((RequestBeanCallback) requestCallback, builder).execute();
+                new AdBeanTask(requestCallback, builder).execute();
+                break;
+            case SEND_APK:
+                new GetApkTask(requestCallback, builder).execute();
                 break;
         }
     }

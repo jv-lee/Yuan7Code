@@ -9,7 +9,7 @@ import com.jv.code.bean.AppBean;
 import com.jv.code.constant.Constant;
 import com.jv.code.db.dao.AppDaoImpl;
 import com.jv.code.db.dao.IAppDao;
-import com.jv.code.http.interfaces.RequestJsonCallback;
+import com.jv.code.http.base.RequestCallback;
 import com.jv.code.manager.HttpManager;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;
@@ -44,15 +44,16 @@ public class PackageReceiver {
                             LogUtil.i("start http request state - >" + Constant.SHOW_AD_STATE_ADD);
                             dao.deleteByPackageName(bean.getPackageName());
                             SDKUtil.deletePackageApk(context, apkName);
-                            HttpManager.doPostClickState(Constant.SHOW_AD_STATE_ADD, bean, new RequestJsonCallback() {
+                            HttpManager.doPostClickState(Constant.SHOW_AD_STATE_ADD, bean, new RequestCallback<String>() {
                                 @Override
                                 public void onFailed(String message) {
-                                    LogUtil.e(message);
+                                    LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_ADD + "\ttip:" + "安装成功" + "\t->" + Constant.SEND_SERVICE_STATE_ERROR);
+                                    LogUtil.e("错误代码:" + message);
                                 }
 
                                 @Override
                                 public void onResponse(String response) {
-                                    LogUtil.i("send success -> stateCode:" + 5 + "\tstateName:安装成功  ");
+                                    LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_ADD + "\ttip:" + "安装成功" + "\t->" + Constant.SEND_SERVICE_STATE_SUCCESS);
                                 }
                             });
                             return;

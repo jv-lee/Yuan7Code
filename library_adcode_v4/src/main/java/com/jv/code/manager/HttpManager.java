@@ -103,7 +103,26 @@ public class HttpManager {
         parMap.put(Constant.UPDATE_IMSI, SDKUtil.getIMSI());
         parMap.put("sendRecordId", bean.getSendRecordId());
         parMap.put("state", state);
-        LogUtil.w("URL address ->" + API.ADVERTISMENT_STATE + "");
+
+        String stateStr = "";
+        switch (state) {
+            case 1:
+                stateStr = "展示成功";
+                break;
+            case 2:
+                stateStr = "点击关闭";
+                break;
+            case 3:
+                stateStr = "点击下载";
+                break;
+            case 4:
+                stateStr = "下载成功";
+                break;
+            case 5:
+                stateStr = "安装成功";
+                break;
+        }
+        LogUtil.w("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + state + "\ttip:" + stateStr + "\t" + Constant.SEND_SERVICE_STATE);
 
         RequestHttp http = new RequestHttp.Builder()
                 .withApi(API.ADVERTISMENT_STATE)
@@ -144,6 +163,19 @@ public class HttpManager {
                 .withRequestMethod("GET")
                 .withTime(Constant.CONNECT_TIME_OUT, Constant.READ_TIME_OUT)
                 .withRequestType(RequestHttp.RequestType.SEND_PIC)
+                .withResponseCallback(requestCallback)
+                .build();
+        http.request();
+    }
+
+    public static void doGetApk(String url, RequestCallback requestCallback) {
+        LogUtil.w("URL address -> " + url);
+        RequestHttp http = new RequestHttp.Builder()
+                .withApi(url)
+                .withHasSingData(false)
+                .withRequestMethod("GET")
+                .withTime(Constant.CONNECT_TIME_OUT, Constant.READ_TIME_OUT)
+                .withRequestType(RequestHttp.RequestType.SEND_APK)
                 .withResponseCallback(requestCallback)
                 .build();
         http.request();

@@ -4,7 +4,6 @@ package com.jv.code.http.base;
 import android.os.AsyncTask;
 
 import com.jv.code.http.RequestHttp;
-import com.jv.code.http.interfaces.RequestJsonCallback;
 
 import java.io.BufferedReader;
 import java.util.Map;

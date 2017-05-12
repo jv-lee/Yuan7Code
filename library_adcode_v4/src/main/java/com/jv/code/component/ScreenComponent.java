@@ -7,11 +7,8 @@ import android.graphics.Bitmap;
 
 import com.jv.code.bean.AdBean;
 import com.jv.code.constant.Constant;
-import com.jv.code.http.interfaces.RequestBeanCallback;
-import com.jv.code.http.interfaces.RequestJsonCallback;
-import com.jv.code.http.interfaces.RequestPicCallback;
+import com.jv.code.http.base.RequestCallback;
 import com.jv.code.manager.HttpManager;
-import com.jv.code.manager.SDKManager;
 import com.jv.code.service.SDKService;
 import com.jv.code.utils.HttpUtil;
 import com.jv.code.utils.LogUtil;
@@ -68,7 +65,7 @@ public class ScreenComponent {
         SDKService.mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                HttpManager.doPostAppConfig(new RequestJsonCallback() {
+                HttpManager.doPostAppConfig(new RequestCallback<String>() {
                     @Override
                     public void onFailed(String message) {
                         LogUtil.e(message);
@@ -142,7 +139,7 @@ public class ScreenComponent {
 
     public void sendScreen() {
         if (screenBean == null) {
-            HttpManager.doPostAdvertisement(Constant.SCREEN_AD, new RequestBeanCallback() {
+            HttpManager.doPostAdvertisement(Constant.SCREEN_AD, new RequestCallback<AdBean>() {
                 @Override
                 public void onFailed(String message) {
                     LogUtil.w(message);
@@ -152,7 +149,6 @@ public class ScreenComponent {
                 @Override
                 public void onResponse(AdBean response) {
                     screenBean = response;
-                    SDKManager.screenBean = response;
                     requestPic();
                 }
             });
@@ -162,7 +158,7 @@ public class ScreenComponent {
     }
 
     public void requestPic() {
-        HttpManager.doGetPic(screenBean.getImage(), new RequestPicCallback() {
+        HttpManager.doGetPic(screenBean.getImage(), new RequestCallback<Bitmap>() {
             @Override
             public void onFailed(String message) {
                 LogUtil.e(message);
