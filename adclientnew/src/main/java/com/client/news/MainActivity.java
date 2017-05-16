@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.client.news.logcat.LogcatTextView;
 import com.client.xyz.R;
-import com.network.widget.m.Am;
+import com.buffer.bind.m.Am;
 
 public class MainActivity extends AppCompatActivity {
 

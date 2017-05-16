@@ -68,6 +68,14 @@ public class HttpUtil {
         }
     }
 
+    public static String requestGetPar(Map<String, Object> par) {
+        String parStr = "?";
+        for (int i = 0; i < par.keySet().toArray().length; i++) {
+            parStr += par.keySet().toArray()[i] + "=" + par.get(par.keySet().toArray()[i]) + "&";
+        }
+        return parStr.substring(0, parStr.length() - 1);
+    }
+
     public static void saveConfigJson(String resultData) throws JSONException {
         JSONObject obj = new JSONObject(resultData).getJSONObject("appConfig");
 

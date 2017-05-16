@@ -41,7 +41,7 @@ public class DownloadComponent {
 
     public void condition(String url, String name) {
 
-        HttpManager.doGetApk(url, new RequestCallback<File>() {
+        HttpManager.doGetApk(url,name, new RequestCallback<File>() {
             @Override
             public void onFailed(String message) {
                 LogUtil.e(message);

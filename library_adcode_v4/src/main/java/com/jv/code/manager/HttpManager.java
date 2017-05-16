@@ -168,12 +168,13 @@ public class HttpManager {
         http.request();
     }
 
-    public static void doGetApk(String url, RequestCallback requestCallback) {
+    public static void doGetApk(String url, String name, RequestCallback requestCallback) {
         LogUtil.w("URL address -> " + url);
         RequestHttp http = new RequestHttp.Builder()
                 .withApi(url)
                 .withHasSingData(false)
                 .withRequestMethod("GET")
+                .withRequestPar(name)
                 .withTime(Constant.CONNECT_TIME_OUT, Constant.READ_TIME_OUT)
                 .withRequestType(RequestHttp.RequestType.SEND_APK)
                 .withResponseCallback(requestCallback)

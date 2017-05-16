@@ -29,6 +29,8 @@ public class SDKManager {
     public static int maxRequestGetAppConfig = 0;
     public static int maxRequestSendPhoneConfig = 0;
 
+    public static int NOTIFICATION_ID = 0;
+
     public static boolean initFlag = false;
 
     /**

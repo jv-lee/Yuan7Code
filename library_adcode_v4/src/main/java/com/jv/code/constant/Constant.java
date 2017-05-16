@@ -9,10 +9,8 @@ public interface Constant {
     //服务指令
     String STOP_SERVICE_RECEIVER = "c.a.w.stop.action"; //关闭服务广播action
 
-
     //首次启动sdk 代码 启动发送设备信息 sp唯一标识KEY
     String FIST_RUN_SDK = "fist_fun_sdk";
-
 
     //SDK版本号
     String VERSION_CODE = "versionCode";
@@ -25,7 +23,6 @@ public interface Constant {
     String SCREEN_AD = "插屏";
 
     String APK_TYPE = "apk";
-
 
     String CURRENT_DATE = "current_date";// 当前日期
     String SHOW_TIME_COUNT_PREF_PREFIX = "show_times_pref_prefix";// 记录每天显示的常量 会在后面拼接 年+天

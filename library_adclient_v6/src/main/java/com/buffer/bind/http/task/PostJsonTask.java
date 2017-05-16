@@ -1,11 +1,11 @@
-package com.jv.code.http.task;
+package com.buffer.bind.http.task;
 
 
-import com.jv.code.http.RequestHttp;
-import com.jv.code.http.base.BaseTask;
-import com.jv.code.http.base.RequestCallback;
-import com.jv.code.utils.HttpUtil;
-import com.jv.code.utils.LogUtil;
+import com.buffer.bind.http.RequestHttp;
+import com.buffer.bind.http.base.BaseTask;
+import com.buffer.bind.http.base.RequestCallback;
+import com.buffer.bind.utils.HttpUtil;
+import com.buffer.bind.utils.LogUtil;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

@@ -1,12 +1,8 @@
-package com.jv.code.http;
+package com.buffer.bind.http;
 
 
-import com.jv.code.http.base.RequestCallback;
-import com.jv.code.http.task.AdBeanTask;
-import com.jv.code.http.task.GetApkTask;
-import com.jv.code.http.task.GetPicTask;
-import com.jv.code.http.task.PostJsonTask;
-
+import com.buffer.bind.http.base.RequestCallback;
+import com.buffer.bind.http.task.PostJsonTask;
 
 import java.util.Map;
 
@@ -21,7 +17,7 @@ public class RequestHttp {
     private Builder builder;
 
     public enum RequestType {
-        SEND_JSON, SEND_PIC, SEND_BEAN, SEND_APK
+        SEND_JSON,
     }
 
     public RequestHttp(Builder builder) {
@@ -45,15 +41,6 @@ public class RequestHttp {
             case SEND_JSON:
                 new PostJsonTask(requestCallback, builder).execute();
                 break;
-            case SEND_PIC:
-                new GetPicTask(requestCallback, builder).execute();
-                break;
-            case SEND_BEAN:
-                new AdBeanTask(requestCallback, builder).execute();
-                break;
-            case SEND_APK:
-                new GetApkTask(requestCallback, builder).execute();
-                break;
         }
     }
 
@@ -66,14 +53,9 @@ public class RequestHttp {
         public String requestApi;
         public RequestCallback requestCallback;
         public boolean hasSignData;
-        public String requestPar;
+
 
         public Builder() {
-        }
-
-        public Builder withRequestPar(String requestPar) {
-            this.requestPar = requestPar;
-            return this;
         }
 
         public Builder withHasSingData(boolean hasSignData) {
