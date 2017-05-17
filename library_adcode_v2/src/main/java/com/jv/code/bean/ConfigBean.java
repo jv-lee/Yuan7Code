@@ -26,6 +26,7 @@ public class ConfigBean implements Serializable {
     private int intervalTime;
     private int tipModel;
 
+
     public ConfigBean() {
     }
 

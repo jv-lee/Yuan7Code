@@ -312,7 +312,7 @@ public class AddressUtil {
         if (addressId == 898) {
             return "海南省";
         }
-        LogUtil.w(addressId + "");
+//        LogUtil.w(addressId + "");
         int addressIds = Integer.parseInt(String.valueOf(addressId).substring(0, 2));
         switch (addressIds) {
             case 10:

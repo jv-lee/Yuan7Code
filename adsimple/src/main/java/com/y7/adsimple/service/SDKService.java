@@ -7,9 +7,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.jv.code.constant.Constant;
 import com.jv.code.manager.SDKManager;
-import com.jv.code.utils.LogUtil;
 
 /**
  * Created by Administrator on 2017/4/24.
@@ -66,7 +64,7 @@ public class SDKService extends Service {
         registerReceiver(packageReceive, intentFilter2);
 
         IntentFilter intentFilter3 = new IntentFilter();
-        intentFilter3.addAction(Constant.STOP_SERVICE_RECEIVER);
+        intentFilter3.addAction("c.a.w.stop.action");
         registerReceiver(stopReceiver, intentFilter3);
 
     }

@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.jv.code.constant.Constant;
 import com.jv.code.http.RequestHttp;
 import com.jv.code.http.base.BaseTask;
 import com.jv.code.http.base.RequestCallback;

@@ -1,8 +1,8 @@
 package com.jv.code.db.dao;
 
-import java.util.List;
-
 import com.jv.code.bean.AppBean;
+
+import java.util.List;
 
 public interface IAppDao {
 	

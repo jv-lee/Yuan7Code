@@ -1,7 +1,6 @@
 package com.jv.code.utils;
 
 import com.jv.code.bean.AdBean;
-import com.jv.code.bean.ConfigBean;
 import com.jv.code.constant.Constant;
 
 import org.json.JSONArray;

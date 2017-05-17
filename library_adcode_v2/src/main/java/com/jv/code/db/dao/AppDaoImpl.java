@@ -1,13 +1,13 @@
 package com.jv.code.db.dao;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Context;
+import android.database.Cursor;
 
 import com.jv.code.bean.AppBean;
 import com.jv.code.db.DBHelper;
 
-import android.content.Context;
-import android.database.Cursor;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AppDaoImpl implements IAppDao{
 	

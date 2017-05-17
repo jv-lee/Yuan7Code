@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 
-import com.jv.code.manager.SDKManager;
-import com.jv.code.utils.LogUtil;
 
 /**
  * Created by Administrator on 2017/4/24.

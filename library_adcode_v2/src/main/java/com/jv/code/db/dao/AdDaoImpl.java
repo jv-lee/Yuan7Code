@@ -1,12 +1,12 @@
 package com.jv.code.db.dao;
 
-import java.util.List;
+import android.content.Context;
+import android.database.Cursor;
 
 import com.jv.code.bean.AdBean;
 import com.jv.code.db.DBHelper;
 
-import android.content.Context;
-import android.database.Cursor;
+import java.util.List;
 
 
 /**
@@ -58,11 +58,12 @@ public class AdDaoImpl implements IAdDao {
     public AdBean findByCurr(int type) {//where showType = ?
         Cursor cursor = db.getReadableDatabase().rawQuery("select * from advertisements where showType = ? limit 1", new String[]{type + ""});
 
-        AdBean bean = new AdBean();
+        AdBean bean = null;
 
         if (cursor != null) {
 
             while (cursor.moveToNext()) {
+                bean = new AdBean();
                 bean.setNoid(cursor.getInt(cursor.getColumnIndex("noid")));
                 bean.setId(cursor.getString(cursor.getColumnIndex("id")));
                 bean.setName(cursor.getString(cursor.getColumnIndex("name")));

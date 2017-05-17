@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.jv.code.api.API;
 import com.jv.code.bean.AdBean;
 import com.jv.code.component.DownloadComponent;
-import com.jv.code.component.ScreenComponent;
 import com.jv.code.constant.Constant;
 import com.jv.code.http.base.RequestCallback;
 import com.jv.code.interfaces.NoDoubleClickListener;

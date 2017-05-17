@@ -31,7 +31,6 @@ public class ScreenInterfaceComponent {
             @Override
             public void onFailed(String message) {
                 LogUtil.w(message);
-                condition(context);
             }
 
             @Override
@@ -40,7 +39,6 @@ public class ScreenInterfaceComponent {
                     @Override
                     public void onFailed(String message) {
                         LogUtil.e(message);
-                        condition(context);
                     }
 
                     @Override

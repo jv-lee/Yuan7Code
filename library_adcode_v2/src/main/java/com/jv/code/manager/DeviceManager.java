@@ -1,11 +1,10 @@
 package com.jv.code.manager;
 
-import com.jv.code.utils.LogUtil;
-
 import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 
+import com.jv.code.utils.LogUtil;
 
 
 /**

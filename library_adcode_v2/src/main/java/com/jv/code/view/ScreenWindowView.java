@@ -1,96 +1,184 @@
 package com.jv.code.view;
 
-import com.jv.code.constant.Constant;
-import com.jv.code.db.dao.AdDaoImpl;
-import com.jv.code.manager.SDKManager;
-import com.jv.code.net.HttpClickState;
-import com.jv.code.service.SDKService;
-import com.jv.code.utils.BrowserUtils;
-import com.jv.code.utils.ImageUtils;
-import com.jv.code.utils.LogUtil;
-import com.jv.code.utils.SPHelper;
-import com.jv.code.utils.Util;
-
-import android.app.ActionBar.LayoutParams;
+import android.app.ActionBar;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.net.wifi.WifiManager;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ScreenWindowView {
+import com.jv.code.api.API;
+import com.jv.code.bean.AdBean;
+import com.jv.code.component.DownloadComponent;
+import com.jv.code.component.ScreenComponent;
+import com.jv.code.constant.Constant;
+import com.jv.code.http.base.RequestCallback;
+import com.jv.code.interfaces.NoDoubleClickListener;
+import com.jv.code.manager.HttpManager;
+import com.jv.code.manager.SDKManager;
+import com.jv.code.utils.BrowserUtil;
+import com.jv.code.utils.ImageUtil;
+import com.jv.code.utils.LogUtil;
+import com.jv.code.utils.NetworkUtils;
+import com.jv.code.utils.SDKUtil;
+import com.jv.code.utils.SPUtil;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 
-    private Context mContext;
-    private WindowManager.LayoutParams wmLayoutParams;
-    private View windowView;
+/**
+ * Created by Administrator on 2017/4/21.
+ */
 
-    public ScreenWindowView(Context context) {
-        this.mContext = context;
-        WindowInit();
+public class ScreenWindowView extends BaseWindowView {
+
+    public ScreenWindowView(Context context, AdBean bean, Bitmap bitmap) {
+        super(context, Constant.SCREEN_AD, bean, bitmap);
     }
 
-    public void sendWindow() {
-        Looper.prepare();
-        SDKManager.windowManager.addView(windowView, wmLayoutParams);
-
-        //展示成功 发送状态至服务器
-        new HttpClickState(mContext, Constant.SHOW_AD_STATE_OK).start();
-        Looper.loop();
+    @Override
+    public void condition() {
+        initWindow();
     }
 
-    @SuppressWarnings("deprecation")
-    public void WindowInit() {
-        int height = (int) SDKManager.windowManager.getDefaultDisplay().getHeight();
-        int width = (int) SDKManager.windowManager.getDefaultDisplay().getWidth();
-        wmLayoutParams = new WindowManager.LayoutParams();
-        wmLayoutParams.type = WindowManager.LayoutParams.TYPE_TOAST; //系统弹框
-        wmLayoutParams.format = PixelFormat.TRANSLUCENT; //支持透明
-        wmLayoutParams.flags = WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN;
+    @Override
+    protected void initToastView() {
+//        Looper.prepare();
+        toast = new Toast(mContext);
+        toast.setView(createView());
+        try {
+            Field tnField = toast.getClass().getDeclaredField("mTN");
+            tnField.setAccessible(true);
+            mTN = tnField.get(toast);
+            show = mTN.getClass().getMethod("show");
+            hide = mTN.getClass().getMethod("hide");
+
+            WindowManager windowManager = SDKManager.windowManager;
+            int height = windowManager.getDefaultDisplay().getHeight();
+            int width = windowManager.getDefaultDisplay().getWidth();
+
+
+            Field tnParamsField = mTN.getClass().getDeclaredField("mParams");
+            tnParamsField.setAccessible(true);
+            wmParams = (WindowManager.LayoutParams) tnParamsField.get(mTN);
+
+            //普通插屏广告显示
+            if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) { //竖屏
+                wmParams.height = (int) (height * 0.4);
+                wmParams.width = (int) (width * 0.9);
+            } else if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) { //横屏
+                wmParams.height = (int) (height * 0.70);
+                wmParams.width = (int) (width * 0.7);
+            }
+            wmParams.flags = WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN; //获取全屏焦点 首先执行广告点击
+            toast.setGravity(Gravity.CENTER, 0, 0);
+
+            /**设置动画*/
+//            wmParams.windowAnimations = animations;
+
+            /**调用tn.show()之前一定要先设置mNextView*/
+            Field tnNextViewField = mTN.getClass().getDeclaredField("mNextView");
+            tnNextViewField.setAccessible(true);
+            tnNextViewField.set(mTN, toast.getView());
+
+            //展示成功 发送状态至服务器
+            LogUtil.i("screen show success -> start state");
+            HttpManager.doPostClickState(Constant.SHOW_AD_STATE_OK, appBean, new RequestCallback<String>() {
+                @Override
+                public void onFailed(String message) {
+                    LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_OK + "\ttip:" + "展示成功" + "\t->" + Constant.SEND_SERVICE_STATE_ERROR);
+                    LogUtil.e("错误代码:" + message);
+                }
+
+                @Override
+                public void onResponse(String response) {
+                    LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_OK + "\ttip:" + "展示成功" + "\t->" + Constant.SEND_SERVICE_STATE_SUCCESS);
+                }
+            });
+            show.invoke(mTN);
+//            Looper.loop();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtil.e(e.getMessage());
+        }
+    }
+
+    @Override
+    protected void initWindowView() {
+
+        int height = SDKManager.windowManager.getDefaultDisplay().getHeight();
+        int width = SDKManager.windowManager.getDefaultDisplay().getWidth();
+        wmParams = new WindowManager.LayoutParams();
+        wmParams.type = WindowManager.LayoutParams.TYPE_TOAST; //系统弹框
+        wmParams.format = PixelFormat.TRANSLUCENT; //支持透明
+        wmParams.flags = WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN;
 
         //普通插屏广告显示
         if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) { //竖屏
-            wmLayoutParams.height = (int) (height * 0.4);
-            wmLayoutParams.width = (int) (width * 0.9);
+            wmParams.height = (int) (height * 0.4);
+            wmParams.width = (int) (width * 0.9);
         } else if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) { //横屏
-            wmLayoutParams.height = (int) (height * 0.70);
-            wmLayoutParams.width = (int) (width * 0.7);
+            wmParams.height = (int) (height * 0.70);
+            wmParams.width = (int) (width * 0.7);
         }
-        wmLayoutParams.gravity = Gravity.CENTER;
-        windowView = createView(mContext);
+        wmParams.gravity = Gravity.CENTER;
+        windowView = createView();
+
+//        Looper.prepare();
+        //展示成功 发送状态至服务器
+        LogUtil.i("screen show success -> start state");
+        HttpManager.doPostClickState(Constant.SHOW_AD_STATE_OK, appBean, new RequestCallback<String>() {
+            @Override
+            public void onFailed(String message) {
+                LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_OK + "\ttip:" + "展示成功" + "\t->" + Constant.SEND_SERVICE_STATE_ERROR);
+                LogUtil.e("错误代码:" + message);
+            }
+
+            @Override
+            public void onResponse(String response) {
+                LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_OK + "\ttip:" + "展示成功" + "\t->" + Constant.SEND_SERVICE_STATE_SUCCESS);
+            }
+        });
+        SDKManager.windowManager.addView(windowView, wmParams);
+//        Looper.loop();
+
     }
 
-    public View createView(Context context) {
+    @Override
+    protected View createView() {
         try {
             //创建父容器 RelativeLayout
-            RelativeLayout background = new RelativeLayout(context);
+            RelativeLayout background = new RelativeLayout(mContext);
             background.setLayoutParams(new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT));
 
             //设置加载广告图片的ImageView
-            ImageView imageView = new ImageView(context);
-            imageView.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+            ImageView imageView = new ImageView(mContext);
+            imageView.setLayoutParams(new RelativeLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT));
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            imageView.setImageBitmap(ImageUtils.toRoundCornerImage(SDKManager.screenIcon, 10));
+            imageView.setImageBitmap(ImageUtil.toRoundCornerImage(bitmap, 10));
 
             imageView.setId(2);
-            imageView.setOnClickListener(onClickListener);
+            imageView.setOnClickListener(new NoDoubleClickListener() {
+                @Override
+                protected void onNoDoubleClick(View v) {
+                    onClickFunction(2);
+                }
+            });
 
             //设置Close 关闭TextView
-            TextView textView = new TextView(context);
+            TextView textView = new TextView(mContext);
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             textView.setLayoutParams(layoutParams);
@@ -100,92 +188,118 @@ public class ScreenWindowView {
             textView.setTextSize(20);
             textView.setTextColor(Color.parseColor("#ffffff"));
             textView.setId(1);
-            textView.setOnClickListener(onClickListener);
+            textView.setOnClickListener(new NoDoubleClickListener() {
+                @Override
+                protected void onNoDoubleClick(View v) {
+                    onClickFunction(1);
+                }
+            });
 
 
             //将控件添加至 父容器中
             background.addView(imageView);
             background.addView(textView);
-
+            LogUtil.i("createView - end " + type);
             return background;
         } catch (Exception e) {
-            LogUtil.i("view 出现异常:" + e);
+            LogUtil.e("view 出现异常:" + e);
         }
-
+        LogUtil.e("createView - null");
         return null;
     }
 
-    OnClickListener onClickListener = new OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-
-            clickState(v.getId(), mContext);
-
+    private void onClickFunction(int i) {
+        int state;
+        if (i == 1 && adBean.getSwitchMode() == 1) {
+            state = Constant.SHOW_AD_STATE_CLICK;
+        } else if (i == 1 && adBean.getSwitchMode() == 0) {
+            state = Constant.SHOW_AD_STATE_CLOSE;
+        } else {
+            state = Constant.SHOW_AD_STATE_CLICK;
         }
-    };
 
-    //点击监听 调用逻辑函数
-    public void clickState(int id, Context context) {
-        int state = -1;
-        switch (id) {
+        String pref = SDKUtil.getAdShowDate();//获取当天时间存储 次数
+        int timeCount = (Integer) SPUtil.get(pref, 0);//当天已显示的次数
+        timeCount++;
+        SPUtil.save(pref, timeCount);
+
+        ScreenComponent.screenBean = null;
+        hideWindow();
+        ScreenComponent.getInstance(mContext).condition();
+
+        final int finalState = state;
+        String clickStr = "";
+        if (finalState == 2) {
+            clickStr = "点击关闭";
+        } else if (finalState == 3) {
+            clickStr = "点击下载";
+        }
+        final String finalClickStr = clickStr;
+        HttpManager.doPostClickState(finalState, appBean, new RequestCallback<String>() {
+            @Override
+            public void onFailed(String message) {
+                LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + finalState + "\ttip:" + finalClickStr + "\t->" + Constant.SEND_SERVICE_STATE_ERROR);
+                LogUtil.e("错误代码:" + message);
+            }
+
+            @Override
+            public void onResponse(String response) {
+                LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + finalState + "\ttip:" + finalClickStr + "\t->" + Constant.SEND_SERVICE_STATE_SUCCESS);
+            }
+        });
+        switch (i) {
             case 1:
                 LogUtil.w("···SCREEN_TIME··· -> SCREEN_END_TIME");
-                SPHelper.save(Constant.SCREEN_TIME, SPHelper.get(Constant.SCREEN_END_TIME, 30));
-                state = windowClose();
+                SPUtil.save(Constant.SCREEN_TIME, SPUtil.get(Constant.SCREEN_END_TIME, 30));
+                windowClose();
                 break;
             case 2:
                 LogUtil.w("···SCREEN_TIME··· -> SCREEN_SHOW_TIME");
-                SPHelper.save(Constant.SCREEN_TIME, SPHelper.get(Constant.SCREEN_SHOW_TIME, 30));
-                state = windowDowload(context);
+                SPUtil.save(Constant.SCREEN_TIME, SPUtil.get(Constant.SCREEN_SHOW_TIME, 30));
+                windowDowload();
                 break;
         }
+    }
 
-        //获取当天时间存储 次数
-        String pref = Util.getAdShowDate();
 
-        //当天已显示的次数
-        int timeCount = (Integer) SPHelper.get(pref, 0);
-        timeCount++;
-        SPHelper.save(pref, timeCount);
+    @Override
+    protected void hideToastView() {
+        try {
+            hide.invoke(mTN);
+            toast = null;
+        } catch (InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+            LogUtil.e(e.getMessage());
+        }
+    }
 
-        new AdDaoImpl(mContext).delete(SDKManager.screenBean.getNoid()); //获取后删除当前广告
-        new HttpClickState(mContext, state).start(); //发送点击状态
-
+    @Override
+    protected void hideWindowView() {
         //删除当前显示广告WindowView
         if (windowView.getParent() != null) {
             SDKManager.windowManager.removeView(windowView);
         }
-        mContext.sendBroadcast(new Intent(Constant.SEND_SCREEN));
     }
 
     /**
      * 点击广告窗口执行下载apk逻辑
-     *
-     * @param context
      */
     @SuppressWarnings("static-access")
-    private int windowDowload(Context context) {
+    private int windowDowload() {
 
         //0. 所有網絡都可以下載
-        if (SDKManager.screenBean.getActionWay() == 0) {
-            windowResponseEvent(2, SDKManager.screenBean.getDownloadUrl(), context);
-            LogUtil.i("akp download URL ->" + SDKManager.screenBean.getDownloadUrl());
-            SDKManager.PackageAddState = true; //当前为下載后展示状态
+        if (adBean.getActionWay() == 0) {
+            windowResponseEvent(2, adBean.getDownloadUrl(), mContext);
 
         } else {
             WifiManager wm = (WifiManager) mContext.getSystemService(mContext.WIFI_SERVICE);
             //1. WIFI下才可以下載
             if (wm.isWifiEnabled()) {
-
-                LogUtil.i("akp download URL ->" + SDKManager.screenBean.getDownloadUrl());
-                windowResponseEvent(2, SDKManager.screenBean.getDownloadUrl(), context);
-                SDKManager.PackageAddState = true; //当前为下載后展示状态
+                LogUtil.i("akp download URL ->" + adBean.getDownloadUrl());
+                windowResponseEvent(2, adBean.getDownloadUrl(), mContext);
                 //非WIFI不可下載
             } else {
-
                 Toast.makeText(mContext, "无法下载，非WIFI状态", Toast.LENGTH_SHORT).show();
-                SDKManager.PackageAddState = false; //当前为普通展示状态
             }
         }
         return Constant.SHOW_AD_STATE_CLICK;
@@ -198,12 +312,11 @@ public class ScreenWindowView {
      */
     private int windowClose() {
         //0位直接關閉
-        if (SDKManager.screenBean.getSwitchMode() == 0) {
-            SDKManager.PackageAddState = false; //当前为普通展示状态
+        if (adBean.getSwitchMode() == 0) {
             return Constant.SHOW_AD_STATE_CLOSE;
             //1.為直接下
-        } else if (SDKManager.screenBean.getSwitchMode() == 1) {
-            windowDowload(mContext);
+        } else if (adBean.getSwitchMode() == 1) {
+            windowDowload();
             return Constant.SHOW_AD_STATE_CLICK;
         }
         return Constant.SHOW_AD_STATE_CLOSE;
@@ -217,18 +330,24 @@ public class ScreenWindowView {
      * @param context
      */
     private void windowResponseEvent(int op, final String url, final Context context) {
-        if (op == 1) {
-            // 浏览网页广告
-            BrowserUtils.openLinkByBrowser(url, mContext);
-        } else {
-            // 下载应用
-            new Thread() {
-                public void run() {
-                    Util.startToDownloadByDownloadManager(context, url, SDKManager.screenBean.getName());
-                }
-
-                ;
-            }.start();
+        if (op == 1) {// 浏览网页广告
+            BrowserUtil.openLinkByBrowser(url, mContext);
+        } else {// 下载应用
+            SDKUtil.deletePackageApk(context, adBean.getApkName()); //先删除同包名安装包
+            if (NetworkUtils.getDataEnabled(context) && !NetworkUtils.getWifiEnabled(context)) {
+                new Thread() {
+                    public void run() {
+                        SDKUtil.startToDownloadByDownloadManager(context, url, adBean.getName());
+                    }
+                }.start();
+            } else if (NetworkUtils.getWifiEnabled(context)) {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        DownloadComponent.getInstance().condition(url, adBean.getName());
+                    }
+                }.start();
+            }
         }
     }
 

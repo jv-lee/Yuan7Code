@@ -7,7 +7,6 @@ import com.jv.code.http.task.GetApkTask;
 import com.jv.code.http.task.GetPicTask;
 import com.jv.code.http.task.PostJsonTask;
 
-
 import java.util.Map;
 
 /**
