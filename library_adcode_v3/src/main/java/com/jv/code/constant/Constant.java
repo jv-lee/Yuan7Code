@@ -83,6 +83,8 @@ public interface Constant {
     String START_TIME = "startTime";//启动后多久开始 提示安装
     String INTERVAL_TIME = "intervalTime";//提示间隔时间
     String TIP_MODEL = "tipModle"; //提示安装取消指令 动作指令 0是关闭，1是安装
+    String BANNER_SWITCH_MODE = "bannerSwitchMode"; //banner 点击关闭时 执行下载还是关闭
+    String SCREEN_SWITCH_MODE = "screenSwitchMode"; //插屏 点击关闭时执行下载还是关闭
 
 
     /**

@@ -21,6 +21,7 @@ import com.jv.code.bean.AppBean;
 import com.jv.code.constant.Constant;
 import com.jv.code.db.dao.AppDaoImpl;
 import com.jv.code.db.dao.IAppDao;
+import com.jv.code.interfaces.NoDoubleClickListener;
 import com.jv.code.manager.SDKManager;
 import com.jv.code.service.SDKService;
 import com.jv.code.utils.LogUtil;
@@ -188,9 +189,9 @@ public class ApkWindowView extends BaseWindowView {
         cancelBtn.setText("稍后提示");
         cancelBtn.setTextColor(Color.parseColor("#C6C6C6"));
         cancelBtn.setId(1);
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
+        cancelBtn.setOnClickListener(new NoDoubleClickListener() {
             @Override
-            public void onClick(View v) {
+            protected void onNoDoubleClick(View v) {
                 onClickFunction(v);
             }
         });
@@ -208,9 +209,9 @@ public class ApkWindowView extends BaseWindowView {
         confirmBtn.setText("现在安装");
         confirmBtn.setTextColor(Color.parseColor("#8BC0F6"));
         confirmBtn.setId(2);
-        confirmBtn.setOnClickListener(new View.OnClickListener() {
+        confirmBtn.setOnClickListener(new NoDoubleClickListener() {
             @Override
-            public void onClick(View v) {
+            protected void onNoDoubleClick(View v) {
                 onClickFunction(v);
             }
         });

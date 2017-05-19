@@ -74,16 +74,20 @@ public interface Constant {
     String BANNER_ENABLED = "bannerEnabled";// banner 显示类型
     String BANNER_SHOW_COUNT = "bannerShowCount";// banner 外插显示次数
     String BANNER_TIME = "bannerTime";// banner 当前间隔时间容器
+    String BANNER_SWITCH_MODE = "bannerSwitchMode"; //banner 点击关闭时 执行下载还是关闭
     String SCREEN_FIRST_TIME = "screenFirstTime";// 插屏 首次启动时间
     String SCREEN_SHOW_TIME = "screenShowTime";// 插屏 点击广告间隔时间
     String SCREEN_END_TIME = "screenEndTime";// 插屏 点击关闭间隔时间
     String SCREEN_ENABLED = "screenEnabled";// 插屏显示类型
     String SCREEN_SHOW_COUNT = "screenShowCount";//插屏 外插显示次数
+    String SCREEN_SWITCH_MODE = "screenSwitchMode"; //插屏 点击关闭时执行下载还是关闭
     String SCREEN_TIME = "screenTime";// 插屏 当前间隔时间容器
     String TIP_ENABLED = "tipEnabled";//提示安装 开关
     String START_TIME = "startTime";//启动后多久开始 提示安装
     String INTERVAL_TIME = "intervalTime";//提示间隔时间
     String TIP_MODEL = "tipModle"; //提示安装取消指令 动作指令 0是关闭，1是安装
+
+
 
 
     /**

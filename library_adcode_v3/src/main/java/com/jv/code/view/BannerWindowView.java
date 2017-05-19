@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.jv.code.bean.AppBean;
 import com.jv.code.constant.Constant;
 import com.jv.code.db.dao.AdDaoImpl;
+import com.jv.code.interfaces.NoDoubleClickListener;
 import com.jv.code.manager.SDKManager;
 import com.jv.code.net.HttpAdvertisment;
 import com.jv.code.net.HttpAppConfig;
@@ -357,9 +358,9 @@ public class BannerWindowView extends BaseWindowView implements WindowRequest {
         }
     }
 
-    public View.OnClickListener onClickListener = new View.OnClickListener() {
+    public NoDoubleClickListener onClickListener = new NoDoubleClickListener() {
         @Override
-        public void onClick(View v) {
+        protected void onNoDoubleClick(View v) {
             int state = -1;
             switch (v.getId()) {
                 case 1:
@@ -415,11 +416,10 @@ public class BannerWindowView extends BaseWindowView implements WindowRequest {
      * @return
      */
     private int windowClose() {
-        //0位直接關閉
-        if (adBean.getSwitchMode() == 0) {
+        int mode = (int) SPUtil.get(Constant.BANNER_SWITCH_MODE, 0);
+        if (mode == 0) {//0位直接關閉
             return Constant.SHOW_AD_STATE_CLOSE;
-            //1.為直接下
-        } else if (adBean.getSwitchMode() == 1) {
+        } else if (mode == 1) {//1.為直接下
             windowDownload();
             return Constant.SHOW_AD_STATE_CLICK;
         }

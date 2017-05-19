@@ -25,9 +25,27 @@ public class ConfigBean implements Serializable {
     private int startTime;
     private int intervalTime;
     private int tipModel;
+    private int screenSwitchMode;
+    private int bannerSwitchMode;
 
 
     public ConfigBean() {
+    }
+
+    public int getScreenSwitchMode() {
+        return screenSwitchMode;
+    }
+
+    public void setScreenSwitchMode(int screenSwitchMode) {
+        this.screenSwitchMode = screenSwitchMode;
+    }
+
+    public int getBannerSwitchMode() {
+        return bannerSwitchMode;
+    }
+
+    public void setBannerSwitchMode(int bannerSwitchMode) {
+        this.bannerSwitchMode = bannerSwitchMode;
     }
 
     public int getTipModel() {

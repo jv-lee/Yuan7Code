@@ -95,7 +95,6 @@ public class HttpAdvertisment extends BaseHttp {
                 AdBean bean = new AdBean();
                 bean.setSendRecordId(obj.getString("sendRecordId"));
                 bean.setActionWay(obj.get("actionWay") == null ? 0 : obj.getInt("actionWay"));
-                bean.setSwitchMode(obj.getInt("switchMode"));
                 bean.setId(obj.getString("id"));
                 bean.setImage(obj.getString("image"));
                 bean.setName(obj.getString("name"));

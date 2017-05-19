@@ -13,7 +13,6 @@ public class AdBean implements Serializable {
     private String id;
     private String name;
     private String image;
-    private int switchMode;
     private int actionWay;
     private String type;
     private String sendRecordId;
@@ -78,15 +77,6 @@ public class AdBean implements Serializable {
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-
-    public int getSwitchMode() {
-        return switchMode;
-    }
-
-    public void setSwitchMode(int switchMode) {
-        this.switchMode = switchMode;
     }
 
     public int getActionWay() {

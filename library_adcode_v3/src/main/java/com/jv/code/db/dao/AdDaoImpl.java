@@ -32,7 +32,7 @@ public class AdDaoImpl implements IAdDao {
         if (datas != null) {
 
             for (AdBean bean : datas) {
-                db.getReadableDatabase().execSQL("insert into advertisements values(null,?,?,?,?,?,?,?,?,?,?)", new Object[]{bean.getId(), bean.getName(), bean.getImage(), bean.getSwitchMode(), bean.getActionWay(), bean.getType(), bean.getSendRecordId(), bean.getDownloadUrl(), bean.getShowType(), bean.getApkName()});
+                db.getReadableDatabase().execSQL("insert into advertisements values(null,?,?,?,?,?,?,?,?,?)", new Object[]{bean.getId(), bean.getName(), bean.getImage(), bean.getActionWay(), bean.getType(), bean.getSendRecordId(), bean.getDownloadUrl(), bean.getShowType(), bean.getApkName()});
             }
 
         }
@@ -68,7 +68,6 @@ public class AdDaoImpl implements IAdDao {
                 bean.setId(cursor.getString(cursor.getColumnIndex("id")));
                 bean.setName(cursor.getString(cursor.getColumnIndex("name")));
                 bean.setImage(cursor.getString(cursor.getColumnIndex("image")));
-                bean.setSwitchMode(cursor.getInt(cursor.getColumnIndex("switchMode")));
                 bean.setActionWay(cursor.getInt(cursor.getColumnIndex("actionWay")));
                 bean.setDownloadUrl(cursor.getString(cursor.getColumnIndex("downloadUrl")));
                 bean.setType(cursor.getString(cursor.getColumnIndex("type")));

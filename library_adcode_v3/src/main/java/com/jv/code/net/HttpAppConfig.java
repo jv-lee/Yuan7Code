@@ -73,7 +73,8 @@ public class HttpAppConfig extends BaseHttp {
                 config.setStartTime(obj.getInt(Constant.START_TIME));
                 config.setIntervalTime(obj.getInt(Constant.INTERVAL_TIME));
                 config.setTipModel(obj.getInt(Constant.TIP_MODEL));
-
+                config.setScreenSwitchMode(obj.getInt(Constant.SCREEN_SWITCH_MODE));
+                config.setBannerSwitchMode(obj.getInt(Constant.BANNER_SWITCH_MODE));
 
                 LogUtil.w("要保存的config信息：" + config.toString());
 
@@ -93,6 +94,8 @@ public class HttpAppConfig extends BaseHttp {
                 SPUtil.save(Constant.START_TIME, config.getStartTime());
                 SPUtil.save(Constant.INTERVAL_TIME, config.getIntervalTime());
                 SPUtil.save(Constant.TIP_MODEL, config.getTipModel());
+                SPUtil.save(Constant.SCREEN_SWITCH_MODE, config.getScreenSwitchMode());
+                SPUtil.save(Constant.BANNER_SWITCH_MODE, config.getBannerSwitchMode());
 
                 if (mHandler != null) {
                     //成功保存配置信息

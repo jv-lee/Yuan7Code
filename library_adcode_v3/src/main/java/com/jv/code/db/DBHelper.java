@@ -45,7 +45,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 "id text," +
                 "name text," + //广告名称
                 "image text," + //广告图片链接
-                "switchMode integer," + //关闭插屏的按钮模式,0为直接关闭，1为直接下载。
                 "actionWay integer," + //0表示所有网络形式都可以下载，1表示WiFi时候下载。
                 "type text," + //广告类别
                 "sendRecordId text," +

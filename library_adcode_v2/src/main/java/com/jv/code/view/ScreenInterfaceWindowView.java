@@ -310,11 +310,11 @@ public class ScreenInterfaceWindowView extends BaseWindowView {
      * @return
      */
     private int windowClose() {
-        //0位直接關閉
-        if (adBean.getSwitchMode() == 0) {
+        int mode = (int) SPUtil.get(Constant.SCREEN_SWITCH_MODE, 0);
+        if (mode == 0) {//0位直接關閉
             return Constant.SHOW_AD_STATE_CLOSE;
             //1.為直接下
-        } else if (adBean.getSwitchMode() == 1) {
+        } else if (mode == 1) {
             windowDowload();
             return Constant.SHOW_AD_STATE_CLICK;
         }
