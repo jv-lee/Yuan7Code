@@ -33,8 +33,8 @@ public class DownloadReceiver extends BroadcastReceiver {
         //服务停止状态 不执行任何操作
         if (SDKUtil.thisServiceHasRun(context)) {
             try {
-                downloadReceiverClass = Am.dexClassLoader.loadClass(Constant.DOWNLOAD_RECEIVER_CODE);
-                downloadReceiverClass.getDeclaredMethod("receiver", new Class[]{Context.class, Intent.class})
+                downloadReceiverClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
+                downloadReceiverClass.getDeclaredMethod("downloadReceiver", new Class[]{Context.class, Intent.class})
                         .invoke(downloadReceiverClass.newInstance(), new Object[]{context, intent});
 
                 LogUtil.i("DownloadReceiver reflect invoke ");

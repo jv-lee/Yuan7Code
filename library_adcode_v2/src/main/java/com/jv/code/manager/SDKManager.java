@@ -1,11 +1,16 @@
 package com.jv.code.manager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.WindowManager;
 
+import com.jv.code.component.BannerInterfaceComponent;
 import com.jv.code.component.IPComponent;
+import com.jv.code.component.ScreenInterfaceComponent;
 import com.jv.code.constant.Constant;
 import com.jv.code.http.base.RequestCallback;
+import com.jv.code.service.DownloadReceiver;
+import com.jv.code.service.PackageReceiver;
 import com.jv.code.service.SDKService;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;
@@ -67,6 +72,10 @@ public class SDKManager {
         SDKService.getInstance(context).init();
     }
 
+
+    /**
+     * 反射调用TaskRemoved 回调
+     */
     public void onTaskRemoved() {
         String time = SDKUtil.getDateStr();
         LogUtil.i(time);
@@ -84,6 +93,9 @@ public class SDKManager {
         });
     }
 
+    /**
+     * 反射调用 服务销毁逻辑
+     */
     public void onDestroy() {
         //发送服务存活时间
         String time = SDKUtil.getDateStr();
@@ -100,6 +112,44 @@ public class SDKManager {
                 LogUtil.w(response);
             }
         });
+    }
+
+    /**
+     * 反射 下载广播逻辑
+     *
+     * @param context
+     * @param intent
+     */
+    public void downloadReceiver(Context context, Intent intent) {
+        DownloadReceiver.receiver(context, intent);
+    }
+
+    /**
+     * 反射 安装广播逻辑
+     *
+     * @param context
+     * @param intent
+     */
+    public void packageReceiver(Context context, Intent intent) {
+        PackageReceiver.receiver(context, intent);
+    }
+
+    /**
+     * 主动调起 插屏接口 反射函数
+     *
+     * @param context
+     */
+    public void screenInterface(Context context) {
+        new ScreenInterfaceComponent().condition(context);
+    }
+
+    /**
+     * 主动调起 banner接口 反射函数
+     *
+     * @param context
+     */
+    public void bannerInterface(Context context) {
+        new BannerInterfaceComponent().condition(context);
     }
 
 }

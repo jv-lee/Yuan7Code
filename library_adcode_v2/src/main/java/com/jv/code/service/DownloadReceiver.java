@@ -26,7 +26,7 @@ import java.util.List;
 
 public class DownloadReceiver {
 
-    public void receiver(Context context, Intent intent) {
+    public static void receiver(Context context, Intent intent) {
 
         IAppDao dao = new AppDaoImpl(context);
 

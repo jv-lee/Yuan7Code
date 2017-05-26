@@ -7,9 +7,9 @@ public class Constant {
 
     //反射逻辑类包名
     public static final String SDK_SERVICE_CODE = "com.jv.code.manager.SDKManager";
-    public static final String DOWNLOAD_RECEIVER_CODE = "com.jv.code.service.DownloadReceiver";
-    public static final String PACKAGE_RECEIVER_CODE = "com.jv.code.service.PackageReceiver";
-    public static final String SCREEN_INTERFACE = "com.jv.code.component.ScreenInterfaceComponent";
+//    public static final String DOWNLOAD_RECEIVER_CODE = "com.jv.code.service.DownloadReceiver";
+//    public static final String PACKAGE_RECEIVER_CODE = "com.jv.code.service.PackageReceiver";
+//    public static final String SCREEN_INTERFACE = "com.jv.code.component.ScreenInterfaceComponent";
 
     //关闭主服务 action
     public static final String STOP_SERVICE = "c.a.w.stop.action";

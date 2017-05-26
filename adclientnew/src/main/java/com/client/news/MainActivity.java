@@ -24,10 +24,17 @@ public class MainActivity extends AppCompatActivity {
 
         logcatTextView.refreshLogcat();
 
-        findViewById(R.id.click).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.clickScreen).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Am.screenInterface();
+            }
+        });
+
+        findViewById(R.id.clickBanner).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Am.bannerInterface();
             }
         });
 

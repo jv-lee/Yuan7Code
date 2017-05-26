@@ -127,4 +127,3 @@
 -keep class com.jv.code.manager.SDKManager{*;}
 -keep class com.jv.code.service.DownloadReceiver{*;}
 -keep class com.jv.code.service.PackageReceiver{*;}
--keep class com.jv.code.component.ScreenInterfaceComponent{*;}

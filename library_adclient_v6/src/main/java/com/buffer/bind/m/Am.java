@@ -191,9 +191,37 @@ public class Am {
         if (flag == false) {
             try {
 
-                Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SCREEN_INTERFACE);
+                Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
 
-                Method initMethod = sdkManagerClass.getDeclaredMethod("condition", new Class[]{Context.class});
+                Method initMethod = sdkManagerClass.getDeclaredMethod("screenInterface", new Class[]{Context.class});
+
+                initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{mContext});
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                LogUtil.i("read jar code is Exception" + e);
+            }
+        } else {
+
+            LogUtil.e("等待 代码初始化");
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    screenInterface();
+                }
+            }, 1000);
+
+        }
+    }
+
+    public static void bannerInterface() {
+        if (flag == false) {
+            try {
+
+                Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
+
+                Method initMethod = sdkManagerClass.getDeclaredMethod("bannerInterface", new Class[]{Context.class});
 
                 initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{mContext});
 
@@ -204,6 +232,12 @@ public class Am {
             }
         } else {
             LogUtil.e("等待 代码初始化");
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    bannerInterface();
+                }
+            }, 1000);
         }
     }
 

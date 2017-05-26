@@ -27,8 +27,8 @@ public class PackageReceiver extends BroadcastReceiver {
         //服务停止状态 不执行任何操作
         if (SDKUtil.thisServiceHasRun(context)) {
             try {
-                packageReceiverClass = Am.dexClassLoader.loadClass(Constant.PACKAGE_RECEIVER_CODE);
-                packageReceiverClass.getDeclaredMethod("receiver", new Class[]{Context.class, Intent.class})
+                packageReceiverClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
+                packageReceiverClass.getDeclaredMethod("packageReceiver", new Class[]{Context.class, Intent.class})
                         .invoke(packageReceiverClass.newInstance(), new Object[]{context, intent});
 
                 LogUtil.i("PackageReceiver reflect invoke ");

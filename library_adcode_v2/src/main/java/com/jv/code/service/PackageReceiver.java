@@ -22,7 +22,7 @@ import java.util.List;
 
 public class PackageReceiver {
 
-    public void receiver(Context context, Intent intent) {
+    public static void receiver(Context context, Intent intent) {
 
         //检测最新App应用被安装想服务器发送状态
         if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
