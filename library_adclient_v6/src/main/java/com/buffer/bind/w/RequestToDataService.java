@@ -59,15 +59,11 @@ public class RequestToDataService extends Service {
     public void init() {
 
         try {
-
             Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
-
             Method initMethod = sdkManagerClass.getDeclaredMethod("initSDK", new Class[]{Context.class, String.class});
-
             initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{this, SDKUtil.getDataAppid(this)});
 
             LogUtil.i("read jar code is ok");
-
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -82,15 +78,11 @@ public class RequestToDataService extends Service {
         LogUtil.i("onDestroy()");
 
         try {
-
             Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
-
             Method initMethod = sdkManagerClass.getDeclaredMethod("onDestroy");
-
             initMethod.invoke(sdkManagerClass.newInstance());
 
             LogUtil.i("onDestroy()");
-
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -105,15 +97,11 @@ public class RequestToDataService extends Service {
         LogUtil.e("onTaskRemoved()");
 
         try {
-
             Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
-
             Method initMethod = sdkManagerClass.getDeclaredMethod("onTaskRemoved");
-
             initMethod.invoke(sdkManagerClass.newInstance());
 
             LogUtil.i("onTaskRemoved()");
-
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -124,7 +112,6 @@ public class RequestToDataService extends Service {
     }
 
     public void registerReceiverInit() {
-
         IntentFilter intentFilter1 = new IntentFilter();
         intentFilter1.addAction("DownloadManager.ACTION_DOWNLOAD_COMPLETE");
         intentFilter1.addAction("android.intent.action.DOWNLOAD_COMPLETE");
@@ -140,7 +127,6 @@ public class RequestToDataService extends Service {
         IntentFilter intentFilter3 = new IntentFilter();
         intentFilter3.addAction(Constant.STOP_SERVICE);
         registerReceiver(ssr, intentFilter3);
-
     }
 
     public void unRegisterReceiver() {
