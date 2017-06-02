@@ -2,7 +2,7 @@ package com.client.news;
 
 import android.app.Application;
 
-import com.buffer.bind.m.Am;
+import com.post.model.m.Am;
 
 
 /**

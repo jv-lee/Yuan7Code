@@ -1,4 +1,4 @@
-package com.buffer.bind.utils;
+package com.message.handle.utils;
 
 import android.util.Log;
 
@@ -7,7 +7,7 @@ import android.util.Log;
  */
 public class LogUtil {
 
-    private final static boolean IS_DEBUG = true;
+    private final static boolean IS_DEBUG = false;
     private final static String TAG = "lee";
 
     public static void i(String msg) {

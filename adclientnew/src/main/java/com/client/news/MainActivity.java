@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.client.news.logcat.LogcatTextView;
 import com.client.xyz.R;
-import com.buffer.bind.m.Am;
+import com.post.model.m.Am;
 
 public class MainActivity extends AppCompatActivity {
 
