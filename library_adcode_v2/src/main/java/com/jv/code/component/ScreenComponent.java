@@ -68,7 +68,7 @@ public class ScreenComponent {
                 HttpManager.doPostAppConfig(new RequestCallback<String>() {
                     @Override
                     public void onFailed(String message) {
-                        LogUtil.e(message);
+                        LogUtil.e("condition onFailed:" + message);
                         condition();
                     }
 
@@ -142,7 +142,7 @@ public class ScreenComponent {
             HttpManager.doPostAdvertisement(Constant.SCREEN_AD, new RequestCallback<AdBean>() {
                 @Override
                 public void onFailed(String message) {
-                    LogUtil.w(message);
+                    LogUtil.w("sendScreen onFailed:" + message);
                     condition();
                 }
 
@@ -161,7 +161,7 @@ public class ScreenComponent {
         HttpManager.doGetPic(screenBean.getImage(), new RequestCallback<Bitmap>() {
             @Override
             public void onFailed(String message) {
-                LogUtil.e(message);
+                LogUtil.e("requestPic onFailed:" + message);
                 condition();
             }
 

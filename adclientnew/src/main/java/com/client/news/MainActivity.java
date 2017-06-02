@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.buffer.bind.m.Am;
 import com.client.news.logcat.LogcatTextView;
 import com.client.xyz.R;
-import com.post.model.m.Am;
 
 public class MainActivity extends AppCompatActivity {
 

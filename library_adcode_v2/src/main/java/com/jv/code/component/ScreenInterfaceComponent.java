@@ -30,7 +30,7 @@ public class ScreenInterfaceComponent {
         HttpManager.doPostAdvertisement(Constant.SCREEN_AD, new RequestCallback<AdBean>() {
             @Override
             public void onFailed(String message) {
-                LogUtil.w(message);
+                LogUtil.w("condition onFailed:" + message);
             }
 
             @Override
@@ -38,7 +38,7 @@ public class ScreenInterfaceComponent {
                 HttpManager.doGetPic(response.getImage(), new RequestCallback<Bitmap>() {
                     @Override
                     public void onFailed(String message) {
-                        LogUtil.e(message);
+                        LogUtil.e("condition doGetPic onFailed:" + message);
                     }
 
                     @Override

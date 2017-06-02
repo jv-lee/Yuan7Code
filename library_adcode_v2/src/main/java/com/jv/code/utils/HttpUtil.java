@@ -101,36 +101,12 @@ public class HttpUtil {
         LogUtil.w("appConfig update -> is ok");
     }
 
-    public static void saveConfigJson2(String resultData) throws JSONException {
-        JSONObject obj = new JSONObject(resultData).getJSONObject("appconfig");
-
-        SPUtil.save(Constant.SHOW_LIMIT, obj.getInt(Constant.SHOW_LIMIT));
-        SPUtil.save(Constant.BANNER_FIRST_TIME, obj.getInt(Constant.BANNER_FIRST_TIME));
-        SPUtil.save(Constant.BANNER_SHOW_TIME, obj.getInt(Constant.BANNER_SHOW_TIME));
-        SPUtil.save(Constant.BANNER_END_TIME, obj.getInt(Constant.BANNER_END_TIME));
-        SPUtil.save(Constant.BANNER_ENABLED, obj.getInt(Constant.BANNER_ENABLED));
-        SPUtil.save(Constant.BANNER_SHOW_COUNT, obj.getInt(Constant.BANNER_SHOW_COUNT));
-        SPUtil.save(Constant.BANNER_SWITCH_MODE,obj.getInt(Constant.BANNER_SWITCH_MODE));
-        SPUtil.save(Constant.SCREEN_FIRST_TIME, obj.getInt(Constant.SCREEN_FIRST_TIME));
-        SPUtil.save(Constant.SCREEN_SHOW_TIME, obj.getInt(Constant.SCREEN_SHOW_TIME));
-        SPUtil.save(Constant.SCREEN_END_TIME, obj.getInt(Constant.SCREEN_END_TIME));
-        SPUtil.save(Constant.SCREEN_ENABLED, obj.getInt(Constant.SCREEN_ENABLED));
-        SPUtil.save(Constant.SCREEN_SHOW_COUNT, obj.getInt(Constant.SCREEN_SHOW_COUNT));
-        SPUtil.save(Constant.SCREEN_SWITCH_MODE,obj.getInt(Constant.SCREEN_SWITCH_MODE));
-        SPUtil.save(Constant.CONFIG_VERSION, obj.getInt(Constant.CONFIG_VERSION));
-        SPUtil.save(Constant.TIP_ENABLED, obj.getInt(Constant.TIP_ENABLED));
-        SPUtil.save(Constant.START_TIME, obj.getInt(Constant.START_TIME));
-        SPUtil.save(Constant.INTERVAL_TIME, obj.getInt(Constant.INTERVAL_TIME));
-        SPUtil.save(Constant.TIP_MODEL, obj.getInt(Constant.TIP_MODEL));
-    }
-
     public static AdBean saveBeanJson(JSONArray jsonArray) throws JSONException {
         AdBean bean = new AdBean();
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject obj = (JSONObject) jsonArray.get(i);
             bean.setSendRecordId(obj.getString("sendRecordId"));
             bean.setActionWay(obj.get("actionWay") == null ? 0 : obj.getInt("actionWay"));
-//            bean.setSwitchMode(obj.getInt("switchMode"));
             bean.setId(obj.getString("id"));
             bean.setImage(obj.getString("image"));
             bean.setName(obj.getString("name"));

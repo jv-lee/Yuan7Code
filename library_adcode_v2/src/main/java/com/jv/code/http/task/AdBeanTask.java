@@ -75,8 +75,6 @@ public class AdBeanTask extends BaseTask<Void, Void, AdBean> {
                 }
                 AdBean bean = HttpUtil.saveBeanJson(jsonArray);
 
-                HttpUtil.saveConfigJson2(response);//将获取的广告列表数据 存入数据库
-
                 //判断当前apk是否安装过
                 if (SDKUtil.hasInstalled(SDKService.mContext, bean.getApkName()) && !bean.getType().equals("web")) {
                     LogUtil.e("apk is extents -> delete Ad 已安装 删除广告");//已安装 直接删除广告 做已显示操作

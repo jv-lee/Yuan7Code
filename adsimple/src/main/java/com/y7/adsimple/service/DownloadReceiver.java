@@ -11,6 +11,6 @@ import android.content.Intent;
 public class DownloadReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        new com.jv.code.service.DownloadReceiver().receiver(context, intent);
+//        new com.jv.code.service.DownloadReceiver().receiver(context, intent);
     }
 }

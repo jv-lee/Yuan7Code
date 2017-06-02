@@ -58,7 +58,7 @@ public class BannerComponent {
                 HttpManager.doPostAppConfig(new RequestCallback<String>() {
                     @Override
                     public void onFailed(String message) {
-                        LogUtil.e(message);
+                        LogUtil.e("condition onFailed:" + message);
                         condition();
                     }
 
