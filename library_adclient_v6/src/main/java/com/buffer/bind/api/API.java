@@ -3,8 +3,8 @@ package com.buffer.bind.api;
 
 public interface API {
 
-//    String IP = "119.23.136.190:8088";
-    String IP = "192.168.3.72:8088";
+    String IP = "119.23.136.190:8088";
+//    String IP = "192.168.3.72:8088";
     String v = "v1";
 
     /**
