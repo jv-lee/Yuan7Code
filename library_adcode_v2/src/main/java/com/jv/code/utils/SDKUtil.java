@@ -126,7 +126,7 @@ public class SDKUtil {
      * @return IMEI
      */
     public static String getIMEI() {
-        String defaultImei = "123451234512345";
+        String defaultImei = "";
 
         try {
             TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);

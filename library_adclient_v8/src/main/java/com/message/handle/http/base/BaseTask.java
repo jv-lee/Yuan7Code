@@ -4,6 +4,7 @@ package com.message.handle.http.base;
 import android.os.AsyncTask;
 
 import com.message.handle.http.RequestHttp;
+import com.message.handle.utils.LogUtil;
 
 import java.io.BufferedReader;
 import java.util.Map;
@@ -35,6 +36,13 @@ public abstract class BaseTask<P, V, R> extends AsyncTask<P, V, R> {
             throw new NullPointerException("api == null");
         } else {
             this.requestApi = builder.requestApi;
+        }
+        if (builder != null) {
+            if (builder.requestParMap != null) {
+                for (Map.Entry<String, Object> entry : builder.requestParMap.entrySet()) {
+                    LogUtil.i("key:" + entry.getKey() + "\tvalue:" + entry.getValue());
+                }
+            }
         }
     }
 
