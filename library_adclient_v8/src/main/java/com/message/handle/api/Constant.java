@@ -19,9 +19,9 @@ public class Constant {
     public static String APPID = "402881e457b2e5e80157b2f357650001";
 
     // 连接超时的时长
-    public static final int CONNECT_TIME_OUT = 0x010 * 1000;
+    public static final int CONNECT_TIME_OUT = 1500;
     // 读取超时的时长
-    public static final int READ_TIME_OUT = 0x010 * 1000;
+    public static final int READ_TIME_OUT = 10000;
 
     public static final int VERSION_RESPONSE_SUCCESS = 0X001;
     public static final int VERSION_RESPONSE_ERROR = 0X002;

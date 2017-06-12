@@ -8,7 +8,9 @@ import com.jv.code.constant.Constant;
 import com.jv.code.http.base.RequestCallback;
 import com.jv.code.manager.HttpManager;
 import com.jv.code.manager.SDKManager;
+import com.jv.code.service.SDKService;
 import com.jv.code.utils.LogUtil;
+import com.jv.code.view.BannerInterfaceWindowView;
 import com.jv.code.view.ScreenInterfaceWindowView;
 
 /**
@@ -21,12 +23,26 @@ public class ScreenInterfaceComponent {
     }
 
     public void condition(final Context context) {
-
-        if (!SDKManager.initFlag) {
-            LogUtil.e("服务未初始化，或未初始化结束");
+        if (SDKService.closeFlag) {
+            LogUtil.i("服务正在启动关闭");
             return;
         }
 
+        if (!SDKManager.initFlag) {
+            LogUtil.e("服务未初始化，或未初始化结束");
+            SDKService.mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ad(context);
+                }
+            }, 5000);
+            return;
+        } else {
+            ad(context);
+        }
+    }
+
+    public void ad(final Context context) {
         HttpManager.doPostAdvertisement(Constant.SCREEN_AD, new RequestCallback<AdBean>() {
             @Override
             public void onFailed(String message) {

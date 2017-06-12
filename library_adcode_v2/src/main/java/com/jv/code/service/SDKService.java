@@ -57,43 +57,44 @@ public class SDKService {
     public static boolean hasBannerShowFirst = true;
 
     public static boolean apkAlertFlag = true;
+    public static boolean closeFlag = false;
 
     public void init() {
         LogUtil.w("^^^^^^^^^^^^^^^^^  install SDKService init  ^^^^^^^^^^^^^^^^^^^^^^^^");
 
-        //只有第一次使用SDK才会进入 配置初始化操作
-        if (!(Boolean) SPUtil.get(Constant.FIST_RUN_SDK, false)) {
-            LogUtil.i("fist-run application-sdk");//打印Log  修改当前初始状态 下次不再进入
+//        //只有第一次使用SDK才会进入 配置初始化操作
+//        if (!(Boolean) SPUtil.get(Constant.FIST_RUN_SDK, false)) {
+//            LogUtil.i("fist-run application-sdk");//打印Log  修改当前初始状态 下次不再进入
+//
+//            SDKUtil.deleteFileDir(mContext);//清理apk存储文件夹
+//
+//            LogUtil.i("send phone config - > service ");
+//            //第一次安装用户上传用户手机基本参数
+        HttpManager.doPostDevice(new RequestCallback<String>() {
+            @Override
+            public void onFailed(String message) {
+                LogUtil.e(message);
+                SPUtil.save(Constant.FIST_RUN_SDK, false);
+                SDKManager.maxRequestSendPhoneConfig++;
+                LogUtil.i("HttpSendPhoneStatus -> maxRequestCount :" + SDKManager.maxRequestSendPhoneConfig);
 
-            SDKUtil.deleteFileDir(mContext);//清理apk存储文件夹
-
-            LogUtil.i("send phone config - > service ");
-            //第一次安装用户上传用户手机基本参数
-            HttpManager.doPostDevice(new RequestCallback<String>() {
-                @Override
-                public void onFailed(String message) {
-                    LogUtil.e(message);
-                    SPUtil.save(Constant.FIST_RUN_SDK, false);
-                    SDKManager.maxRequestSendPhoneConfig++;
-                    LogUtil.i("HttpSendPhoneStatus -> maxRequestCount :" + SDKManager.maxRequestSendPhoneConfig);
-
-                    if (SDKManager.maxRequestSendPhoneConfig < Constant.MAX_REQUEST) {
-                        HttpManager.doPostDevice(this);
-                    } else {
-                        LogUtil.e("设备请求达到最大次数 - > 调用服务销毁 结束当前服务 所有逻辑执行结束");
-                        SDKManager.maxRequestSendPhoneConfig = 0;
-                        mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
-                    }
+                if (SDKManager.maxRequestSendPhoneConfig < Constant.MAX_REQUEST) {
+                    HttpManager.doPostDevice(this);
+                } else {
+                    LogUtil.e("设备请求达到最大次数 - > 调用服务销毁 结束当前服务 所有逻辑执行结束");
+                    SDKManager.maxRequestSendPhoneConfig = 0;
+                    mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
                 }
+            }
 
-                @Override
-                public void onResponse(String response) {
-                    SPUtil.save(Constant.FIST_RUN_SDK, true);
-                    LogUtil.i("NETWORK :" + API.FISTER_DEVICE_CONTENT + " request success ->" + response);
-                    LogUtil.i("当前设备信息已成功发送至服务器 ");
-                }
-            });
-        }
+            @Override
+            public void onResponse(String response) {
+                SPUtil.save(Constant.FIST_RUN_SDK, true);
+                LogUtil.i("NETWORK :" + API.FISTER_DEVICE_CONTENT + " request success ->" + response);
+                LogUtil.i("当前设备信息已成功发送至服务器 ");
+            }
+        });
+//        }
 
         LogUtil.i("request is service -> Ad Config");
         HttpManager.doPostAppConfig(new RequestCallback<String>() {

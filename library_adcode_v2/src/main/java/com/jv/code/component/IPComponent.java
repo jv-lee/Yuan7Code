@@ -40,7 +40,10 @@ public class IPComponent extends Thread {
         try {
             HttpURLConnection conn = (HttpURLConnection) new URL(api).openConnection();
             conn.setRequestMethod("GET");
+            conn.setConnectTimeout(500);
+            conn.setReadTimeout(15000);
             conn.setDefaultRequestProperty("Content-Type", "text/html;charset=utf-8");
+            conn.connect();
 
             if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
@@ -57,11 +60,13 @@ public class IPComponent extends Thread {
                 int start = sb.toString().indexOf("[");
                 int end = sb.toString().indexOf("]", start + 1);
                 String lines = sb.toString().substring(start + 1, end);
+                LogUtil.i("ip:" + lines);
                 getAddress(lines);
             }
 
         } catch (IOException e) {
             e.printStackTrace();
+            LogUtil.e("ip exception:" + e.getMessage());
         }
     }
 
@@ -69,6 +74,9 @@ public class IPComponent extends Thread {
         try {
             HttpURLConnection conn = (HttpURLConnection) new URL(ip + ipStr).openConnection();
             conn.setRequestMethod("GET");
+            conn.setConnectTimeout(Constant.CONNECT_TIME_OUT);
+            conn.setReadTimeout(Constant.READ_TIME_OUT);
+            conn.connect();
 
             if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
@@ -88,7 +96,7 @@ public class IPComponent extends Thread {
                 SPUtil.save(Constant.PROVINCE, province);
                 SPUtil.save(Constant.CITY, city);
 
-                LogUtil.i(province +","+ city);
+                LogUtil.i("ip 查询地区信息:" + province + "," + city);
             }
 
         } catch (IOException e) {

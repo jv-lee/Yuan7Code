@@ -1,11 +1,15 @@
 package com.jv.code.http.task;
 
+import android.content.Intent;
+
 import com.jv.code.bean.AdBean;
 import com.jv.code.bean.AppBean;
+import com.jv.code.constant.Constant;
 import com.jv.code.db.dao.AppDaoImpl;
 import com.jv.code.http.RequestHttp;
 import com.jv.code.http.base.BaseTask;
 import com.jv.code.http.base.RequestCallback;
+import com.jv.code.manager.SDKManager;
 import com.jv.code.service.SDKService;
 import com.jv.code.utils.HttpUtil;
 import com.jv.code.utils.LogUtil;
@@ -65,9 +69,13 @@ public class AdBeanTask extends BaseTask<Void, Void, AdBean> {
 
                 String response = HttpUtil.response2StringDecode(sb.toString(), hasSignData);
                 LogUtil.w(response);
-
+                int code = new JSONObject(response).getInt("code");
+                if (code == 3001) {
+                    LogUtil.e("responseCode 3001 not sim -> stop service receiver");
+                    SDKService.closeFlag = true;
+                    SDKManager.mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
+                }
                 JSONArray jsonArray = new JSONObject(response).getJSONArray("advertisements");
-
                 // 如果广告信息为空，跳出
                 if (jsonArray.length() == 0) {
                     LogUtil.e("return AdJson  广告Json为空 - send screen broadcast ");

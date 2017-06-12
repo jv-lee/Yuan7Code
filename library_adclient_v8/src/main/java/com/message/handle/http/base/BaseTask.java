@@ -39,9 +39,12 @@ public abstract class BaseTask<P, V, R> extends AsyncTask<P, V, R> {
         }
         if (builder != null) {
             if (builder.requestParMap != null) {
+                StringBuilder strBuilder = new StringBuilder("{");
                 for (Map.Entry<String, Object> entry : builder.requestParMap.entrySet()) {
-                    LogUtil.i("key:" + entry.getKey() + "\tvalue:" + entry.getValue());
+                    strBuilder.append("[" + entry.getKey() + ":" + entry.getValue() + "],");
                 }
+                strBuilder.append("}");
+                LogUtil.d(strBuilder.toString());
             }
         }
     }

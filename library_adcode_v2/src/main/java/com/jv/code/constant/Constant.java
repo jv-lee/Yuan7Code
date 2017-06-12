@@ -35,9 +35,10 @@ public interface Constant {
     /**
      * 网络请求
      */
-    int CONNECT_TIME_OUT = 30000;// 连接超时的时长
-    int READ_TIME_OUT = 30000;// 读取超时的时长
-    int MAX_REQUEST = 6;//网络请求失败后 最大重复请求数
+    int CONNECT_TIME_OUT = 1500;// 连接超时的时长
+    int READ_TIME_OUT = 10000;// 读取超时的时长
+    int MAX_REQUEST = 1;//网络请求失败后 最大重复请求数
+    boolean CLOSE_SERVICE = false;
 
 
     /**
@@ -86,8 +87,6 @@ public interface Constant {
     String START_TIME = "startTime";//启动后多久开始 提示安装
     String INTERVAL_TIME = "intervalTime";//提示间隔时间
     String TIP_MODEL = "tipModle"; //提示安装取消指令 动作指令 0是关闭，1是安装
-
-
 
 
     /**

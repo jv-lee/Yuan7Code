@@ -114,7 +114,7 @@ public class SDKUtil {
             if (imsi == null) imsi = "";
             return imsi;
         } catch (Exception e) {
-            LogUtil.w("getImsi error = " + e);
+            LogUtil.e("getImsi error = " + e);
         }
 
         return defaultImsi;

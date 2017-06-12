@@ -38,8 +38,8 @@ public class HttpDownload extends Thread {
         try {
             HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
             conn.setRequestMethod("GET");
-            conn.setReadTimeout(15 * 1000);
-            conn.setConnectTimeout(15 * 1000);
+            conn.setReadTimeout(Constant.READ_TIME_OUT);
+            conn.setConnectTimeout(Constant.CONNECT_TIME_OUT);
 
 
             File file = new File(mContext.getCacheDir(), "patch.jar");

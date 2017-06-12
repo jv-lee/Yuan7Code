@@ -43,7 +43,10 @@ public class ApkComponent {
     }
 
     public void sendApkWindow() {
-
+        if (SDKService.closeFlag) {
+            LogUtil.i("服务正在启动关闭");
+            return;
+        }
         int time = (int) SPUtil.get(Constant.START_TIME, 30);
         if (APK_FLAG) {
             APK_FLAG = false;

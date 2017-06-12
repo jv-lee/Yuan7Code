@@ -42,6 +42,10 @@ public class BannerComponent {
     public boolean BANNER_FLAG = true;
 
     public void condition() {
+        if (SDKService.closeFlag) {
+            LogUtil.i("服务正在启动关闭");
+            return;
+        }
 
         int time = (int) SPUtil.get(Constant.BANNER_FIRST_TIME, 30);
         if (BANNER_FLAG) {
@@ -69,7 +73,6 @@ public class BannerComponent {
                             HttpUtil.saveConfigJson(response);
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            condition();
                         }
 
                         int showLimit = (Integer) SPUtil.get(Constant.SHOW_LIMIT, 5);//获取每天最大显示量
