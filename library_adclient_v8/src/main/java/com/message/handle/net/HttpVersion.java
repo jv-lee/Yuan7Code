@@ -78,58 +78,49 @@ public class HttpVersion extends Thread {
 
                     //获取当前本地sdk版本
                     int code = SPUtil.getInstance(mContext).getInt(Constant.VERSION_CODE, -1);
-                    LogUtil.i("jar Version：" + versionCode);
-
+                    LogUtil.i("download jar Version:" + versionCode);
+                    LogUtil.i("this jar Version:" + code);
                     File file = new File(mContext.getCacheDir(), "patch.jar");
 
                     //版本不同进行下载
                     if (code != versionCode) {
                         SPUtil.save(Constant.VERSION_CODE, versionCode);
-                        LogUtil.i("this jar updateCode noOk download -> Jar");
-
+                        LogUtil.w("this jar version != download jar version -> download jar");
                         //文件存在 删除后重新下载保存
                         if (file.exists()) {
                             if (file.delete()) {
-                                LogUtil.i("delete File Success");
+                                LogUtil.i("File exists delete File Success -> download jar");
                                 new HttpDownload(mContext, mHandler, jarDownloadUrl).start();
                             } else {
-                                LogUtil.i("delete File Exception");
+                                LogUtil.i("File exists delete File Exception -> download jar");
                             }
                         } else {
-                            LogUtil.i("File noExists -> downloadJar");
+                            LogUtil.i("File noExists -> download jar");
                             new HttpDownload(mContext, mHandler, jarDownloadUrl).start();
                         }
-
                     } else {
-
+                        LogUtil.w("this jar version == download jar version");
                         //文件不存在 开始下载更新sdk包
                         if (!file.exists()) {
-                            LogUtil.i("UpdateCode is ok , else Jar noExists -> downloadJar");
+                            LogUtil.i("jar noExists -> download jar");
                             new HttpDownload(mContext, mHandler, jarDownloadUrl).start();
-
                             //文件存在 直接读取jar包代码
                         } else {
-                            LogUtil.i("this jarCode isOk ,read Jar");
+                            LogUtil.i("jar exists -> read jar");
                             mHandler.sendEmptyMessage(Constant.VERSION_RESPONSE_SUCCESS);
                         }
                     }
-
-                    //
                 } else {
-                    LogUtil.i("network request VersionCode-> data is null -response Error");
+                    LogUtil.e("network request version code -> data is null response error");
                     mHandler.sendEmptyMessage(Constant.VERSION_RESPONSE_ERROR);
                 }
-
-
             } else {
-                LogUtil.i("network VersionCode requestError  ErrorCode :" + conn.getResponseCode());
+                LogUtil.e("network version code requestError  errorCode :" + conn.getResponseCode());
                 mHandler.sendEmptyMessage(Constant.VERSION_RESPONSE_ERROR);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
-
-            LogUtil.i("this network VersionCode is Exception :" + e.getMessage());
+            LogUtil.e("this network VersionCode is Exception :" + e.getMessage());
             mHandler.sendEmptyMessage(Constant.VERSION_RESPONSE_ERROR);
         }
     }

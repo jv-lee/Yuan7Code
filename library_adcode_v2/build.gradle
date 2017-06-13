@@ -4,13 +4,12 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.0"
 
-    def SDK_BASENAME = "adcode";
-    def SDK_VERSION = "_v1.0";
+    def SDK_BASENAME = "code";
     def sdkDestinationPath = "build/outputs/jar/";
     def zipFile = file('build/intermediates/bundles/default/classes.jar')
 
     task deleteBuild(type: Delete) {
-        delete sdkDestinationPath + SDK_BASENAME + SDK_VERSION + ".jar"
+        delete sdkDestinationPath + SDK_BASENAME + ".jar"
     }
 
     lintOptions {
@@ -19,7 +18,7 @@ android {
 
     task makeJar(type: Jar) {
         from zipTree(zipFile)
-        baseName = SDK_BASENAME + SDK_VERSION
+        baseName = SDK_BASENAME
         destinationDir = file(sdkDestinationPath)
     }
 
