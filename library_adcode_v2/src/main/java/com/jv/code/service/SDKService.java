@@ -120,6 +120,8 @@ public class SDKService {
                     HttpUtil.saveConfigJson(response);
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
+                    return;
                 }
 
                 LogUtil.i("广告配置信息保持成功 启动窗口组件初始化");

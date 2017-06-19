@@ -108,7 +108,9 @@ public class ApkComponent {
     };
 
     public void stopApk() {
-        SDKService.mHandler.removeCallbacks(runnable);
+        if (SDKService.mHandler != null && runnable != null) {
+            SDKService.mHandler.removeCallbacks(runnable);
+        }
     }
 
 }

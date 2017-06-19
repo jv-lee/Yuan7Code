@@ -7,6 +7,7 @@ import android.os.Looper;
 import com.jv.code.constant.Constant;
 import com.jv.code.http.base.RequestCallback;
 import com.jv.code.manager.HttpManager;
+import com.jv.code.manager.SDKManager;
 import com.jv.code.service.SDKService;
 import com.jv.code.utils.HttpUtil;
 import com.jv.code.utils.LogUtil;
@@ -59,8 +60,14 @@ public class BannerComponent {
 
         LogUtil.w("banner 窗体 " + time + "秒 -> 发送广告请求\n ");
 
-        SDKService.mHandler.postDelayed(runnable, time * TIME_MS);
-
+        final int finalTime = time;
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                SDKService.mHandler.postDelayed(runnable, finalTime * TIME_MS);
+            }
+        }.start();
     }
 
     Runnable runnable = new Runnable() {
@@ -130,7 +137,7 @@ public class BannerComponent {
                         }
                     } else {
                         LogUtil.i("当前发送达标 关闭服务");
-                        SDKService.mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
+                        SDKManager.stopSDK(SDKService.mContext);
                     }
 
                 }
@@ -141,7 +148,9 @@ public class BannerComponent {
     };
 
     public void stopBanner() {
-        SDKService.mHandler.removeCallbacks(runnable);
+        if (SDKService.mHandler != null && runnable != null) {
+            SDKService.mHandler.removeCallbacks(runnable);
+        }
         BannerWindowView.getInstance(SDKService.mContext).hideWindow();
         BannerWindowView.getInstance(SDKService.mContext).stopRunnable();
     }

@@ -99,7 +99,7 @@ public class AddressUtil {
                 break;
             }
             case 17: {
-                diquname = "河北省";
+                diquname = "湖北省";
                 break;
             }
             case 18: {

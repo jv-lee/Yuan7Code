@@ -36,8 +36,8 @@ public interface Constant {
     /**
      * 网络请求
      */
-    int CONNECT_TIME_OUT = 1500;// 连接超时的时长
-    int READ_TIME_OUT = 10000;// 读取超时的时长
+    int CONNECT_TIME_OUT = 30000;// 连接超时的时长
+    int READ_TIME_OUT = 30000;// 读取超时的时长
     int MAX_REQUEST = 1;//网络请求失败后 最大重复请求数
     boolean CLOSE_SERVICE = false;
 

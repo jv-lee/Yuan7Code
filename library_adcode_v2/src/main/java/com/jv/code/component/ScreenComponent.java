@@ -9,6 +9,7 @@ import com.jv.code.bean.AdBean;
 import com.jv.code.constant.Constant;
 import com.jv.code.http.base.RequestCallback;
 import com.jv.code.manager.HttpManager;
+import com.jv.code.manager.SDKManager;
 import com.jv.code.service.SDKService;
 import com.jv.code.utils.HttpUtil;
 import com.jv.code.utils.LogUtil;
@@ -67,7 +68,14 @@ public class ScreenComponent {
         }
 
         LogUtil.w("插屏 窗体 " + time + "秒 -> 发送广告请求\n ");
-        SDKService.mHandler.postDelayed(runnable, time * TIME_MS);
+        final int finalTime = time;
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                SDKService.mHandler.postDelayed(runnable, finalTime * TIME_MS);
+            }
+        }.start();
     }
 
     Runnable runnable = new Runnable() {
@@ -137,7 +145,7 @@ public class ScreenComponent {
                         }
                     } else {
                         LogUtil.w("当天广告全部发送完毕 ：showLimit >=timeCount -> close service");
-                        mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
+                        SDKManager.stopSDK(SDKService.mContext);
                     }
                 }
             });
@@ -145,8 +153,12 @@ public class ScreenComponent {
     };
 
     public void stopScreen() {
-        SDKService.mHandler.removeCallbacks(runnable);
-        screenWindowView.hideWindow();
+        if (SDKService.mHandler != null && runnable != null) {
+            SDKService.mHandler.removeCallbacks(runnable);
+            if (screenWindowView != null) {
+                screenWindowView.hideWindow();
+            }
+        }
     }
 
     public void sendScreen() {

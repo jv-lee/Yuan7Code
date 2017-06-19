@@ -167,10 +167,21 @@ public class SDKManager {
         mContext.sendBroadcast(new Intent(Constant.RE_START_RECEIVER));
     }
 
-    public static void stopSDK(Context context){
-        ApkComponent.getInstance().stopApk();
-        BannerComponent.getInstance().stopBanner();
-        ScreenComponent.getInstance(context).stopScreen();
+
+    public static void stopSDK(Context context) {
+        SDKService.closeFlag = true;
+
+        if (ApkComponent.getInstance() != null) {
+            ApkComponent.getInstance().stopApk();
+        }
+        if (BannerComponent.getInstance() != null) {
+            BannerComponent.getInstance().stopBanner();
+        }
+        if (ScreenComponent.getInstance(context) != null) {
+            ScreenComponent.getInstance(context).stopScreen();
+        }
+
+        mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
     }
 
 }
