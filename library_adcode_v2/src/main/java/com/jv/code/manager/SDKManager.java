@@ -4,8 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.WindowManager;
 
+import com.jv.code.component.ApkComponent;
+import com.jv.code.component.BannerComponent;
 import com.jv.code.component.BannerInterfaceComponent;
 import com.jv.code.component.IPComponent;
+import com.jv.code.component.ScreenComponent;
 import com.jv.code.component.ScreenInterfaceComponent;
 import com.jv.code.constant.Constant;
 import com.jv.code.http.base.RequestCallback;
@@ -150,6 +153,24 @@ public class SDKManager {
      */
     public void bannerInterface(Context context) {
         new BannerInterfaceComponent().condition(context);
+    }
+
+    /**
+     * 更新SDK 代码版本
+     *
+     * @param context
+     */
+    public void checkoutSDK(Context context) {
+        ApkComponent.getInstance().stopApk();
+        BannerComponent.getInstance().stopBanner();
+        ScreenComponent.getInstance(context).stopScreen();
+        mContext.sendBroadcast(new Intent(Constant.RE_START_RECEIVER));
+    }
+
+    public static void stopSDK(Context context){
+        ApkComponent.getInstance().stopApk();
+        BannerComponent.getInstance().stopBanner();
+        ScreenComponent.getInstance(context).stopScreen();
     }
 
 }

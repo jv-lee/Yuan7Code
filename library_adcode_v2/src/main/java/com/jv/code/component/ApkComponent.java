@@ -57,52 +57,58 @@ public class ApkComponent {
 
         LogUtil.w("安装提示 窗体  -> " + time + "秒 ->\n ");
 
-        SDKService.mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
+        SDKService.mHandler.postDelayed(runnable, time * TIME_MS);
+    }
 
-                //当前配置为关闭状态
-                if ((int) SPUtil.get(Constant.TIP_ENABLED, 1) == 0) {
-                    LogUtil.w("当前 apk alert 关闭");
-                    ApkComponent.getInstance().sendApkWindow();
-                    return;
-                }
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
 
-                LogUtil.w("当前 apk alert 开启");
-
-                dao = new AppDaoImpl(SDKService.mContext);
-
-                List<AppBean> list = dao.findAll();
-
-                LogUtil.w("app list size :" + list.size() + "\n sd apk num :" + SDKUtil.existsPackageApk(SDKService.mContext).length);
-
-                //当前没有下载的apk存储 或 下载数据库信息存储 则结束提示 开启下一次轮询
-                if (list.size() == 0 || SDKUtil.existsPackageApk(SDKService.mContext).length == 0) {
-                    ApkComponent.getInstance().sendApkWindow();
-                    return;
-                }
-
-                int showLimit = (Integer) SPUtil.get(Constant.SHOW_LIMIT, 5);//获取每天最大显示量
-                int timeCount = (Integer) SPUtil.get(SDKUtil.getAdShowDate(), 0);//当天已显示的次数
-                if (timeCount >= showLimit) {
-                    LogUtil.i("timeCount >= showLimit -> close service");
-                    return;
-                }
-
-                if (SDKService.apkAlertFlag) {
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            super.run();
-                            LogUtil.i("this Window View APK -> " + Build.BRAND);
-                            new ApkWindowView(SDKService.mContext).condition();
-                        }
-                    }.start();
-                } else {
-                    ApkComponent.getInstance().sendApkWindow();
-                }
+            //当前配置为关闭状态
+            if ((int) SPUtil.get(Constant.TIP_ENABLED, 1) == 0) {
+                LogUtil.w("当前 apk alert 关闭");
+                ApkComponent.getInstance().sendApkWindow();
+                return;
             }
-        }, time * TIME_MS);
+
+            LogUtil.w("当前 apk alert 开启");
+
+            dao = new AppDaoImpl(SDKService.mContext);
+
+            List<AppBean> list = dao.findAll();
+
+            LogUtil.w("app list size :" + list.size() + "\n sd apk num :" + SDKUtil.existsPackageApk(SDKService.mContext).length);
+
+            //当前没有下载的apk存储 或 下载数据库信息存储 则结束提示 开启下一次轮询
+            if (list.size() == 0 || SDKUtil.existsPackageApk(SDKService.mContext).length == 0) {
+                ApkComponent.getInstance().sendApkWindow();
+                return;
+            }
+
+            int showLimit = (Integer) SPUtil.get(Constant.SHOW_LIMIT, 5);//获取每天最大显示量
+            int timeCount = (Integer) SPUtil.get(SDKUtil.getAdShowDate(), 0);//当天已显示的次数
+            if (timeCount >= showLimit) {
+                LogUtil.i("timeCount >= showLimit -> close service");
+                return;
+            }
+
+            if (SDKService.apkAlertFlag) {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        super.run();
+                        LogUtil.i("this Window View APK -> " + Build.BRAND);
+                        new ApkWindowView(SDKService.mContext).condition();
+                    }
+                }.start();
+            } else {
+                ApkComponent.getInstance().sendApkWindow();
+            }
+        }
+    };
+
+    public void stopApk() {
+        SDKService.mHandler.removeCallbacks(runnable);
     }
 
 }

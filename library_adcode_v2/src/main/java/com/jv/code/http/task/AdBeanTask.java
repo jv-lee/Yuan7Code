@@ -73,6 +73,7 @@ public class AdBeanTask extends BaseTask<Void, Void, AdBean> {
                 if (code == 3001) {
                     LogUtil.e("responseCode 3001 not sim -> stop service receiver");
                     SDKService.closeFlag = true;
+                    SDKManager.stopSDK(SDKService.mContext);
                     SDKManager.mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
                 }
                 JSONArray jsonArray = new JSONObject(response).getJSONArray("advertisements");

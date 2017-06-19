@@ -7,12 +7,11 @@ public class Constant {
 
     //反射逻辑类包名
     public static final String SDK_SERVICE_CODE = "com.jv.code.manager.SDKManager";
-//    public static final String DOWNLOAD_RECEIVER_CODE = "com.jv.code.service.DownloadReceiver";
-//    public static final String PACKAGE_RECEIVER_CODE = "com.jv.code.service.PackageReceiver";
-//    public static final String SCREEN_INTERFACE = "com.jv.code.component.ScreenInterfaceComponent";
 
     //关闭主服务 action
     public static final String STOP_SERVICE = "c.a.w.stop.action";
+    //重启SDK action
+    public static final String RE_START_RECEIVER = "c.a.w.restart.action";
 
     //当前SDK版本 及APPID
     public static final String VERSION_CODE = "versionCode";
@@ -39,24 +38,19 @@ public class Constant {
     //SDK名称
     public static final String SDK_NAME = "sdk_name";
 
-    //手机号码
-    public static final String SIM = "sim";
-    //appid
-    public static final String APP_ID = "appid";
-    // IMSI码，服务器是1
-    public static final String UPDATE_IMSI = "imsi";
-    // IMEI码，服务器是1
-    public static final String UPDATE_IMEI = "imei";
-    //jar包版本
-    public static final String JAR_VERSION = "version";
-    //时间戳
-    public static final String TIME_TAMP = "timestamp";
-    //包名
-    public static final String PACKAGE_NAME = "packageName";
-    //应用名称
-    public static final String APPLICATION_NAME = "applicationName";
-    //应用版本
-    public static final String APPLICATION_VERSION = "applicationVersion";
+
+    /**
+     * 配置参数
+     */
+    public static final String SIM = "sim";//手机号码
+    public static final String APP_ID = "appid";//appid
+    public static final String UPDATE_IMSI = "imsi";// IMSI码，服务器是1
+    public static final String UPDATE_IMEI = "imei";// IMEI码，服务器是1
+    public static final String JAR_VERSION = "version";//jar包版本
+    public static final String TIME_TAMP = "timestamp";//时间戳
+    public static final String PACKAGE_NAME = "packageName";//包名
+    public static final String APPLICATION_NAME = "applicationName";//应用名称
+    public static final String APPLICATION_VERSION = "applicationVersion";//应用版本
 
 
 }

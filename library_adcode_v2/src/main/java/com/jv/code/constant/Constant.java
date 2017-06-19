@@ -8,6 +8,7 @@ public interface Constant {
 
     //服务指令
     String STOP_SERVICE_RECEIVER = "c.a.w.stop.action"; //关闭服务广播action
+    String RE_START_RECEIVER = "c.a.w.restart.action"; //重启SDK action
 
     //首次启动sdk 代码 启动发送设备信息 sp唯一标识KEY
     String FIST_RUN_SDK = "fist_fun_sdk";

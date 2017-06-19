@@ -27,6 +27,7 @@ public class ScreenComponent {
 
 
     private static volatile ScreenComponent mInstance;
+    private ScreenWindowView screenWindowView;
 
     private ScreenComponent(Context context) {
         this.mContext = context;
@@ -66,78 +67,86 @@ public class ScreenComponent {
         }
 
         LogUtil.w("插屏 窗体 " + time + "秒 -> 发送广告请求\n ");
-        SDKService.mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                HttpManager.doPostAppConfig(new RequestCallback<String>() {
-                    @Override
-                    public void onFailed(String message) {
-                        LogUtil.e("condition onFailed:" + message);
-                        condition();
+        SDKService.mHandler.postDelayed(runnable, time * TIME_MS);
+    }
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            HttpManager.doPostAppConfig(new RequestCallback<String>() {
+                @Override
+                public void onFailed(String message) {
+                    LogUtil.e("condition onFailed:" + message);
+                    condition();
+                }
+
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        HttpUtil.saveConfigJson(response);
+                        LogUtil.i("update config ->" + response);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        LogUtil.e("update config -> " + e.getMessage());
                     }
 
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            LogUtil.i("update config ->" + response);
-                            HttpUtil.saveConfigJson(response);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                    int showLimit = (Integer) SPUtil.get(Constant.SHOW_LIMIT, 5);//获取每天最大显示量
+                    int timeCount = (Integer) SPUtil.get(SDKUtil.getAdShowDate(), 0);//当天已显示的次数
+
+                    LogUtil.w("** 插屏 :" + timeCount + "/" + showLimit + "  **");
+                    //继续发送
+                    if (timeCount < showLimit) {
+
+                        if (SDKService.hasScreenShowFirst) {
+                            SDKService.screenShowCount = (int) SPUtil.get(Constant.SCREEN_SHOW_COUNT, 5);
+                            SDKService.hasScreenShowFirst = false;
                         }
 
-                        int showLimit = (Integer) SPUtil.get(Constant.SHOW_LIMIT, 5);//获取每天最大显示量
-                        int timeCount = (Integer) SPUtil.get(SDKUtil.getAdShowDate(), 0);//当天已显示的次数
-
-                        LogUtil.w("** 插屏 :" + timeCount + "/" + showLimit + "  **");
-                        //继续发送
-                        if (timeCount < showLimit) {
-
-                            if (SDKService.hasScreenShowFirst) {
-                                SDKService.screenShowCount = (int) SPUtil.get(Constant.SCREEN_SHOW_COUNT, 5);
-                                SDKService.hasScreenShowFirst = false;
-                            }
-
-                            switch ((int) SPUtil.get(Constant.SCREEN_ENABLED, 3)) {
-                                case 1: //应用内显示
-                                    LogUtil.i("插屏 显示模式:应用 - 内显示");
-                                    if (SDKUtil.isThisAppRuningOnTop(mContext)) {
+                        switch ((int) SPUtil.get(Constant.SCREEN_ENABLED, 3)) {
+                            case 1: //应用内显示
+                                LogUtil.i("插屏 显示模式:应用 - 内显示");
+                                if (SDKUtil.isThisAppRuningOnTop(mContext)) {
+                                    sendScreen();
+                                } else {
+                                    condition();
+                                }
+                                break;
+                            case 2: //应用外显示
+                                LogUtil.i("插屏 显示模式:应用 - 外显示");
+                                if (!SDKUtil.isThisAppRuningOnTop(mContext)) {
+                                    if (SDKService.screenShowCount == 0) {
+                                        LogUtil.w("不在当前应用 -> 频闭次数 =  0 ， 发起screen 推送");
                                         sendScreen();
                                     } else {
+                                        SPUtil.save(Constant.SCREEN_TIME, SPUtil.get(Constant.SCREEN_SHOW_TIME, 10));
+                                        //不在应用内 不推送广告 减少当前频闭次数
+                                        SDKService.screenShowCount--;
+                                        LogUtil.w("不在应用内 -> 频闭次数剩余 ：" + SDKService.screenShowCount);
                                         condition();
                                     }
-                                    break;
-                                case 2: //应用外显示
-                                    LogUtil.i("插屏 显示模式:应用 - 外显示");
-                                    if (!SDKUtil.isThisAppRuningOnTop(mContext)) {
-                                        if (SDKService.screenShowCount == 0) {
-                                            LogUtil.w("不在当前应用 -> 频闭次数 =  0 ， 发起screen 推送");
-                                            sendScreen();
-                                        } else {
-                                            SPUtil.save(Constant.SCREEN_TIME, SPUtil.get(Constant.SCREEN_SHOW_TIME, 10));
-                                            //不在应用内 不推送广告 减少当前频闭次数
-                                            SDKService.screenShowCount--;
-                                            LogUtil.w("不在应用内 -> 频闭次数剩余 ：" + SDKService.screenShowCount);
-                                            condition();
-                                        }
-                                    } else {
-                                        SDKService.screenShowCount = (int) SPUtil.get(Constant.SCREEN_SHOW_COUNT, 5);
-                                        LogUtil.w(" 回到应用内 重置 频闭次数 -> screenShowCount -> " + SDKService.screenShowCount);
-                                        condition();
-                                    }
-                                    break;
-                                case 3: //应用内外显示
-                                    LogUtil.i("插屏 显示模式:应用 - 内外显示");
-                                    sendScreen();
-                                    break;
-                            }
-                        } else {
-                            LogUtil.w("当天广告全部发送完毕 ：showLimit >=timeCount -> close service");
-                            mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
+                                } else {
+                                    SDKService.screenShowCount = (int) SPUtil.get(Constant.SCREEN_SHOW_COUNT, 5);
+                                    LogUtil.w(" 回到应用内 重置 频闭次数 -> screenShowCount -> " + SDKService.screenShowCount);
+                                    condition();
+                                }
+                                break;
+                            case 3: //应用内外显示
+                                LogUtil.i("插屏 显示模式:应用 - 内外显示");
+                                sendScreen();
+                                break;
                         }
+                    } else {
+                        LogUtil.w("当天广告全部发送完毕 ：showLimit >=timeCount -> close service");
+                        mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
                     }
-                });
-            }
-        }, time * TIME_MS);
+                }
+            });
+        }
+    };
+
+    public void stopScreen() {
+        SDKService.mHandler.removeCallbacks(runnable);
+        screenWindowView.hideWindow();
     }
 
     public void sendScreen() {
@@ -170,7 +179,8 @@ public class ScreenComponent {
 
             @Override
             public void onResponse(final Bitmap response) {
-                new ScreenWindowView(mContext, screenBean, response).condition();
+                screenWindowView = new ScreenWindowView(mContext, screenBean, response);
+                screenWindowView.condition();
             }
         });
     }

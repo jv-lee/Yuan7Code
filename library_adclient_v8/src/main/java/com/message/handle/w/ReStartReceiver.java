@@ -1,23 +1,20 @@
 package com.message.handle.w;
 
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 
 import com.message.handle.m.Am;
-import com.message.handle.utils.LogUtil;
 
 /**
- * 停止服务器广播
+ * Created by Administrator on 2017/6/14.
  */
-public class StopServiceReceiver extends BroadcastReceiver {
+
+public class ReStartReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        LogUtil.i("stop service");
         Am.mContext.stopService(new Intent(Am.mContext, RequestToDataService.class));
+        Am.getInstance(Am.mContext);
     }
-
 }

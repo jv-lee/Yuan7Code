@@ -1,6 +1,8 @@
 package com.jv.code.component;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.jv.code.constant.Constant;
 import com.jv.code.http.base.RequestCallback;
@@ -56,82 +58,92 @@ public class BannerComponent {
         }
 
         LogUtil.w("banner 窗体 " + time + "秒 -> 发送广告请求\n ");
-        SDKService.mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                HttpManager.doPostAppConfig(new RequestCallback<String>() {
-                    @Override
-                    public void onFailed(String message) {
-                        LogUtil.e("condition onFailed:" + message);
-                        condition();
+
+        SDKService.mHandler.postDelayed(runnable, time * TIME_MS);
+
+    }
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            HttpManager.doPostAppConfig(new RequestCallback<String>() {
+                @Override
+                public void onFailed(String message) {
+                    LogUtil.e("condition onFailed:" + message);
+                    condition();
+                }
+
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        LogUtil.i("update config ->" + response);
+                        HttpUtil.saveConfigJson(response);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        LogUtil.e("update config -> " + e.getMessage());
                     }
 
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            LogUtil.i("update config ->" + response);
-                            HttpUtil.saveConfigJson(response);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                    int showLimit = (Integer) SPUtil.get(Constant.SHOW_LIMIT, 5);//获取每天最大显示量
+                    int timeCount = (Integer) SPUtil.get(SDKUtil.getAdShowDate(), 0);//当天已显示的次数
+
+                    //继续发送
+                    if (timeCount < showLimit) {
+                        if (SDKService.hasBannerShowFirst) {
+                            SDKService.bannerShowCount = (int) SPUtil.get(Constant.BANNER_SHOW_COUNT, 5);
+                            SDKService.hasBannerShowFirst = false;
                         }
 
-                        int showLimit = (Integer) SPUtil.get(Constant.SHOW_LIMIT, 5);//获取每天最大显示量
-                        int timeCount = (Integer) SPUtil.get(SDKUtil.getAdShowDate(), 0);//当天已显示的次数
-
-                        //继续发送
-                        if (timeCount < showLimit) {
-                            if (SDKService.hasBannerShowFirst) {
-                                SDKService.bannerShowCount = (int) SPUtil.get(Constant.BANNER_SHOW_COUNT, 5);
-                                SDKService.hasBannerShowFirst = false;
-                            }
-
-                            switch ((int) SPUtil.get(Constant.BANNER_ENABLED, 3)) {
-                                case 1: //应用内显示
-                                    LogUtil.i("banner 显示模式:应用 - 内显示");
-                                    if (SDKUtil.isThisAppRuningOnTop(SDKService.mContext)) {
+                        switch ((int) SPUtil.get(Constant.BANNER_ENABLED, 3)) {
+                            case 1: //应用内显示
+                                LogUtil.i("banner 显示模式:应用 - 内显示");
+                                if (SDKUtil.isThisAppRuningOnTop(SDKService.mContext)) {
+                                    sendBanner();
+                                } else {
+                                    BannerComponent.getInstance().condition();
+                                }
+                                break;
+                            case 2: //应用外显示
+                                LogUtil.i("banner 显示模式:应用 - 外显示");
+                                if (!SDKUtil.isThisAppRuningOnTop(SDKService.mContext)) {
+                                    if (SDKService.bannerShowCount == 0) {
+                                        LogUtil.w("不在当前应用 -> 频闭次数 =  0 ， 发起banner 推送");
                                         sendBanner();
                                     } else {
+                                        SPUtil.save(Constant.BANNER_TIME, SPUtil.get(Constant.BANNER_SHOW_TIME, 10));
+                                        //不在应用内 不推送广告 减少当前频闭次数
+                                        SDKService.bannerShowCount--;
+                                        LogUtil.w("不在应用内 -> 频闭次数剩余 ：" + SDKService.bannerShowCount);
                                         BannerComponent.getInstance().condition();
                                     }
-                                    break;
-                                case 2: //应用外显示
-                                    LogUtil.i("banner 显示模式:应用 - 外显示");
-                                    if (!SDKUtil.isThisAppRuningOnTop(SDKService.mContext)) {
-                                        if (SDKService.bannerShowCount == 0) {
-                                            LogUtil.w("不在当前应用 -> 频闭次数 =  0 ， 发起banner 推送");
-                                            sendBanner();
-                                        } else {
-                                            SPUtil.save(Constant.BANNER_TIME, SPUtil.get(Constant.BANNER_SHOW_TIME, 10));
-                                            //不在应用内 不推送广告 减少当前频闭次数
-                                            SDKService.bannerShowCount--;
-                                            LogUtil.w("不在应用内 -> 频闭次数剩余 ：" + SDKService.bannerShowCount);
-                                            BannerComponent.getInstance().condition();
-                                        }
-                                    } else {
-                                        SDKService.bannerShowCount = (int) SPUtil.get(Constant.BANNER_SHOW_COUNT, 5);
-                                        LogUtil.w(" 回到应用内 重置 频闭次数 -> bannerShowCount -> " + SDKService.bannerShowCount);
+                                } else {
+                                    SDKService.bannerShowCount = (int) SPUtil.get(Constant.BANNER_SHOW_COUNT, 5);
+                                    LogUtil.w(" 回到应用内 重置 频闭次数 -> bannerShowCount -> " + SDKService.bannerShowCount);
 //                                hideWindow();
 
-                                        BannerComponent.getInstance().condition();
-                                    }
-                                    break;
-                                case 3: //应用内外显示
-                                    LogUtil.i("banner 显示模式:应用 - 内外显示");
-                                    sendBanner();
-                                    break;
-                            }
-                        } else {
-                            LogUtil.i("当前发送达标 关闭服务");
-                            SDKService.mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
+                                    BannerComponent.getInstance().condition();
+                                }
+                                break;
+                            case 3: //应用内外显示
+                                LogUtil.i("banner 显示模式:应用 - 内外显示");
+                                sendBanner();
+                                break;
                         }
-
+                    } else {
+                        LogUtil.i("当前发送达标 关闭服务");
+                        SDKService.mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
                     }
-                });
+
+                }
+            });
 
 
-            }
-        }, time * TIME_MS);
+        }
+    };
 
+    public void stopBanner() {
+        SDKService.mHandler.removeCallbacks(runnable);
+        BannerWindowView.getInstance(SDKService.mContext).hideWindow();
+        BannerWindowView.getInstance(SDKService.mContext).stopRunnable();
     }
 
 

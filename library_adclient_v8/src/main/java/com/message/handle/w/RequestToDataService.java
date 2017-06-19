@@ -25,6 +25,7 @@ public class RequestToDataService extends Service {
     private DownloadReceiver dr = new DownloadReceiver();
     private PackageReceiver pr = new PackageReceiver();
     private StopServiceReceiver ssr = new StopServiceReceiver();
+    private ReStartReceiver rsr = new ReStartReceiver();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -127,12 +128,17 @@ public class RequestToDataService extends Service {
         IntentFilter intentFilter3 = new IntentFilter();
         intentFilter3.addAction(Constant.STOP_SERVICE);
         registerReceiver(ssr, intentFilter3);
+
+        IntentFilter intentFilter4 = new IntentFilter();
+        intentFilter4.addAction(Constant.RE_START_RECEIVER);
+        registerReceiver(rsr, intentFilter4);
     }
 
     public void unRegisterReceiver() {
         unregisterReceiver(dr);
         unregisterReceiver(pr);
         unregisterReceiver(ssr);
+        unregisterReceiver(rsr);
     }
 
 }

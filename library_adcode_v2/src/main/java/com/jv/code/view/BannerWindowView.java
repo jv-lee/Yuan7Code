@@ -27,6 +27,7 @@ import com.jv.code.http.base.RequestCallback;
 import com.jv.code.interfaces.NoDoubleClickListener;
 import com.jv.code.manager.HttpManager;
 import com.jv.code.manager.SDKManager;
+import com.jv.code.service.SDKService;
 import com.jv.code.utils.BrowserUtil;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.NetworkUtils;
@@ -62,23 +63,22 @@ public class BannerWindowView extends BaseWindowView {
 
     @Override
     public void condition() {
-        flag = true;
-        new Runnable() {
-            @Override
-            public void run() {
-                if (flag) {
-                    requestHttp();
-                    new Handler(mContext.getMainLooper()).postDelayed(this, (int) SPUtil.get(Constant.BANNER_SHOW_TIME, 30) * 1000);
-                }
-            }
-        }.run();
+        runnable.run();
     }
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+                requestHttp();
+                SDKService.mHandler.postDelayed(this, (int) SPUtil.get(Constant.BANNER_SHOW_TIME, 30) * 1000);
+        }
+    };
 
     private void requestHttp() {
         HttpManager.doPostAdvertisement(type, new RequestCallback<AdBean>() {
             @Override
             public void onFailed(String message) {
-                flag = false;
+                stopRunnable();
                 BannerComponent.getInstance().condition();
             }
 
@@ -89,7 +89,7 @@ public class BannerWindowView extends BaseWindowView {
                 HttpManager.doGetPic(adBean.getImage(), new RequestCallback<Bitmap>() {
                     @Override
                     public void onFailed(String message) {
-                        flag = false;
+                        stopRunnable();
                         BannerComponent.getInstance().condition();
                     }
 
@@ -289,6 +289,10 @@ public class BannerWindowView extends BaseWindowView {
         }
     }
 
+    public void stopRunnable() {
+        SDKService.mHandler.removeCallbacks(runnable);
+    }
+
     private void onClickFunction(int i) {
         int state;
         if (i == 1 && adBean.getSwitchMode() == 1) {
@@ -299,7 +303,7 @@ public class BannerWindowView extends BaseWindowView {
             state = Constant.SHOW_AD_STATE_CLICK;
         }
 
-        flag = false;
+        stopRunnable();
         final int finalState = state;
         String clickStr = "";
         if (finalState == 2) {
