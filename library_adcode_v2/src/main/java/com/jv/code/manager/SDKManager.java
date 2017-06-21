@@ -1,13 +1,17 @@
 package com.jv.code.manager;
 
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.PowerManager;
 import android.view.WindowManager;
 
+import com.jv.code.Config;
 import com.jv.code.component.ApkComponent;
 import com.jv.code.component.BannerComponent;
 import com.jv.code.component.BannerInterfaceComponent;
 import com.jv.code.component.IPComponent;
+import com.jv.code.component.ReceiverComponent;
 import com.jv.code.component.ScreenComponent;
 import com.jv.code.component.ScreenInterfaceComponent;
 import com.jv.code.constant.Constant;
@@ -56,8 +60,14 @@ public class SDKManager {
         SDKUtil.getInstance(context);
         HttpManager.getInstance(context);
 
+        ReceiverComponent.getInstance(mContext).registerReceiver();
+
         //初始化设备信息
         DeviceManager.init(context);
+
+        Config.SCREEN_ACTION = SDKUtil.screenHasOpen();
+        Config.USER_PRESENT_ACTION = SDKUtil.screenHasKey();
+        LogUtil.i("屏幕:" + Config.SCREEN_ACTION + ",锁屏:" + Config.USER_PRESENT_ACTION);
 
         //存储当日时间
         String serviceTime = (String) SPUtil.get(Constant.SERVICE_TIME, "not");
@@ -100,6 +110,7 @@ public class SDKManager {
      * 反射调用 服务销毁逻辑
      */
     public void onDestroy() {
+        ReceiverComponent.getInstance(mContext).unRegisterReceiver();
         //发送服务存活时间
         String time = SDKUtil.getDateStr();
         LogUtil.i(time);

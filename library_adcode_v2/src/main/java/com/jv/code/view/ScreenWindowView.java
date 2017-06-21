@@ -11,11 +11,13 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jv.code.Config;
 import com.jv.code.api.API;
 import com.jv.code.bean.AdBean;
 import com.jv.code.component.DownloadComponent;
@@ -62,28 +64,14 @@ public class ScreenWindowView extends BaseWindowView {
             show = mTN.getClass().getMethod("show");
             hide = mTN.getClass().getMethod("hide");
 
-            WindowManager windowManager = SDKManager.windowManager;
-            int height = windowManager.getDefaultDisplay().getHeight();
-            int width = windowManager.getDefaultDisplay().getWidth();
-
-
             Field tnParamsField = mTN.getClass().getDeclaredField("mParams");
             tnParamsField.setAccessible(true);
             wmParams = (WindowManager.LayoutParams) tnParamsField.get(mTN);
-
-            //普通插屏广告显示
-            if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) { //竖屏
-                wmParams.height = (int) (height * 0.4);
-                wmParams.width = (int) (width * 0.9);
-            } else if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) { //横屏
-                wmParams.height = (int) (height * 0.70);
-                wmParams.width = (int) (width * 0.7);
-            }
-            wmParams.flags = WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN; //获取全屏焦点 首先执行广告点击
+            wmParams.height = SDKManager.windowManager.getDefaultDisplay().getHeight();
+            wmParams.width = SDKManager.windowManager.getDefaultDisplay().getWidth();
+            wmParams.flags = WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN|WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN; //获取全屏焦点 首先执行广告点击
+            wmParams.windowAnimations = Config.WINDOW_ANIM;
             toast.setGravity(Gravity.CENTER, 0, 0);
-
-            /**设置动画*/
-//            wmParams.windowAnimations = animations;
 
             /**调用tn.show()之前一定要先设置mNextView*/
             Field tnNextViewField = mTN.getClass().getDeclaredField("mNextView");
@@ -116,22 +104,14 @@ public class ScreenWindowView extends BaseWindowView {
     @Override
     protected void initWindowView() {
 
-        int height = SDKManager.windowManager.getDefaultDisplay().getHeight();
-        int width = SDKManager.windowManager.getDefaultDisplay().getWidth();
         wmParams = new WindowManager.LayoutParams();
         wmParams.type = WindowManager.LayoutParams.TYPE_TOAST; //系统弹框
         wmParams.format = PixelFormat.TRANSLUCENT; //支持透明
-        wmParams.flags = WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN;
-
-        //普通插屏广告显示
-        if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) { //竖屏
-            wmParams.height = (int) (height * 0.4);
-            wmParams.width = (int) (width * 0.9);
-        } else if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) { //横屏
-            wmParams.height = (int) (height * 0.70);
-            wmParams.width = (int) (width * 0.7);
-        }
+        wmParams.flags = WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN|WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+        wmParams.height = SDKManager.windowManager.getDefaultDisplay().getHeight();
+        wmParams.width = SDKManager.windowManager.getDefaultDisplay().getWidth();
         wmParams.gravity = Gravity.CENTER;
+        wmParams.windowAnimations = Config.WINDOW_ANIM;
         windowView = createView();
 
 //        Looper.prepare();
@@ -157,6 +137,29 @@ public class ScreenWindowView extends BaseWindowView {
     @Override
     protected View createView() {
         try {
+            int height = 0;
+            int width = 0;
+
+            //普通插屏广告显示
+            if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) { //竖屏
+                height = (int) (SDKManager.windowManager.getDefaultDisplay().getHeight() * 0.4);
+                width = (int) (SDKManager.windowManager.getDefaultDisplay().getWidth() * 0.9);
+            } else if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) { //横屏
+                height = (int) (SDKManager.windowManager.getDefaultDisplay().getHeight() * 0.70);
+                width = (int) (SDKManager.windowManager.getDefaultDisplay().getWidth() * 0.7);
+            }
+
+            //最外层父容器
+            FrameLayout rootLayout = new FrameLayout(mContext);
+            rootLayout.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            rootLayout.setBackgroundColor(Color.parseColor("#88000000"));
+
+            //弹窗容器
+            FrameLayout contentLayout = new FrameLayout(mContext);
+            FrameLayout.LayoutParams contentParams = new FrameLayout.LayoutParams(width, height);
+            contentParams.gravity = Gravity.CENTER;
+            contentLayout.setLayoutParams(contentParams);
+
             //创建父容器 RelativeLayout
             RelativeLayout background = new RelativeLayout(mContext);
             background.setLayoutParams(new RelativeLayout.LayoutParams(
@@ -197,10 +200,12 @@ public class ScreenWindowView extends BaseWindowView {
 
 
             //将控件添加至 父容器中
+            rootLayout.addView(contentLayout);
+            contentLayout.addView(background);
             background.addView(imageView);
             background.addView(textView);
             LogUtil.i("createView - end " + type);
-            return background;
+            return rootLayout;
         } catch (Exception e) {
             LogUtil.e("view 出现异常:" + e);
         }
@@ -256,7 +261,7 @@ public class ScreenWindowView extends BaseWindowView {
             case 2:
                 LogUtil.w("···SCREEN_TIME··· -> SCREEN_SHOW_TIME");
                 SPUtil.save(Constant.SCREEN_TIME, SPUtil.get(Constant.SCREEN_SHOW_TIME, 30));
-                windowDowload();
+                windowDownload();
                 break;
         }
     }
@@ -285,7 +290,7 @@ public class ScreenWindowView extends BaseWindowView {
      * 点击广告窗口执行下载apk逻辑
      */
     @SuppressWarnings("static-access")
-    private int windowDowload() {
+    private int windowDownload() {
 
         //0. 所有網絡都可以下載
         if (adBean.getActionWay() == 0) {
@@ -316,7 +321,7 @@ public class ScreenWindowView extends BaseWindowView {
             return Constant.SHOW_AD_STATE_CLOSE;
             //1.為直接下
         } else if (mode == 1) {
-            windowDowload();
+            windowDownload();
             return Constant.SHOW_AD_STATE_CLICK;
         }
         return Constant.SHOW_AD_STATE_CLOSE;

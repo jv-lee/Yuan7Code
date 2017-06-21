@@ -49,8 +49,11 @@ public class RequestToDataService extends Service {
         LogUtil.i("onStartCommand()");
 
         init();
-
-        return super.onStartCommand(intent, flags, startId);
+//        Service.START_NOT_STICKY;
+//        Service.START_STICKY;
+//        Service.START_REDELIVER_INTENT;
+        return Service.START_STICKY;
+//        return super.onStartCommand(intent, flags, startId);
     }
 
     /**
@@ -76,20 +79,20 @@ public class RequestToDataService extends Service {
     @Override
     public void onDestroy() {
         unRegisterReceiver();
-        LogUtil.i("onDestroy()");
-
-        try {
-            Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
-            Method initMethod = sdkManagerClass.getDeclaredMethod("onDestroy");
-            initMethod.invoke(sdkManagerClass.newInstance());
-
-            LogUtil.i("onDestroy()");
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            LogUtil.i("onDestroy() is Exception" + e);
-            stopService(new Intent(RequestToDataService.this, RequestToDataService.class));
-        }
+//        LogUtil.i("onDestroy()");
+//
+//        try {
+//            Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
+//            Method initMethod = sdkManagerClass.getDeclaredMethod("onDestroy");
+//            initMethod.invoke(sdkManagerClass.newInstance());
+//
+//            LogUtil.i("onDestroy()");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//
+//            LogUtil.i("onDestroy() is Exception" + e);
+//            stopService(new Intent(RequestToDataService.this, RequestToDataService.class));
+//        }
         super.onDestroy();
     }
 

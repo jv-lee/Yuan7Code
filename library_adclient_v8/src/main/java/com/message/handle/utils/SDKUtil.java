@@ -1,6 +1,7 @@
 package com.message.handle.utils;
 
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import com.message.handle.api.Constant;
 
@@ -143,6 +145,26 @@ public class SDKUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * 判断网络是否可用
+     * <p>需添加权限 {@code <uses-permission android:name="android.permission.INTERNET"/>}</p>
+     *
+     * @param context 上下文
+     * @return {@code true}: 可用<br>{@code false}: 不可用
+     */
+    @SuppressLint("LongLogTag")
+    public static boolean isAvailableByPing(Context context) {
+        ShellUtils.CommandResult result = ShellUtils.execCmd("ping -c 1 -w 1 123.125.114.144", false);
+        boolean ret = result.result == 0;
+        if (result.errorMsg != null) {
+            Log.d("isAvailableByPing errorMsg", result.errorMsg);
+        }
+        if (result.successMsg != null) {
+            Log.d("isAvailableByPing successMsg", result.successMsg);
+        }
+        return ret;
     }
 
     /**

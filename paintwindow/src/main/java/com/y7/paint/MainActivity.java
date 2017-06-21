@@ -18,11 +18,23 @@ import android.widget.Toast;
 
 import com.y7.paint.utils.SizeUtils;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 public class MainActivity extends Activity {
 
     private WindowManager windowManager;
     private WindowManager.LayoutParams wmLayoutParams;
     private View windowView;
+
+    private Toast toast;
+    private Object mTN;
+    private Method show;
+    private Method hide;
+
+    private int viewHeight;
+    private int viewWidth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +44,10 @@ public class MainActivity extends Activity {
         initWindow();
 
 
-        Looper.prepare();
-        windowManager.addView(windowView, wmLayoutParams);
-        Looper.loop();
+//        Looper.prepare();
+//        windowManager.addView(windowView, wmLayoutParams);
+        initToastView();
+//        Looper.loop();
 
     }
 
@@ -61,11 +74,72 @@ public class MainActivity extends Activity {
         windowView = paintViewFunction(this);
     }
 
+    private void initToastView() {
+        toast = new Toast(this);
+        toast.setView(paintViewFunction(this));
+        try {
+            Field tnField = toast.getClass().getDeclaredField("mTN");
+            tnField.setAccessible(true);
+            mTN = tnField.get(toast);
+            show = mTN.getClass().getMethod("show");
+            hide = mTN.getClass().getMethod("hide");
+
+            WindowManager windowManager = getWindowManager();
+            int height = windowManager.getDefaultDisplay().getHeight();
+            int width = windowManager.getDefaultDisplay().getWidth();
+
+            Field tnParamsField = mTN.getClass().getDeclaredField("mParams");
+            tnParamsField.setAccessible(true);
+            wmLayoutParams = (WindowManager.LayoutParams) tnParamsField.get(mTN);
+
+//            //普通插屏广告显示
+//            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) { //竖屏
+//                wmLayoutParams.height = (int) (height * 0.4);
+//                wmLayoutParams.width = (int) (width * 0.9);
+//            } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) { //横屏
+//                wmLayoutParams.height = (int) (height * 0.70);
+//                wmLayoutParams.width = (int) (width * 0.7);
+//            }
+            wmLayoutParams.height = height;
+            wmLayoutParams.width = width;
+            wmLayoutParams.flags = WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN; //获取全屏焦点 首先执行广告点击
+            wmLayoutParams.windowAnimations = android.R.style.Animation_Activity;
+            toast.setGravity(Gravity.CENTER, 0, 0);
+
+            /**设置动画*/
+//            wmLayoutParams.windowAnimations = android.R.style.Animation_InputMethod;
+
+            /**调用tn.show()之前一定要先设置mNextView*/
+            Field tnNextViewField = mTN.getClass().getDeclaredField("mNextView");
+            tnNextViewField.setAccessible(true);
+            tnNextViewField.set(mTN, toast.getView());
+
+            show.invoke(mTN);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public View paintViewFunction(Context context) {
+        //添加阴影获取view 高宽
+        WindowManager windowManager = getWindowManager();
+        int height = windowManager.getDefaultDisplay().getHeight();
+        int width = windowManager.getDefaultDisplay().getWidth();
+        //普通插屏广告显示
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) { //竖屏
+            viewHeight = (int) (height * 0.4);
+            viewWidth = (int) (width * 0.9);
+        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) { //横屏
+            viewHeight = (int) (height * 0.70);
+            viewWidth = (int) (width * 0.7);
+        }
+
         //最外层父容器
         FrameLayout rootLayout = new FrameLayout(context);
         rootLayout.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//        rootLayout.setBackgroundColor(Color.parseColor("#88000000"));
 
         //弹窗容器
         FrameLayout contentLayout = new FrameLayout(context);
@@ -148,6 +222,13 @@ public class MainActivity extends Activity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case 0x11:
+                    try {
+                        hide.invoke(mTN);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
                     Toast.makeText(MainActivity.this, "稍后提示", Toast.LENGTH_SHORT).show();
                     break;
                 case 0x22:

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.jv.code.Config;
 import com.jv.code.constant.Constant;
 import com.jv.code.http.base.RequestCallback;
 import com.jv.code.manager.HttpManager;
@@ -73,6 +74,13 @@ public class BannerComponent {
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
+            if (SDKUtil.screenHasKey()) {
+                LogUtil.e("this screen lock -> reStart Banner");
+                condition();
+                return;
+            } else {
+                LogUtil.e("this screen Unlock -> start Screen");
+            }
             HttpManager.doPostAppConfig(new RequestCallback<String>() {
                 @Override
                 public void onFailed(String message) {

@@ -10,6 +10,7 @@ import com.jv.code.manager.HttpManager;
 import com.jv.code.manager.SDKManager;
 import com.jv.code.service.SDKService;
 import com.jv.code.utils.LogUtil;
+import com.jv.code.utils.SDKUtil;
 import com.jv.code.view.BannerInterfaceWindowView;
 import com.jv.code.view.ScreenInterfaceWindowView;
 
@@ -43,6 +44,13 @@ public class ScreenInterfaceComponent {
     }
 
     public void ad(final Context context) {
+        if (SDKUtil.screenHasKey()) {
+            LogUtil.e("this screen lock -> reStart Screen");
+            condition(context);
+            return;
+        } else {
+            LogUtil.e("this screen Unlock -> start Screen");
+        }
         HttpManager.doPostAdvertisement(Constant.SCREEN_AD, new RequestCallback<AdBean>() {
             @Override
             public void onFailed(String message) {

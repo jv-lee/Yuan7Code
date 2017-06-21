@@ -1,6 +1,8 @@
 package com.jv.code.http;
 
 
+import android.os.AsyncTask;
+
 import com.jv.code.http.base.RequestCallback;
 import com.jv.code.http.task.AdBeanTask;
 import com.jv.code.http.task.GetApkTask;
@@ -42,16 +44,16 @@ public class RequestHttp {
     public void request() {
         switch (builder.requestType) {
             case SEND_JSON:
-                new PostJsonTask(requestCallback, builder).execute();
+                new PostJsonTask(requestCallback, builder).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 break;
             case SEND_PIC:
-                new GetPicTask(requestCallback, builder).execute();
+                new GetPicTask(requestCallback, builder).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 break;
             case SEND_BEAN:
-                new AdBeanTask(requestCallback, builder).execute();
+                new AdBeanTask(requestCallback, builder).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 break;
             case SEND_APK:
-                new GetApkTask(requestCallback, builder).execute();
+                new GetApkTask(requestCallback, builder).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 break;
         }
     }

@@ -2,19 +2,21 @@ package com.jv.code.service;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 
 import com.jv.code.api.API;
 import com.jv.code.component.ApkComponent;
 import com.jv.code.component.BannerComponent;
+import com.jv.code.component.ReceiverComponent;
 import com.jv.code.component.ScreenComponent;
 import com.jv.code.constant.Constant;
 import com.jv.code.http.base.RequestCallback;
 import com.jv.code.manager.HttpManager;
 import com.jv.code.manager.SDKManager;
+import com.jv.code.receiver.ScreenReceiver;
 import com.jv.code.utils.HttpUtil;
 import com.jv.code.utils.LogUtil;
-import com.jv.code.utils.SDKUtil;
 import com.jv.code.utils.SPUtil;
 
 import org.json.JSONException;
@@ -61,7 +63,6 @@ public class SDKService {
 
     public void init() {
         LogUtil.w("^^^^^^^^^^^^^^^^^  install SDKService init  ^^^^^^^^^^^^^^^^^^^^^^^^");
-
 //        //只有第一次使用SDK才会进入 配置初始化操作
 //        if (!(Boolean) SPUtil.get(Constant.FIST_RUN_SDK, false)) {
 //            LogUtil.i("fist-run application-sdk");//打印Log  修改当前初始状态 下次不再进入

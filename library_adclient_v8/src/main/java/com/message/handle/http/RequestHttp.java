@@ -1,6 +1,8 @@
 package com.message.handle.http;
 
 
+import android.os.AsyncTask;
+
 import com.message.handle.http.base.RequestCallback;
 import com.message.handle.http.task.PostJsonTask;
 
@@ -39,7 +41,7 @@ public class RequestHttp {
     public void request() {
         switch (builder.requestType) {
             case SEND_JSON:
-                new PostJsonTask(requestCallback, builder).execute();
+                new PostJsonTask(requestCallback, builder).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 break;
         }
     }

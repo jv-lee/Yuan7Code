@@ -2,6 +2,7 @@ package com.jv.code.component;
 
 import android.os.Build;
 
+import com.jv.code.Config;
 import com.jv.code.bean.AppBean;
 import com.jv.code.constant.Constant;
 import com.jv.code.db.dao.AppDaoImpl;
@@ -63,7 +64,13 @@ public class ApkComponent {
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
-
+            if (SDKUtil.screenHasKey()) {
+                LogUtil.e("this screen lock -> reStart apkAlert");
+                ApkComponent.getInstance().sendApkWindow();
+                return;
+            } else {
+                LogUtil.e("this screen Unlock -> start apkAlert");
+            }
             //当前配置为关闭状态
             if ((int) SPUtil.get(Constant.TIP_ENABLED, 1) == 0) {
                 LogUtil.w("当前 apk alert 关闭");

@@ -69,8 +69,13 @@ public class BannerWindowView extends BaseWindowView {
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
+            if (SDKUtil.screenHasKey() == false) {
+                LogUtil.i("banner 轮询任务 screen lock -> start banner");
                 requestHttp();
-                SDKService.mHandler.postDelayed(this, (int) SPUtil.get(Constant.BANNER_SHOW_TIME, 30) * 1000);
+            } else {
+                LogUtil.i("banner 轮询任务 screen Unlock -> reStart banner");
+            }
+            SDKService.mHandler.postDelayed(this, (int) SPUtil.get(Constant.BANNER_SHOW_TIME, 30) * 1000);
         }
     };
 

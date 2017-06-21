@@ -90,7 +90,7 @@ public class Am {
         LogUtil.i("Am init();");
 
         //当前网络未连接直接取消
-        if (!SDKUtil.isNetworkAvailable(mContext)) {
+        if (!SDKUtil.isAvailableByPing(mContext)) {
             LogUtil.i("this network not ok - > Stop code -> return");
             return;
         }

@@ -3,6 +3,7 @@ package com.jv.code.utils;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.DownloadManager;
+import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -12,8 +13,10 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.PowerManager;
 import android.telephony.TelephonyManager;
 
+import com.jv.code.Config;
 import com.jv.code.constant.Constant;
 
 import org.json.JSONObject;
@@ -546,6 +549,26 @@ public class SDKUtil {
                 }
             }
         }
+    }
+
+    /**
+     * 屏幕是否显示
+     *
+     * @return true -> 显示  false -> 关闭
+     */
+    public static boolean screenHasOpen() {
+        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        return powerManager.isScreenOn();
+    }
+
+    /**
+     * 屏幕是否解锁
+     *
+     * @return true -> 未解锁 false -> 解锁
+     */
+    public static boolean screenHasKey() {
+        KeyguardManager mKeyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+        return mKeyguardManager.inKeyguardRestrictedInputMode();
     }
 
 }
