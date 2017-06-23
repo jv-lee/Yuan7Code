@@ -10,7 +10,7 @@ import android.net.Uri;
 
 import com.jv.code.http.RequestHttp;
 import com.jv.code.http.base.BaseTask;
-import com.jv.code.http.base.RequestCallback;
+import com.jv.code.interfaces.RequestCallback;
 import com.jv.code.manager.SDKManager;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;

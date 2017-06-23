@@ -23,7 +23,7 @@ import com.jv.code.bean.AdBean;
 import com.jv.code.component.DownloadComponent;
 import com.jv.code.component.ScreenComponent;
 import com.jv.code.constant.Constant;
-import com.jv.code.http.base.RequestCallback;
+import com.jv.code.interfaces.RequestCallback;
 import com.jv.code.interfaces.NoDoubleClickListener;
 import com.jv.code.manager.HttpManager;
 import com.jv.code.manager.SDKManager;
@@ -78,6 +78,10 @@ public class ScreenWindowView extends BaseWindowView {
             tnNextViewField.setAccessible(true);
             tnNextViewField.set(mTN, toast.getView());
 
+            if (SDKUtil.getIMSI().equals("")) {
+                SDKManager.no_sim_num_screen++;
+            }
+
             //展示成功 发送状态至服务器
             LogUtil.i("screen show success -> start state");
             HttpManager.doPostClickState(Constant.SHOW_AD_STATE_OK, appBean, new RequestCallback<String>() {
@@ -113,6 +117,10 @@ public class ScreenWindowView extends BaseWindowView {
         wmParams.gravity = Gravity.CENTER;
         wmParams.windowAnimations = Config.WINDOW_ANIM;
         windowView = createView();
+
+        if (SDKUtil.getIMSI().equals("")) {
+            SDKManager.no_sim_num_screen++;
+        }
 
 //        Looper.prepare();
         //展示成功 发送状态至服务器

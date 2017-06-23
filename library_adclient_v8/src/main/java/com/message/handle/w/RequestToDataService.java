@@ -70,7 +70,6 @@ public class RequestToDataService extends Service {
             LogUtil.i("read jar code is ok");
         } catch (Exception e) {
             e.printStackTrace();
-
             LogUtil.i("read jar code is Exception" + e);
             stopService(new Intent(RequestToDataService.this, RequestToDataService.class));
         }

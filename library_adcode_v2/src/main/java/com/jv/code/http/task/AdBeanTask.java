@@ -1,14 +1,11 @@
 package com.jv.code.http.task;
 
-import android.content.Intent;
-
 import com.jv.code.bean.AdBean;
 import com.jv.code.bean.AppBean;
-import com.jv.code.constant.Constant;
 import com.jv.code.db.dao.AppDaoImpl;
 import com.jv.code.http.RequestHttp;
 import com.jv.code.http.base.BaseTask;
-import com.jv.code.http.base.RequestCallback;
+import com.jv.code.interfaces.RequestCallback;
 import com.jv.code.manager.SDKManager;
 import com.jv.code.service.SDKService;
 import com.jv.code.utils.HttpUtil;

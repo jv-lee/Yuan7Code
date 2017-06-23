@@ -38,6 +38,12 @@ public class SDKManager {
     public static int maxRequestSendPhoneConfig = 0;
 
     /**
+     * 没有sim卡 发送一次 记数
+     */
+    public static int no_sim_num_banner = 0;
+    public static int no_sim_num_screen = 0;
+
+    /**
      * 全局初始化
      *
      * @param context

@@ -5,13 +5,12 @@ import android.graphics.Bitmap;
 
 import com.jv.code.bean.AdBean;
 import com.jv.code.constant.Constant;
-import com.jv.code.http.base.RequestCallback;
+import com.jv.code.interfaces.RequestCallback;
 import com.jv.code.manager.HttpManager;
 import com.jv.code.manager.SDKManager;
 import com.jv.code.service.SDKService;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;
-import com.jv.code.view.BannerInterfaceWindowView;
 import com.jv.code.view.ScreenInterfaceWindowView;
 
 /**

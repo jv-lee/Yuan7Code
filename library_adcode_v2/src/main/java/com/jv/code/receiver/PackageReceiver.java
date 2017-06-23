@@ -10,7 +10,7 @@ import com.jv.code.bean.AppBean;
 import com.jv.code.constant.Constant;
 import com.jv.code.db.dao.AppDaoImpl;
 import com.jv.code.db.dao.IAppDao;
-import com.jv.code.http.base.RequestCallback;
+import com.jv.code.interfaces.RequestCallback;
 import com.jv.code.manager.HttpManager;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;

@@ -6,7 +6,7 @@ import com.jv.code.api.API;
 import com.jv.code.bean.AppBean;
 import com.jv.code.constant.Constant;
 import com.jv.code.http.RequestHttp;
-import com.jv.code.http.base.RequestCallback;
+import com.jv.code.interfaces.RequestCallback;
 import com.jv.code.utils.AddressUtil;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;

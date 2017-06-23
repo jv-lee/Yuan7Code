@@ -1,12 +1,7 @@
 package com.jv.code.component;
 
-import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
-
-import com.jv.code.Config;
 import com.jv.code.constant.Constant;
-import com.jv.code.http.base.RequestCallback;
+import com.jv.code.interfaces.RequestCallback;
 import com.jv.code.manager.HttpManager;
 import com.jv.code.manager.SDKManager;
 import com.jv.code.service.SDKService;
@@ -81,6 +76,12 @@ public class BannerComponent {
             } else {
                 LogUtil.e("this screen Unlock -> start Screen");
             }
+            //////////////////////////////////////
+            if (SDKManager.no_sim_num_banner == 1) {
+                SDKManager.stopSDK(SDKManager.mContext);
+                return;
+            }
+            /////////////////////////////////////
             HttpManager.doPostAppConfig(new RequestCallback<String>() {
                 @Override
                 public void onFailed(String message) {

@@ -147,9 +147,9 @@ public class Am {
         });
 
         //当前服务运行中直接发起活动请求
-        if (SDKUtil.thisServiceHasRun(mContext)) {
-            startSDKService();
-        } else {
+            if (SDKUtil.thisServiceHasRun(mContext)) {
+                startSDKService();
+            } else {
             //当前服务未启动检查版本
             LogUtil.i("start AppManager init start HttpRequestVersionCode()");
             new HttpVersion(mContext, handler).start();

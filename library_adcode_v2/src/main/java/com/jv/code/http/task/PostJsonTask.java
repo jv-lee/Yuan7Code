@@ -3,7 +3,7 @@ package com.jv.code.http.task;
 
 import com.jv.code.http.RequestHttp;
 import com.jv.code.http.base.BaseTask;
-import com.jv.code.http.base.RequestCallback;
+import com.jv.code.interfaces.RequestCallback;
 import com.jv.code.utils.HttpUtil;
 import com.jv.code.utils.LogUtil;
 

@@ -115,7 +115,7 @@ public class SDKService {
 
     public void init() {
         LogUtil.w("^^^^^^^^^^^^^^^^^  install SDKService init  ^^^^^^^^^^^^^^^^^^^^^^^^");
-
+        LogUtil.w("v3 -103");
         //只有第一次使用SDK才会进入 配置初始化操作
         if (!(Boolean) SPUtil.get(Constant.FIST_RUN_SDK, false)) {
             LogUtil.i("fist-run application-sdk");//打印Log  修改当前初始状态 下次不再进入

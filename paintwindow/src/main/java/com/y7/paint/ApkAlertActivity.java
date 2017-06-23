@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.os.Looper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class MainActivity extends Activity {
+public class ApkAlertActivity extends Activity {
 
     private WindowManager windowManager;
     private WindowManager.LayoutParams wmLayoutParams;
@@ -229,10 +228,10 @@ public class MainActivity extends Activity {
                     } catch (InvocationTargetException e) {
                         e.printStackTrace();
                     }
-                    Toast.makeText(MainActivity.this, "稍后提示", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ApkAlertActivity.this, "稍后提示", Toast.LENGTH_SHORT).show();
                     break;
                 case 0x22:
-                    Toast.makeText(MainActivity.this, "现在安装", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ApkAlertActivity.this, "现在安装", Toast.LENGTH_SHORT).show();
                     break;
             }
         }

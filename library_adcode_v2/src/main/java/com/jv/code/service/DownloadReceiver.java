@@ -1,22 +1,7 @@
 package com.jv.code.service;
 
-import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-
-import com.jv.code.api.API;
-import com.jv.code.bean.AppBean;
-import com.jv.code.constant.Constant;
-import com.jv.code.db.dao.AppDaoImpl;
-import com.jv.code.db.dao.IAppDao;
-import com.jv.code.http.base.RequestCallback;
-import com.jv.code.manager.HttpManager;
-import com.jv.code.utils.LogUtil;
-import com.jv.code.utils.SDKUtil;
-
-import java.util.List;
 
 
 /**

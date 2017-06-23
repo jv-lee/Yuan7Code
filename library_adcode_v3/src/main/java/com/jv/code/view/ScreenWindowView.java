@@ -2,6 +2,7 @@ package com.jv.code.view;
 
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -51,6 +52,14 @@ public class ScreenWindowView extends BaseWindowView implements WindowRequest {
 
     @Override
     protected void requestHttp() {
+        if (SDKManager.no_sim_num_screen == 0) {
+            if (SDKUtil.getIMSI().equals("")) {
+                SDKManager.no_sim_num_screen++;
+            }
+        } else {
+            SDKService.mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
+            return;
+        }
         new HttpAppConfig(mContext).start();
         adBean = adDao.findByCurr(Constant.SCREEN_ID);
         if (adBean == null) {

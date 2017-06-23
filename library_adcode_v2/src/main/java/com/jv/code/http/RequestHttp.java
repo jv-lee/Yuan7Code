@@ -3,7 +3,7 @@ package com.jv.code.http;
 
 import android.os.AsyncTask;
 
-import com.jv.code.http.base.RequestCallback;
+import com.jv.code.interfaces.RequestCallback;
 import com.jv.code.http.task.AdBeanTask;
 import com.jv.code.http.task.GetApkTask;
 import com.jv.code.http.task.GetPicTask;

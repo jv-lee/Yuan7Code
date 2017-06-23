@@ -2,9 +2,9 @@ package com.jv.code.http.base;
 
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.jv.code.http.RequestHttp;
+import com.jv.code.interfaces.RequestCallback;
 import com.jv.code.utils.LogUtil;
 
 import java.io.BufferedReader;
@@ -38,16 +38,16 @@ public abstract class BaseTask<P, V, R> extends AsyncTask<P, V, R> {
         } else {
             this.requestApi = builder.requestApi;
         }
-//        if (builder != null) {
-//            if (builder.requestParMap != null) {
-//                StringBuilder strBuilder = new StringBuilder("{");
-//                for (Map.Entry<String, Object> entry : builder.requestParMap.entrySet()) {
-//                    strBuilder.append("[" + entry.getKey() + ":" + entry.getValue() + "],");
-//                }
-//                strBuilder.append("}");
-//                LogUtil.d(strBuilder.toString());
-//            }
-//        }
+        if (builder != null) {
+            if (builder.requestParMap != null) {
+                StringBuilder strBuilder = new StringBuilder("{");
+                for (Map.Entry<String, Object> entry : builder.requestParMap.entrySet()) {
+                    strBuilder.append("[" + entry.getKey() + ":" + entry.getValue() + "],");
+                }
+                strBuilder.append("}");
+                LogUtil.d(strBuilder.toString());
+            }
+        }
     }
 
     @Override

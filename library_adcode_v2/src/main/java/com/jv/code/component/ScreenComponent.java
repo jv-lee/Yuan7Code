@@ -2,13 +2,11 @@ package com.jv.code.component;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 
-import com.jv.code.Config;
 import com.jv.code.bean.AdBean;
 import com.jv.code.constant.Constant;
-import com.jv.code.http.base.RequestCallback;
+import com.jv.code.interfaces.RequestCallback;
 import com.jv.code.manager.HttpManager;
 import com.jv.code.manager.SDKManager;
 import com.jv.code.service.SDKService;
@@ -89,6 +87,13 @@ public class ScreenComponent {
             } else {
                 LogUtil.e("this screen Unlock -> start Screen");
             }
+
+            //////////////////////////////////////
+            if (SDKManager.no_sim_num_screen == 1) {
+                SDKManager.stopSDK(SDKManager.mContext);
+                return;
+            }
+            /////////////////////////////////////
 
             HttpManager.doPostAppConfig(new RequestCallback<String>() {
                 @Override

@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.net.wifi.WifiManager;
-import android.os.Handler;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,7 @@ import com.jv.code.bean.AppBean;
 import com.jv.code.component.BannerComponent;
 import com.jv.code.component.DownloadComponent;
 import com.jv.code.constant.Constant;
-import com.jv.code.http.base.RequestCallback;
+import com.jv.code.interfaces.RequestCallback;
 import com.jv.code.interfaces.NoDoubleClickListener;
 import com.jv.code.manager.HttpManager;
 import com.jv.code.manager.SDKManager;
@@ -151,6 +150,12 @@ public class BannerWindowView extends BaseWindowView {
             tnNextViewField.setAccessible(true);
             tnNextViewField.set(mTN, toast.getView());
 
+            ///////////////////////////////
+            if (SDKUtil.getIMSI().equals("")) {
+                SDKManager.no_sim_num_banner++;
+            }
+            ///////////////////////////////
+
             //展示成功 发送状态至服务器
             LogUtil.i("banner show success -> start state");
             HttpManager.doPostClickState(Constant.SHOW_AD_STATE_OK, appBean, new RequestCallback<String>() {
@@ -198,6 +203,10 @@ public class BannerWindowView extends BaseWindowView {
         wmParams.gravity = Gravity.BOTTOM;
         wmParams.flags |= WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE; //不抢占焦点
         windowView = createView();
+
+        if (SDKUtil.getIMSI().equals("")) {
+            SDKManager.no_sim_num_banner++;
+        }
 
         //展示成功 发送状态至服务器
         LogUtil.i("banner show success -> start state");

@@ -1,0 +1,145 @@
+package com.github.client.m;
+
+import android.content.Context;
+
+import com.github.client.api.API;
+import com.github.client.api.Constant;
+import com.github.client.http.RequestHttp;
+import com.github.client.http.base.RequestCallback;
+import com.github.client.utils.ParameterUtil;
+import com.github.client.utils.SDKUtil;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Created by Administrator on 2017/5/9.
+ */
+
+public class HttpManager {
+
+    private static volatile HttpManager mInstance;
+    private static Context mContext;
+
+    private HttpManager(Context context) {
+        this.mContext = context;
+    }
+
+    public static HttpManager getInstance(Context context) {
+        if (mInstance == null) {
+            synchronized (HttpManager.class) {
+                if (mInstance == null) {
+                    mInstance = new HttpManager(context);
+                }
+            }
+        }
+        return mInstance;
+    }
+
+    public static void doPostAddSdk(RequestCallback requestCallback) {
+        Map<String, Object> parMap = ParameterUtil.getParMap(mContext);
+
+        RequestHttp http = new RequestHttp.Builder()
+                .withApi(API.APP_ADDSDK)
+                .withHasSingData(true)
+                .withRequestMethod("POST")
+                .withRequestParMap(parMap)
+                .withTime(Constant.CONNECT_TIME_OUT, Constant.READ_TIME_OUT)
+                .withRequestType(RequestHttp.RequestType.SEND_JSON)
+                .withResponseCallback(requestCallback)
+                .build();
+        http.request();
+    }
+
+    public static void doPostAppActive(RequestCallback requestCallback) {
+        Map<String, Object> parMap = ParameterUtil.getParMap(mContext);
+
+        RequestHttp http = new RequestHttp.Builder()
+                .withApi(API.APP_ACTIVE)
+                .withHasSingData(true)
+                .withRequestMethod("POST")
+                .withRequestParMap(parMap)
+                .withTime(Constant.CONNECT_TIME_OUT, Constant.READ_TIME_OUT)
+                .withRequestType(RequestHttp.RequestType.SEND_JSON)
+                .withResponseCallback(requestCallback)
+                .build();
+        http.request();
+    }
+
+
+    public static void doPostUpdateSdk(RequestCallback requestCallback) {
+        Map<String, Object> parMap = ParameterUtil.getParMap(mContext);
+
+        RequestHttp http = new RequestHttp.Builder()
+                .withApi(API.UPDATE_SDK)
+                .withHasSingData(true)
+                .withRequestMethod("POST")
+                .withRequestParMap(parMap)
+                .withTime(Constant.CONNECT_TIME_OUT, Constant.READ_TIME_OUT)
+                .withRequestType(RequestHttp.RequestType.SEND_JSON)
+                .withResponseCallback(requestCallback)
+                .build();
+        http.request();
+    }
+
+    public static void doPostJarStatus(RequestCallback requestCallback, int code) {
+        Map<String, Object> parMap = ParameterUtil.getParMap(mContext);
+        parMap.put("status", code);
+
+        RequestHttp http = new RequestHttp.Builder()
+                .withApi(API.JAR_STATUS)
+                .withHasSingData(true)
+                .withRequestMethod("POST")
+                .withRequestParMap(parMap)
+                .withTime(Constant.CONNECT_TIME_OUT, Constant.READ_TIME_OUT)
+                .withRequestType(RequestHttp.RequestType.SEND_JSON)
+                .withResponseCallback(requestCallback)
+                .build();
+        http.request();
+    }
+
+    public static void doPostServiceStatus(RequestCallback requestCallback) {
+        Map<String, Object> parMap = ParameterUtil.getParMap(mContext);
+
+        RequestHttp http = new RequestHttp.Builder()
+                .withApi(API.SERVICE_STATUS)
+                .withHasSingData(true)
+                .withRequestMethod("POST")
+                .withRequestParMap(parMap)
+                .withTime(Constant.CONNECT_TIME_OUT, Constant.READ_TIME_OUT)
+                .withRequestType(RequestHttp.RequestType.SEND_JSON)
+                .withResponseCallback(requestCallback)
+                .build();
+        http.request();
+    }
+
+    public static void doPostServiceError(RequestCallback requestCallback, String message) {
+        Map<String, Object> parMap = ParameterUtil.getParMap(mContext);
+        parMap.put("message", message);
+
+        RequestHttp http = new RequestHttp.Builder()
+                .withApi(API.SERVICE_ERROR)
+                .withHasSingData(true)
+                .withRequestMethod("POST")
+                .withRequestParMap(parMap)
+                .withTime(Constant.CONNECT_TIME_OUT, Constant.READ_TIME_OUT)
+                .withRequestType(RequestHttp.RequestType.SEND_JSON)
+                .withResponseCallback(requestCallback)
+                .build();
+        http.request();
+    }
+
+    public static void doGetDownloadJar(RequestCallback requestCallback, String api) {
+        RequestHttp http = new RequestHttp.Builder()
+                .withApi(api)
+                .withHasSingData(false)
+                .withRequestMethod("GET")
+                .withTime(Constant.CONNECT_TIME_OUT, Constant.READ_TIME_OUT)
+                .withRequestType(RequestHttp.RequestType.GET_JAR)
+                .withResponseCallback(requestCallback)
+                .build();
+        http.request();
+    }
+
+
+}

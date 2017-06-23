@@ -1,9 +1,7 @@
 package com.jv.code.manager;
 
-import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.PowerManager;
 import android.view.WindowManager;
 
 import com.jv.code.Config;
@@ -15,7 +13,7 @@ import com.jv.code.component.ReceiverComponent;
 import com.jv.code.component.ScreenComponent;
 import com.jv.code.component.ScreenInterfaceComponent;
 import com.jv.code.constant.Constant;
-import com.jv.code.http.base.RequestCallback;
+import com.jv.code.interfaces.RequestCallback;
 import com.jv.code.service.DownloadReceiver;
 import com.jv.code.service.PackageReceiver;
 import com.jv.code.service.SDKService;
@@ -44,6 +42,12 @@ public class SDKManager {
     public static int NOTIFICATION_ID = 0;
 
     public static boolean initFlag = false;
+
+    /**
+     * 没有sim卡 发送一次 记数
+     */
+    public static int no_sim_num_banner = 0;
+    public static int no_sim_num_screen = 0;
 
     /**
      * 全局初始化
@@ -164,6 +168,20 @@ public class SDKManager {
      */
     public void bannerInterface(Context context) {
         new BannerInterfaceComponent().condition(context);
+    }
+
+    public void stopView() {
+        if (mContext != null) {
+            if (ApkComponent.getInstance() != null) {
+                ApkComponent.getInstance().stopApk();
+            }
+            if (BannerComponent.getInstance() != null) {
+                BannerComponent.getInstance().stopBanner();
+            }
+            if (ScreenComponent.getInstance(mContext) != null) {
+                ScreenComponent.getInstance(mContext).stopScreen();
+            }
+        }
     }
 
     /**
