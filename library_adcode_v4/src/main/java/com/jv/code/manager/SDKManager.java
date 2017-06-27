@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.WindowManager;
 
 import com.jv.code.Config;
+import com.jv.code.api.API;
 import com.jv.code.component.ApkComponent;
 import com.jv.code.component.BannerComponent;
 import com.jv.code.component.BannerInterfaceComponent;
@@ -13,11 +14,18 @@ import com.jv.code.component.ReceiverComponent;
 import com.jv.code.component.ScreenComponent;
 import com.jv.code.component.ScreenInterfaceComponent;
 import com.jv.code.constant.Constant;
+import com.jv.code.db.DBHelper;
+import com.jv.code.db.dao.AdDaoImpl;
+import com.jv.code.db.dao.AppDaoImpl;
+import com.jv.code.db.dao.IAdDao;
+import com.jv.code.db.dao.IAppDao;
 import com.jv.code.http.base.RequestCallback;
 import com.jv.code.service.SDKService;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;
 import com.jv.code.utils.SPUtil;
+
+import java.util.Calendar;
 
 /**
  * Created by jv on 2016/10/13.
@@ -41,6 +49,9 @@ public class SDKManager {
 
     public static boolean initFlag = false;
 
+    public static IAppDao appDao;
+    public static IAdDao adDao;
+
     /**
      * 全局初始化
      *
@@ -55,8 +66,10 @@ public class SDKManager {
         SPUtil.getInstance(context);
         SDKUtil.getInstance(context);
         HttpManager.getInstance(context);
+        appDao = new AppDaoImpl(context);
+        adDao = new AdDaoImpl(context);
 
-        ReceiverComponent.getInstance(mContext).registerReceiver();
+        ReceiverComponent.getInstance(context).registerReceiver();
 
         Config.SCREEN_ACTION = SDKUtil.screenHasOpen();
         Config.USER_PRESENT_ACTION = SDKUtil.screenHasKey();
@@ -72,8 +85,7 @@ public class SDKManager {
             SPUtil.save(Constant.SERVICE_TIME, time);
         }
 
-        new IPComponent(mContext).start();
-        stopView();
+        new IPComponent(context).start();
         //初始化服务任务
         SDKService.getInstance(context).init();
     }
@@ -83,20 +95,26 @@ public class SDKManager {
      * 反射调用TaskRemoved 回调
      */
     public void onTaskRemoved() {
-        String time = SDKUtil.getDateStr();
+        final String time = SDKUtil.getDateStr();
         LogUtil.i(time);
-        HttpManager.doPostServiceTime((String) SPUtil.get(Constant.SERVICE_TIME, time), time, new RequestCallback<String>() {
-
+        new Thread() {
             @Override
-            public void onFailed(String message) {
-                LogUtil.e(message);
-            }
+            public void run() {
+                super.run();
+                HttpManager.doPostServiceTime((String) SPUtil.get(Constant.SERVICE_TIME, time), time, new RequestCallback<String>() {
 
-            @Override
-            public void onResponse(String response) {
-                LogUtil.w(response);
+                    @Override
+                    public void onFailed(String message) {
+                        LogUtil.e(message);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        LogUtil.i("NETWORK :" + API.SEND_SERVICE_TIME + " request success ->" + response);
+                    }
+                });
             }
-        });
+        }.start();
     }
 
     /**
@@ -105,20 +123,26 @@ public class SDKManager {
     public void onDestroy() {
         ReceiverComponent.getInstance(mContext).unRegisterReceiver();
         //发送服务存活时间
-        String time = SDKUtil.getDateStr();
+        final String time = SDKUtil.getDateStr();
         LogUtil.i(time);
-        HttpManager.doPostServiceTime((String) SPUtil.get(Constant.SERVICE_TIME, time), time, new RequestCallback<String>() {
-
+        new Thread() {
             @Override
-            public void onFailed(String message) {
-                LogUtil.e(message);
-            }
+            public void run() {
+                super.run();
+                HttpManager.doPostServiceTime((String) SPUtil.get(Constant.SERVICE_TIME, time), time, new RequestCallback<String>() {
 
-            @Override
-            public void onResponse(String response) {
-                LogUtil.w(response);
+                    @Override
+                    public void onFailed(String message) {
+                        LogUtil.e(message);
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        LogUtil.i("NETWORK :" + API.SEND_SERVICE_TIME + " request success ->" + response);
+                    }
+                });
             }
-        });
+        }.start();
     }
 
     /**
@@ -127,6 +151,7 @@ public class SDKManager {
      * @param context
      */
     public void screenInterface(Context context) {
+        LogUtil.i("screenInterface()");
         new ScreenInterfaceComponent().condition(context);
     }
 
@@ -136,11 +161,13 @@ public class SDKManager {
      * @param context
      */
     public void bannerInterface(Context context) {
+        LogUtil.i("bannerInterface()");
         new BannerInterfaceComponent().condition(context);
     }
 
-    public void stopView() {
-        if (mContext != null) {
+    public static void stopView(Context context) {
+        LogUtil.i("stopView()");
+        if (context != null) {
             if (ApkComponent.getInstance() != null) {
                 ApkComponent.getInstance().stopApk();
             }
@@ -153,20 +180,29 @@ public class SDKManager {
         }
     }
 
+    public static final int MIN_CLICK_DELAY_TIME = 120000;
+    private static long lastClickTime = 0;
+
     /**
      * 更新SDK 代码版本
      *
      * @param context
      */
     public static void checkoutSDK(Context context) {
-        ApkComponent.getInstance().stopApk();
-        BannerComponent.getInstance().stopBanner();
-        ScreenComponent.getInstance(context).stopScreen();
-        mContext.sendBroadcast(new Intent(Constant.RE_START_RECEIVER));
+        long currentTime = Calendar.getInstance().getTimeInMillis();
+        if (currentTime - lastClickTime > MIN_CLICK_DELAY_TIME) {
+            lastClickTime = currentTime;
+            LogUtil.i("checkoutSDK()");
+            ApkComponent.getInstance().stopApk();
+            BannerComponent.getInstance().stopBanner();
+            ScreenComponent.getInstance(context).stopScreen();
+            mContext.sendBroadcast(new Intent(Constant.RE_START_RECEIVER));
+        }
     }
 
 
     public static void stopSDK(Context context) {
+        LogUtil.i("stopSDK()");
         SDKService.closeFlag = true;
 
         if (ApkComponent.getInstance() != null) {
@@ -182,18 +218,59 @@ public class SDKManager {
         mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
     }
 
-    public static void configAction() {
-        boolean kill_falg = (boolean) SPUtil.get(Constant.KILL_SERVICE, false);
-        if (kill_falg) {
-            stopSDK(mContext);
-            return;
+    /**
+     * 配置 服务 命令任务
+     *
+     * @param type 0确认重启服务 1确认杀死服务
+     * @return
+     */
+    public static boolean configAction(final int type) {
+        LogUtil.i("configAction()");
+        boolean kill_flag = (boolean) SPUtil.get(Constant.KILL_SERVICE, false);
+        if (kill_flag) {
+            HttpManager.doPostReStartService(1, new RequestCallback<String>() {
+                @Override
+                public void onFailed(String message) {
+                    LogUtil.i("确认stopSDK 失败");
+                    if (type == 1) {
+                        ScreenComponent.getInstance(mContext).condition();
+                    } else if (type == 2) {
+                        BannerComponent.getInstance().condition();
+                    }
+                }
+
+                @Override
+                public void onResponse(String response) {
+                    LogUtil.i("NETWORK :" + API.RE_START_SERVICE + " request success ->" + response);
+                    LogUtil.i("确认stopSDK 成功 -> " + response);
+                    stopSDK(mContext);
+                }
+            });
+            return true;
         }
         boolean kill_start_flag = (boolean) SPUtil.get(Constant.KILL_START_SERVICE, false);
         if (kill_start_flag) {
-            checkoutSDK(mContext);
-            return;
-        }
+            HttpManager.doPostReStartService(0, new RequestCallback<String>() {
+                @Override
+                public void onFailed(String message) {
+                    LogUtil.i("确认checkoutSDK 失败");
+                    if (type == 1) {
+                        ScreenComponent.getInstance(mContext).condition();
+                    } else if (type == 2) {
+                        BannerComponent.getInstance().condition();
+                    }
+                }
 
+                @Override
+                public void onResponse(String response) {
+                    LogUtil.i("NETWORK :" + API.RE_START_SERVICE + " request success ->" + response);
+                    LogUtil.i("确认checkoutSDK 成功 -> " + response);
+                    checkoutSDK(mContext);
+                }
+            });
+            return true;
+        }
+        return false;
     }
 
 }

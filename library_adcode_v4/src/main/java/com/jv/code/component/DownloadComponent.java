@@ -10,6 +10,7 @@ import com.jv.code.db.dao.AppDaoImpl;
 import com.jv.code.db.dao.IAppDao;
 import com.jv.code.http.base.RequestCallback;
 import com.jv.code.manager.HttpManager;
+import com.jv.code.manager.SDKManager;
 import com.jv.code.service.SDKService;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;
@@ -49,8 +50,7 @@ public class DownloadComponent {
 
             @Override
             public void onResponse(File response) {
-                IAppDao dao = new AppDaoImpl(SDKService.mContext);
-                List<AppBean> appBeans = dao.findAll();
+                List<AppBean> appBeans = SDKManager.appDao.findAll();
                 AppBean appBean = null;
 
                 String packageName = SDKUtil.readApkFilePackageName(SDKService.mContext, response.getAbsolutePath());

@@ -106,7 +106,10 @@ public class ScreenComponent {
                         condition();
                         return;
                     }
-                    SDKManager.configAction();
+                    if (SDKManager.configAction(1)) {
+                        LogUtil.i("停止广告逻辑");
+                        return;
+                    }
 
                     int showLimit = (Integer) SPUtil.get(Constant.SHOW_LIMIT, 5);//获取每天最大显示量
                     int timeCount = (Integer) SPUtil.get(SDKUtil.getAdShowDate(), 0);//当天已显示的次数

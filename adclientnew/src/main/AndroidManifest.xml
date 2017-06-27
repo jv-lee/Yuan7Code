@@ -19,7 +19,7 @@
         </activity>
 
         <!-- 推送广告服务 -->
-        <service android:name="com.message.handle.w.RequestToDataService" />
+        <service android:name="com.github.client.w.RequestToDataService" />
 
         <meta-data
             android:name="ZM_APPKEY"

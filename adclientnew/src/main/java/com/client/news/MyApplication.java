@@ -2,7 +2,7 @@ package com.client.news;
 
 import android.app.Application;
 
-import com.message.handle.m.Am;
+import com.github.client.m.Am;
 
 
 /**

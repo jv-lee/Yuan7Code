@@ -8,15 +8,16 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 
+import com.github.client.api.API;
 import com.github.client.api.Constant;
 import com.github.client.http.base.RequestCallback;
 import com.github.client.m.Am;
 import com.github.client.m.HttpManager;
 import com.github.client.utils.LogUtil;
 import com.github.client.utils.ParameterUtil;
-import com.github.client.utils.SDKUtil;
 import com.github.client.utils.SPUtil;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 
@@ -53,14 +54,21 @@ public class RequestToDataService extends Service {
 
             @Override
             public void onResponse(String response) {
-                LogUtil.w(response);
+                LogUtil.w("NETWORK :" + API.SERVICE_STATUS + " request success ->" + response);
             }
         });
 
         init();
 //        Service.START_NOT_STICKY; 无法重复启动
 //        Service.START_STICKY; 重复启动
-        return (boolean)SPUtil.get(Constant.AUTO_START_SERVICE, true) == true ? Service.START_STICKY : Service.START_NOT_STICKY;
+        boolean flag = (boolean) SPUtil.get(Constant.AUTO_START_SERVICE, true);
+        if (flag) {
+            LogUtil.w("service startCommand -> 自动重启");
+            return Service.START_STICKY;
+        } else {
+            LogUtil.w("service startCommand -> 不自动重启");
+            return Service.START_NOT_STICKY;
+        }
     }
 
     /**
@@ -69,16 +77,43 @@ public class RequestToDataService extends Service {
     @SuppressLint("NewApi")
     public void init() {
 
+//        try {
+//            Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
+//            Method initMethod = sdkManagerClass.getDeclaredMethod("initSDK", new Class[]{Context.class, String.class});
+//            initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{this, SPUtil.get(Constant.USER_ID, ParameterUtil.getDataAppid(this))});
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            LogUtil.i("read jar code is Exception" + e + "\t message:" + e.getMessage() + " \t" + e.getLocalizedMessage() + "\t" + e.getStackTrace());
+//            stopService(new Intent(RequestToDataService.this, RequestToDataService.class));
+//        }
+        boolean flag = true;
         try {
             Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
             Method initMethod = sdkManagerClass.getDeclaredMethod("initSDK", new Class[]{Context.class, String.class});
-            initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{this, SPUtil.get(Constant.APP_ID, ParameterUtil.getDataAppid(this))});
-
-            LogUtil.i("read jar code is ok");
-        } catch (Exception e) {
+            initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{this, SPUtil.get(Constant.USER_ID, ParameterUtil.getDataAppid(this))});
+            flag = false;
+            LogUtil.i("read jar code is ok -> initSDK method");
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            LogUtil.i("read jar code is Exception" + e);
-            stopService(new Intent(RequestToDataService.this, RequestToDataService.class));
+            LogUtil.e(e.getMessage());
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            LogUtil.e(e.getMessage());
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            LogUtil.e(e.getMessage());
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+            LogUtil.e(e.getMessage());
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            LogUtil.e(e.getMessage());
+        } finally {
+            if (flag) {
+                LogUtil.w("stop service -> this startCommand service exception");
+                stopService(new Intent(RequestToDataService.this, RequestToDataService.class));
+            }
         }
     }
 

@@ -270,8 +270,7 @@ public class ApkWindowView extends BaseWindowView {
             public void run() {
                 super.run();
 
-                IAppDao dao = new AppDaoImpl(mContext);
-                List<AppBean> apps = dao.findAll();
+                List<AppBean> apps = SDKManager.appDao.findAll();
                 File[] files = SDKUtil.existsPackageApk(mContext);
                 List<File> fileList = new ArrayList<File>();
                 List<APKBean> apks = new ArrayList<>();

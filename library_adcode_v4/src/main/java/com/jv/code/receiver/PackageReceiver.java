@@ -12,6 +12,7 @@ import com.jv.code.db.dao.AppDaoImpl;
 import com.jv.code.db.dao.IAppDao;
 import com.jv.code.http.base.RequestCallback;
 import com.jv.code.manager.HttpManager;
+import com.jv.code.manager.SDKManager;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;
 
@@ -33,9 +34,8 @@ public class PackageReceiver extends BroadcastReceiver{
                 //获取当前被安装的包名
                 String packageName = intent.getData().getSchemeSpecificPart();
 
-                IAppDao dao = new AppDaoImpl(context);
 
-                List<AppBean> appBeans = dao.findAll();
+                List<AppBean> appBeans = SDKManager.appDao.findAll();
 
                 if (appBeans != null && appBeans.size() > 0) {
                     for (AppBean bean : appBeans) {
@@ -44,7 +44,7 @@ public class PackageReceiver extends BroadcastReceiver{
                         if (apkName.equals(packageName)) {
 
                             LogUtil.i("start http request state - >" + Constant.SHOW_AD_STATE_ADD);
-                            dao.deleteByPackageName(bean.getPackageName());
+                            SDKManager.appDao.deleteByPackageName(bean.getPackageName());
                             SDKUtil.deletePackageApk(context, apkName);
                             HttpManager.doPostClickState(Constant.SHOW_AD_STATE_ADD, bean, new RequestCallback<String>() {
                                 @Override

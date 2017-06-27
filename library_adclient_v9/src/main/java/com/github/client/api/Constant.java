@@ -26,7 +26,7 @@ public class Constant {
      * 配置参数
      */
     public static final String SIM = "sim";//手机号码
-    public static final String APP_ID = "appid";//appid
+    public static final String USER_ID = "userId";//appid
     public static final String IMSI = "imsi";// IMSI码，服务器是1
     public static final String IMEI = "imei";// IMEI码，服务器是1
     public static final String TIME_TAMP = "timestamp";//时间戳

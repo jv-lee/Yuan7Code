@@ -110,13 +110,14 @@ public class BannerWindowView extends BaseWindowView {
     @Override
     protected void initToastView() {
 //        Looper.prepare();
-        if (toast != null) {
-            hideToastView();
-        }
-        toast = new Toast(mContext);
-        toast.setView(createView());
 
         try {
+            if (toast != null) {
+                hideToastView();
+            }
+            toast = new Toast(mContext);
+            toast.setView(createView());
+
             Field tnField = toast.getClass().getDeclaredField("mTN");
             tnField.setAccessible(true);
             mTN = tnField.get(toast);

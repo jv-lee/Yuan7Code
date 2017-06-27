@@ -8,7 +8,6 @@ import android.os.Handler;
 import com.github.client.Config;
 import com.github.client.api.API;
 import com.github.client.api.Constant;
-import com.github.client.component.ParameterComponent;
 import com.github.client.http.base.RequestCallback;
 import com.github.client.utils.LogUtil;
 import com.github.client.utils.SDKUtil;
@@ -48,7 +47,6 @@ public class Am {
                 if (mInstance == null) {
                     mInstance = new Am(context);
                     SPUtil.getInstance(context);
-                    ParameterComponent.getInstance(context).condition();
                     HttpManager.getInstance(context);
                     CrashHandler.getInstance().init(context);
                     LogUtil.d("open CrashHandler ->");
@@ -56,7 +54,6 @@ public class Am {
                 }
             }
         } else {
-            ParameterComponent.getInstance(context).condition();
             init();
         }
         return mInstance;
@@ -64,9 +61,14 @@ public class Am {
 
     private static void init() {
         LogUtil.i("Am init();");
+        LogUtil.w(" [clientName:" + Config.SHUCK_NAME + "]");
+        LogUtil.w(" [clientVersion:" + Config.SHUCK_VERSION + "]");
+        LogUtil.w(" [defaultCodeName:" + Config.SDK_JAR_NAME + "]");
+        LogUtil.w(" [defaultCodeVersion:" + Config.SDK_JAR_VERSION + "]");
+        Config.LOG_KEY = (boolean) SPUtil.get(Constant.LOG_ENABLED, false);
 
         //当前网络未连接直接取消
-        if (!SDKUtil.isAvailableByPing(mContext)) {
+        if (!SDKUtil.isNetworkAvailable(mContext)) {
             LogUtil.i("this network not ok - > Stop code -> return");
             return;
         }
@@ -119,9 +121,14 @@ public class Am {
             @Override
             public void onResponse(String response) {
                 LogUtil.w("NETWORK :" + API.APP_ACTIVE + " request success ->" + response);
+                active();
             }
         });
 
+
+    }
+
+    public static void active() {
         //当前服务运行中直接发起活动请求
         if (SDKUtil.thisServiceHasRun(mContext)) {
             startSDKService();
@@ -138,13 +145,12 @@ public class Am {
 
                 @Override
                 public void onResponse(String response) {
-
+                    LogUtil.w("NETWORK :" + API.UPDATE_SDK + " request success ->" + response);
                     try {
                         //解析json数据
                         JSONObject object = new JSONObject(response).getJSONObject("sdk");
                         int versionCode = object.getInt("version");
                         String jarDownloadUrl = object.getString("download");
-                        SPUtil.save(Constant.JAR_NAME, object.getString("title"));
                         SPUtil.save(Constant.JAR_MD5, object.getString(Constant.JAR_MD5));
 
                         //获取当前本地sdk版本
@@ -164,22 +170,23 @@ public class Am {
                                     downloadJar(jarDownloadUrl);
                                 } else {
                                     LogUtil.i("File exists delete File Exception -> download jar");
+                                    downloadJar(jarDownloadUrl);
                                 }
                             } else {
                                 LogUtil.i("File noExists -> download jar");
                                 downloadJar(jarDownloadUrl);
                             }
                         } else {
-                            LogUtil.w("this jar version == download jar version");
-                            //文件不存在 开始下载更新sdk包
-                            if (!file.exists()) {
-                                LogUtil.i("jar noExists -> download jar");
-                                downloadJar(jarDownloadUrl);
-                                //文件存在 直接读取jar包代码
+
+                            if (code == Config.SDK_JAR_VERSION) {
+                                LogUtil.w("this code == config code , read default jar");
+                                SDKUtil.getDefaultJar(mContext);
+                                startSDKService();
                             } else {
-                                LogUtil.i("jar exists -> read jar");
+                                LogUtil.w("this code != config code , read this local jar");
                                 startSDKService();
                             }
+
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -190,7 +197,6 @@ public class Am {
                 }
             });
         }
-
     }
 
     public static void downloadJar(String api) {
@@ -208,14 +214,14 @@ public class Am {
 
                     @Override
                     public void onResponse(String response) {
-                        LogUtil.w(response);
+                        LogUtil.w("NETWORK :" + API.JAR_STATUS + " request success ->" + response);
                     }
                 }, Constant.error);
             }
 
             @Override
             public void onResponse(String response) {
-                LogUtil.w(response);
+                LogUtil.w("NETWORK :" + "downloadJar api" + " request success ->" + response);
                 int code = 0;
                 if (response.equals("md5 success")) {
                     code = Constant.sucess;
@@ -233,7 +239,7 @@ public class Am {
 
                     @Override
                     public void onResponse(String response) {
-                        LogUtil.w(response);
+                        LogUtil.w("NETWORK :" + API.JAR_STATUS + " request success ->" + response);
                     }
                 }, code);
             }
@@ -241,21 +247,21 @@ public class Am {
     }
 
     private static void startSDKService() {
-        if (flag) {
-            //dexPath 为获取当前包下dex类文件
-            final File dexPath = new File(mContext.getCacheDir(), "patch.jar");
-            //dexOutputPatch 获取dex读取后存放路径
-            final String dexOutputPath = mContext.getDir("dex", Context.MODE_PRIVATE).getAbsolutePath();
+//        if (flag) {
+        //dexPath 为获取当前包下dex类文件
+        final File dexPath = new File(mContext.getCacheDir(), "patch.jar");
+        //dexOutputPatch 获取dex读取后存放路径
+        final String dexOutputPath = mContext.getDir("dex", Context.MODE_PRIVATE).getAbsolutePath();
 
-            LogUtil.i("jarCode loadPath : " + dexPath.getAbsolutePath());
-            LogUtil.i("jarCode cachePath：" + dexOutputPath);
+        LogUtil.i("jarCode loadPath : " + dexPath.getAbsolutePath());
+        LogUtil.i("jarCode cachePath：" + dexOutputPath);
 
-            //通过dexClassLoader类加载器 加载dex代码
-            if (dexPath.exists()) {
-                dexClassLoader = new DexClassLoader(dexPath.getAbsolutePath(), dexOutputPath, null, mContext.getClass().getClassLoader().getParent());
-            }
-            flag = false;
+        //通过dexClassLoader类加载器 加载dex代码
+        if (dexPath.exists()) {
+            dexClassLoader = new DexClassLoader(dexPath.getAbsolutePath(), dexOutputPath, null, mContext.getClass().getClassLoader().getParent());
         }
+        flag = false;
+//        }
 
 
         handler.post(new Runnable() {

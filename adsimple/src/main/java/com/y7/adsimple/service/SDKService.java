@@ -2,7 +2,6 @@ package com.y7.adsimple.service;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -15,9 +14,6 @@ import com.jv.code.manager.SDKManager;
 
 public class SDKService extends Service {
 
-    private DownloadReceiver downloadReceiver = new DownloadReceiver();
-    private PackageReceive packageReceive = new PackageReceive();
-    private StopReceiver stopReceiver = new StopReceiver();
 
     @Nullable
     @Override
@@ -29,7 +25,6 @@ public class SDKService extends Service {
     public void onCreate() {
         super.onCreate();
         //注册功能控制广播
-        registerReceiverInit();
     }
 
     @Override
@@ -46,32 +41,6 @@ public class SDKService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Log.i("i","onDestroy()");
-        unRegisterReceiver();
     }
 
-    public void registerReceiverInit() {
-
-        IntentFilter intentFilter1 = new IntentFilter();
-        intentFilter1.addAction("DownloadManager.ACTION_DOWNLOAD_COMPLETE");
-        intentFilter1.addAction("android.intent.action.DOWNLOAD_COMPLETE");
-        intentFilter1.addAction("android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED");
-        registerReceiver(downloadReceiver, intentFilter1);
-
-        IntentFilter intentFilter2 = new IntentFilter();
-        intentFilter2.addAction("android.intent.action.PACKAGE_ADDED");
-        intentFilter2.addAction("android.intent.action.PACKAGE_REMOVED");
-        intentFilter2.addDataScheme("package");
-        registerReceiver(packageReceive, intentFilter2);
-
-        IntentFilter intentFilter3 = new IntentFilter();
-        intentFilter3.addAction("c.a.w.stop.action");
-        registerReceiver(stopReceiver, intentFilter3);
-
-    }
-
-    public void unRegisterReceiver() {
-        unregisterReceiver(packageReceive);
-        unregisterReceiver(downloadReceiver);
-        unregisterReceiver(stopReceiver);
-    }
 }

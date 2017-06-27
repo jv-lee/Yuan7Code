@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.client.news.logcat.LogcatTextView;
 import com.client.xyz.R;
-import com.message.handle.m.Am;
+import com.github.client.m.Am;
 
 public class MainActivity extends AppCompatActivity {
 

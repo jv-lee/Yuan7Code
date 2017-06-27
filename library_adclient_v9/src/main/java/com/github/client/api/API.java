@@ -5,8 +5,8 @@ import com.github.client.utils.Base64;
 
 public interface API {
 
-    String IP = new String(Base64.decode("MTE5LjIzLjEzNi4xOTA6ODA4OA==")).trim();
-    //    String IP = "119.23.136.190:8088";
+    String IP = new String(Base64.decode("MTIwLjc2LjIwLjc2OjgwODg=")).trim();
+    //    String IP = "192.168.3.72:8088";
     String v = "v2";
 
     String UPDATE_SDK = "http://" + IP + "/sdkserver/" + v + "/updateSdk";

@@ -49,7 +49,7 @@ public interface Constant {
      * 配置参数
      */
     String SIM = "sim";//手机号码
-    String APP_ID = "appid";//appid
+    String USER_ID = "userId";//userId
     String IMSI = "imsi";// IMSI码，服务器是1
     String IMEI = "imei";// IMEI码，服务器是1
     String TIME_TAMP = "timestamp";//时间戳

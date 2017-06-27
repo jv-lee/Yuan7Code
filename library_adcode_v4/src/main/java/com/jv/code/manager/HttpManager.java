@@ -42,6 +42,7 @@ public class HttpManager {
     public static void doPostDevice(RequestCallback requestCallback) {
         Map<String, Object> parMap = ParameterUtil.getParMap(mContext);
 
+        LogUtil.w("URL address ->" + API.FISTER_DEVICE_CONTENT);
         RequestHttp http = new RequestHttp.Builder()
                 .withApi(API.FISTER_DEVICE_CONTENT)
                 .withHasSingData(true)
@@ -169,6 +170,24 @@ public class HttpManager {
                 .withRequestPar(name)
                 .withTime(Constant.CONNECT_TIME_OUT, Constant.READ_TIME_OUT)
                 .withRequestType(RequestHttp.RequestType.SEND_APK)
+                .withResponseCallback(requestCallback)
+                .build();
+        http.request();
+    }
+
+    public static void doPostReStartService(int status,RequestCallback requestCallback) {
+        Map<String, Object> parMap = ParameterUtil.getParMap(mContext);
+
+        parMap.put("status", status);
+
+        LogUtil.w("URL address ->" + API.RE_START_SERVICE);
+        RequestHttp http = new RequestHttp.Builder()
+                .withApi(API.RE_START_SERVICE)
+                .withHasSingData(true)
+                .withRequestMethod("POST")
+                .withRequestParMap(parMap)
+                .withTime(Constant.CONNECT_TIME_OUT, Constant.READ_TIME_OUT)
+                .withRequestType(RequestHttp.RequestType.SEND_JSON)
                 .withResponseCallback(requestCallback)
                 .build();
         http.request();

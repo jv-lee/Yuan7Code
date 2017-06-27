@@ -34,20 +34,17 @@ public abstract class BaseWindowView {
     protected AdBean adBean;
     protected AppBean appBean;
     protected Bitmap bitmap;
-    protected IAppDao appDao;
 
     protected boolean flag = true;
 
     public BaseWindowView(Context context, String type) {
         this.mContext = context;
         this.type = type;
-        this.appDao = new AppDaoImpl(context);
     }
 
     public BaseWindowView(Context context, String type, AdBean bean, Bitmap bitmap) {
         this.mContext = context;
         this.type = type;
-        this.appDao = new AppDaoImpl(context);
         this.bitmap = bitmap;
         this.adBean = bean;
         appBean = new AppBean(bean.getId(), bean.getApkName(), bean.getSendRecordId());

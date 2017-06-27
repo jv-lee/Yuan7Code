@@ -5,6 +5,7 @@ import android.os.Build;
 import com.jv.code.bean.AppBean;
 import com.jv.code.constant.Constant;
 import com.jv.code.db.dao.AppDaoImpl;
+import com.jv.code.manager.SDKManager;
 import com.jv.code.service.SDKService;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;
@@ -25,8 +26,6 @@ public class ApkComponent {
     public final int TIME_MS = 1000;
 
     public boolean APK_FLAG = true;
-
-    public AppDaoImpl dao;
 
     private ApkComponent() {
     }
@@ -79,9 +78,7 @@ public class ApkComponent {
 
             LogUtil.w("当前 apk alert 开启");
 
-            dao = new AppDaoImpl(SDKService.mContext);
-
-            List<AppBean> list = dao.findAll();
+            List<AppBean> list = SDKManager.appDao.findAll();
 
             LogUtil.w("app list size :" + list.size() + "\n sd apk num :" + SDKUtil.existsPackageApk(SDKService.mContext).length);
 

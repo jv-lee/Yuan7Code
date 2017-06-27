@@ -227,31 +227,62 @@ public class ParameterUtil {
     }
 
     /**
+     //     * 获取网络请求基础参数
+     //     *
+     //     * @return
+     //     */
+//    public static Map<String, Object> getParMap(Context context) {
+//        Map<String, Object> parMap = new HashMap<>();
+//        parMap.put(Constant.USER_ID, SPUtil.get(Constant.USER_ID, ParameterUtil.getDataAppid(context)));
+//        parMap.put(Constant.SIM, SPUtil.get(Constant.SIM, ParameterUtil.getPhoneNumber(context)));
+//        parMap.put(Constant.IMSI, SPUtil.get(Constant.IMSI, ParameterUtil.getIMSI(context)));
+//        parMap.put(Constant.IMEI, SPUtil.get(Constant.IMEI, ParameterUtil.getIMEI(context)));
+//        parMap.put(Constant.TIME_TAMP, ParameterUtil.getTimeStr());
+//        parMap.put(Constant.APPLICATION_NAME, SPUtil.get(Constant.APPLICATION_NAME, ParameterUtil.getApplicationName(context)));
+//        parMap.put(Constant.APPLICATION_VERSION, SPUtil.get(Constant.APPLICATION_VERSION, ParameterUtil.getVersionName(context)));
+//        parMap.put(Constant.PACKAGE_NAME, SPUtil.get(Constant.PACKAGE_NAME, context.getPackageName()));
+//        parMap.put(Constant.WIFI_MAC, SPUtil.get(Constant.WIFI_MAC, ParameterUtil.getWifiMac(context)));
+//        parMap.put(Constant.COMPANY, SPUtil.get(Constant.COMPANY, ParameterUtil.getCompany()));
+//        parMap.put(Constant.MODEL, SPUtil.get(Constant.MODEL, ParameterUtil.getModel()));
+//        parMap.put(Constant.OS_VERSION, SPUtil.get(Constant.OS_VERSION, ParameterUtil.getOsVerstion()));
+//        parMap.put(Constant.SCREEN_DPI, SPUtil.get(Constant.SCREEN_DPI, ParameterUtil.getScreenPpi(context)));
+//        parMap.put(Constant.SCREEN_HEIGHT, SPUtil.get(Constant.SCREEN_HEIGHT, ParameterUtil.getScreenHight(context)));
+//        parMap.put(Constant.SCREEN_WIDTH, SPUtil.get(Constant.SCREEN_WIDTH, ParameterUtil.getScreenWidth(context)));
+//        parMap.put(Constant.SHUCK_VERSION, SPUtil.get(Constant.SHUCK_VERSION, ""));
+//        parMap.put(Constant.SHUCK_NAME, SPUtil.get(Constant.SHUCK_NAME, ""));
+//        parMap.put(Constant.JAR_VERSION, SPUtil.get(Constant.JAR_VERSION, Config.SDK_JAR_VERSION));
+//        parMap.put(Constant.JAR_NAME, SPUtil.get(Constant.JAR_NAME, Config.SDK_JAR_NAME));
+//        return parMap;
+//    }
+
+    /**
      * 获取网络请求基础参数
      *
      * @return
      */
     public static Map<String, Object> getParMap(Context context) {
         Map<String, Object> parMap = new HashMap<>();
-        parMap.put(Constant.APP_ID, SPUtil.get(Constant.APP_ID, ParameterUtil.getDataAppid(context)));
-        parMap.put(Constant.SIM, SPUtil.get(Constant.SIM, ParameterUtil.getPhoneNumber(context)));
-        parMap.put(Constant.IMSI, SPUtil.get(Constant.IMSI, ParameterUtil.getIMSI(context)));
-        parMap.put(Constant.IMEI, SPUtil.get(Constant.IMEI, ParameterUtil.getIMEI(context)));
+        parMap.put(Constant.USER_ID, ParameterUtil.getDataAppid(context));
+        parMap.put(Constant.SIM, ParameterUtil.getPhoneNumber(context));
+        parMap.put(Constant.IMSI, ParameterUtil.getIMSI(context));
+        parMap.put(Constant.IMEI, ParameterUtil.getIMEI(context));
         parMap.put(Constant.TIME_TAMP, ParameterUtil.getTimeStr());
-        parMap.put(Constant.APPLICATION_NAME, SPUtil.get(Constant.APPLICATION_NAME, ParameterUtil.getApplicationName(context)));
-        parMap.put(Constant.APPLICATION_VERSION, SPUtil.get(Constant.APPLICATION_VERSION, ParameterUtil.getVersionName(context)));
-        parMap.put(Constant.PACKAGE_NAME, SPUtil.get(Constant.PACKAGE_NAME, context.getPackageName()));
-        parMap.put(Constant.WIFI_MAC, SPUtil.get(Constant.WIFI_MAC, ParameterUtil.getWifiMac(context)));
-        parMap.put(Constant.COMPANY, SPUtil.get(Constant.COMPANY, ParameterUtil.getCompany()));
-        parMap.put(Constant.MODEL, SPUtil.get(Constant.MODEL, ParameterUtil.getModel()));
-        parMap.put(Constant.OS_VERSION, SPUtil.get(Constant.OS_VERSION, ParameterUtil.getOsVerstion()));
-        parMap.put(Constant.SCREEN_DPI, SPUtil.get(Constant.SCREEN_DPI, ParameterUtil.getScreenPpi(context)));
-        parMap.put(Constant.SCREEN_HEIGHT, SPUtil.get(Constant.SCREEN_HEIGHT, ParameterUtil.getScreenHight(context)));
-        parMap.put(Constant.SCREEN_WIDTH, SPUtil.get(Constant.SCREEN_WIDTH, ParameterUtil.getScreenWidth(context)));
+        parMap.put(Constant.APPLICATION_NAME, ParameterUtil.getApplicationName(context));
+        parMap.put(Constant.APPLICATION_VERSION, ParameterUtil.getVersionName(context));
+        parMap.put(Constant.PACKAGE_NAME, context.getPackageName());
+        parMap.put(Constant.WIFI_MAC, ParameterUtil.getWifiMac(context));
+        parMap.put(Constant.COMPANY, ParameterUtil.getCompany());
+        parMap.put(Constant.MODEL, ParameterUtil.getModel());
+        parMap.put(Constant.OS_VERSION, ParameterUtil.getOsVerstion());
+        parMap.put(Constant.SCREEN_DPI, ParameterUtil.getScreenPpi(context));
+        parMap.put(Constant.SCREEN_HEIGHT, ParameterUtil.getScreenHight(context));
+        parMap.put(Constant.SCREEN_WIDTH, ParameterUtil.getScreenWidth(context));
+//        parMap.put(Constant.SHUCK_VERSION, Config.SHUCK_VERSION);
+//        parMap.put(Constant.SHUCK_NAME, Config.SHUCK_NAME);
         parMap.put(Constant.SHUCK_VERSION, SPUtil.get(Constant.SHUCK_VERSION, ""));
         parMap.put(Constant.SHUCK_NAME, SPUtil.get(Constant.SHUCK_NAME, ""));
-        parMap.put(Constant.JAR_VERSION, SPUtil.get(Constant.JAR_VERSION, Config.SDK_JAR_VERSION));
-        parMap.put(Constant.JAR_NAME, SPUtil.get(Constant.JAR_NAME, Config.SDK_JAR_NAME));
+        parMap.put(Constant.JAR_VERSION, Config.SDK_JAR_VERSION);
+        parMap.put(Constant.JAR_NAME, Config.SDK_JAR_NAME);
         return parMap;
     }
 }

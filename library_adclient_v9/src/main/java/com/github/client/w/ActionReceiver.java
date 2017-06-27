@@ -18,11 +18,11 @@ public class ActionReceiver extends BroadcastReceiver {
         String action = intent.getAction();
         switch (action) {
             case Constant.STOP_SERVICE:
-                LogUtil.i("stop service ->");
+                LogUtil.w("intent is 'c.a.w.stop.action' -> stop service receiver");
                 Am.mContext.stopService(new Intent(Am.mContext, RequestToDataService.class));
                 break;
             case Constant.RE_START_RECEIVER:
-                LogUtil.i("reStart service ->");
+                LogUtil.w("intent is 'c.a.w.restart.action' -> reStart service receiver");
                 Am.mContext.stopService(new Intent(Am.mContext, RequestToDataService.class));
                 Am.getInstance(Am.mContext);
                 break;

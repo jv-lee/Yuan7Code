@@ -1,13 +1,9 @@
 package com.y7.paint;
 
-import android.animation.ObjectAnimator;
-import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -15,15 +11,11 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.y7.paint.utils.ImageUtil;
 import com.y7.paint.utils.SizeUtils;
 import com.y7.paint.view.CloseView;
 
@@ -40,6 +32,8 @@ public class ViewActivity extends Activity {
     private Object mTN;
     private Method show;
     private Method hide;
+
+    private RelativeLayout contentLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +61,7 @@ public class ViewActivity extends Activity {
             wmParams.height = windowManager.getDefaultDisplay().getHeight();
             wmParams.width = windowManager.getDefaultDisplay().getWidth();
             wmParams.flags = WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN; //获取全屏焦点 首先执行广告点击
-            wmParams.windowAnimations = android.R.style.Animation_Toast;
+            wmParams.windowAnimations = android.R.style.Animation_Activity;
             toast.setGravity(Gravity.CENTER, 0, 0);
 
             /**调用tn.show()之前一定要先设置mNextView*/
@@ -76,7 +70,7 @@ public class ViewActivity extends Activity {
             tnNextViewField.set(mTN, toast.getView());
 
             show.invoke(mTN);
-//            Looper.loop();
+            showAnimation();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,12 +86,11 @@ public class ViewActivity extends Activity {
         wmParams.height = windowManager.getDefaultDisplay().getHeight();
         wmParams.width = windowManager.getDefaultDisplay().getWidth();
         wmParams.gravity = Gravity.CENTER;
-        wmParams.windowAnimations = android.R.style.Animation_Toast;
+        wmParams.windowAnimations = android.R.style.Animation_Activity;
         windowView = createView();
 
         windowManager.addView(windowView, wmParams);
-//        Looper.loop();
-
+        showAnimation();
     }
 
 
@@ -122,9 +115,10 @@ public class ViewActivity extends Activity {
             rootLayout.setBackgroundColor(Color.parseColor("#88000000"));
 
             //内容容器
-            final RelativeLayout contentLayout = new RelativeLayout(this);
+            contentLayout = new RelativeLayout(this);
             RelativeLayout.LayoutParams contentParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             contentLayout.setLayoutParams(contentParams);
+            contentLayout.setVisibility(View.GONE);
 
             //设置加载广告图片的ImageView
             ImageView imageView = new ImageView(this);
@@ -152,34 +146,7 @@ public class ViewActivity extends Activity {
             closeView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //添加缩放动画 从外围 缩放到中心 隐藏
-                    ScaleAnimation mShowAction = new ScaleAnimation(1.0f, 0.0f, 1.0f, 0.0f,
-                            Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                    mShowAction.setDuration(300);
-                    mShowAction.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            try {
-                                contentLayout.setVisibility(View.GONE);
-                                hide.invoke(mTN);
-                                finish();
-                            } catch (IllegalAccessException e) {
-                                e.printStackTrace();
-                            } catch (InvocationTargetException e) {
-                                e.printStackTrace();
-                            }
-                            Toast.makeText(ViewActivity.this, "click close view", Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-                        }
-                    });
-                    contentLayout.startAnimation(mShowAction);
+                    hideAnimation();
                 }
             });
 
@@ -193,5 +160,61 @@ public class ViewActivity extends Activity {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    private void showAnimation() {
+        //添加缩放动画 从外围 缩放到中心 隐藏
+        ScaleAnimation mShowAction = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.5f, Animation.RELATIVE_TO_PARENT, 0.5f);
+        mShowAction.setDuration(300);
+        mShowAction.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                contentLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Toast.makeText(ViewActivity.this, "click close view", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+        contentLayout.startAnimation(mShowAction);
+    }
+
+    private void hideAnimation() {
+        //添加缩放动画 从外围 缩放到中心 隐藏
+        ScaleAnimation mShowAction = new ScaleAnimation(1.0f, 0.0f, 1.0f, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        mShowAction.setDuration(300);
+        mShowAction.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                try {
+                    contentLayout.setVisibility(View.GONE);
+                    hide.invoke(mTN);
+//                    getWindowManager().removeView(windowView);
+                    finish();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+                Toast.makeText(ViewActivity.this, "click close view", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+        contentLayout.startAnimation(mShowAction);
     }
 }

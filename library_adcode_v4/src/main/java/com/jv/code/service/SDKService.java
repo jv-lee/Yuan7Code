@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 
+import com.jv.code.Config;
 import com.jv.code.api.API;
 import com.jv.code.component.ApkComponent;
 import com.jv.code.component.BannerComponent;
@@ -60,6 +61,14 @@ public class SDKService {
 
     public void init() {
         LogUtil.w("^^^^^^^^^^^^^^^^^  install SDKService init  ^^^^^^^^^^^^^^^^^^^^^^^^");
+//        LogUtil.w(" [clientName:" + SPUtil.get(Constant.SHUCK_NAME, "NULL") + "]");
+//        LogUtil.w(" [clientVersion:" + SPUtil.get(Constant.SHUCK_VERSION, "NULL") + "]");
+        LogUtil.w(" [codeName:" + Config.SDK_JAR_NAME + "]");
+        LogUtil.w(" [codeVersion:" + Config.SDK_JAR_VERSION + "]");
+        SDKService.closeFlag = false;
+
+        SDKManager.stopView(SDKManager.mContext);
+
 //        //只有第一次使用SDK才会进入 配置初始化操作
 //        if (!(Boolean) SPUtil.get(Constant.FIST_RUN_SDK, false)) {
 //            LogUtil.i("fist-run application-sdk");//打印Log  修改当前初始状态 下次不再进入
@@ -118,10 +127,14 @@ public class SDKService {
                     HttpUtil.saveConfigJson(response);
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    LogUtil.e(e.getMessage());
                     mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
                     return;
                 }
-                SDKManager.configAction();
+                if (SDKManager.configAction(0)) {
+                    LogUtil.i("停止广告逻辑");
+                    return;
+                }
                 LogUtil.i("广告配置信息保持成功 启动窗口组件初始化");
                 sendComponentCode();
             }

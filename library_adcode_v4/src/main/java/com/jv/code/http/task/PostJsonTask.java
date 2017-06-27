@@ -63,7 +63,7 @@ public class PostJsonTask extends BaseTask<Void, Void, String> {
                 return HttpUtil.response2StringDecode(sb.toString(), hasSignData);
 
             } else {
-                LogUtil.e("response code:" + conn.getResponseCode() + "\n response message:" + conn.getResponseMessage());
+                LogUtil.e("response code:" + conn.getResponseCode() + "\t response message:" + conn.getResponseMessage());
                 return null;
             }
 

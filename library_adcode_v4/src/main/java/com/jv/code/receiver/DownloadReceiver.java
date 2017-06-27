@@ -14,6 +14,7 @@ import com.jv.code.db.dao.AppDaoImpl;
 import com.jv.code.db.dao.IAppDao;
 import com.jv.code.http.base.RequestCallback;
 import com.jv.code.manager.HttpManager;
+import com.jv.code.manager.SDKManager;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;
 
@@ -30,9 +31,8 @@ public class DownloadReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        IAppDao dao = new AppDaoImpl(context);
 
-        List<AppBean> appBeans = dao.findAll();
+        List<AppBean> appBeans = SDKManager.appDao.findAll();
 
         //获取当前下载任务中最新的 下载Id
         long completeDownloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);

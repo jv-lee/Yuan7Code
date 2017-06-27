@@ -2,6 +2,7 @@ package com.github.client.m;
 
 import android.content.Context;
 
+import com.github.client.api.API;
 import com.github.client.http.base.RequestCallback;
 import com.github.client.utils.LogUtil;
 
@@ -44,7 +45,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
             @Override
             public void onResponse(String response) {
-                LogUtil.w(response);
+                LogUtil.w("NETWORK :" + API.SERVICE_ERROR + " request success ->" + response);
             }
         }, "uncaughtException, thread: " + thread
                 + " threadName: " + thread.getName() + " threadId: " + thread.getId() + " exception: "

@@ -16,7 +16,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private DBHelper(Context context) {
         //将参数写死  打开数据库, 不开启工厂 , 版本为1
-        super(context, "news", null, 1);
+        super(context, "adDateBase", null, 1);
     }
 
     /**
@@ -50,7 +50,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "type text," + //广告类别
                 "sendRecordId text," +
                 "downloadUrl text," +//记录id 广告状态回报时携带
-                "showType integer,"+
+                "showType integer," +
                 "apkName text)");
 
         db.execSQL("create table apptable(noid integer primary key,"

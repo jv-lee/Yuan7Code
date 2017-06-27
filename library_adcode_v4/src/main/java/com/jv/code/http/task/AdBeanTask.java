@@ -80,15 +80,15 @@ public class AdBeanTask extends BaseTask<Void, Void, AdBean> {
                 AdBean bean = HttpUtil.saveBeanJson(jsonArray);
 
                 //判断当前apk是否安装过
-                if (SDKUtil.hasInstalled(SDKService.mContext, bean.getApkName()) && !bean.getType().equals("web")) {
+                if (SDKUtil.hasInstalled(SDKManager.mContext, bean.getApkName()) && !bean.getType().equals("web")) {
                     LogUtil.e("apk is extents -> delete Ad 已安装 删除广告");//已安装 直接删除广告 做已显示操作
                     return null;
                 }
 
                 //保存包信息
                 AppBean appBean = new AppBean(bean.getId(), bean.getApkName(), bean.getSendRecordId());
-                new AppDaoImpl(SDKService.mContext).deleteByPackageName(appBean.getPackageName());
-                new AppDaoImpl(SDKService.mContext).insert(appBean);
+                SDKManager.appDao.deleteByPackageName(appBean.getPackageName());
+                SDKManager.appDao.insert(appBean);
 
                 return bean;
             } else {

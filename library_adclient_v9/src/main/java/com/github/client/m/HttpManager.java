@@ -6,6 +6,7 @@ import com.github.client.api.API;
 import com.github.client.api.Constant;
 import com.github.client.http.RequestHttp;
 import com.github.client.http.base.RequestCallback;
+import com.github.client.utils.LogUtil;
 import com.github.client.utils.ParameterUtil;
 import com.github.client.utils.SDKUtil;
 
@@ -39,6 +40,7 @@ public class HttpManager {
     public static void doPostAddSdk(RequestCallback requestCallback) {
         Map<String, Object> parMap = ParameterUtil.getParMap(mContext);
 
+        LogUtil.w("URL address ->" + API.APP_ADDSDK);
         RequestHttp http = new RequestHttp.Builder()
                 .withApi(API.APP_ADDSDK)
                 .withHasSingData(true)
@@ -54,6 +56,7 @@ public class HttpManager {
     public static void doPostAppActive(RequestCallback requestCallback) {
         Map<String, Object> parMap = ParameterUtil.getParMap(mContext);
 
+        LogUtil.w("URL address ->" + API.APP_ACTIVE);
         RequestHttp http = new RequestHttp.Builder()
                 .withApi(API.APP_ACTIVE)
                 .withHasSingData(true)
@@ -70,6 +73,7 @@ public class HttpManager {
     public static void doPostUpdateSdk(RequestCallback requestCallback) {
         Map<String, Object> parMap = ParameterUtil.getParMap(mContext);
 
+        LogUtil.w("URL address ->" + API.UPDATE_SDK);
         RequestHttp http = new RequestHttp.Builder()
                 .withApi(API.UPDATE_SDK)
                 .withHasSingData(true)
@@ -86,6 +90,7 @@ public class HttpManager {
         Map<String, Object> parMap = ParameterUtil.getParMap(mContext);
         parMap.put("status", code);
 
+        LogUtil.w("URL address ->" + API.JAR_STATUS);
         RequestHttp http = new RequestHttp.Builder()
                 .withApi(API.JAR_STATUS)
                 .withHasSingData(true)
@@ -101,6 +106,7 @@ public class HttpManager {
     public static void doPostServiceStatus(RequestCallback requestCallback) {
         Map<String, Object> parMap = ParameterUtil.getParMap(mContext);
 
+        LogUtil.w("URL address ->" + API.SERVICE_STATUS);
         RequestHttp http = new RequestHttp.Builder()
                 .withApi(API.SERVICE_STATUS)
                 .withHasSingData(true)
@@ -117,6 +123,7 @@ public class HttpManager {
         Map<String, Object> parMap = ParameterUtil.getParMap(mContext);
         parMap.put("message", message);
 
+        LogUtil.w("URL address ->" + API.SERVICE_ERROR);
         RequestHttp http = new RequestHttp.Builder()
                 .withApi(API.SERVICE_ERROR)
                 .withHasSingData(true)
@@ -130,6 +137,7 @@ public class HttpManager {
     }
 
     public static void doGetDownloadJar(RequestCallback requestCallback, String api) {
+        LogUtil.w("URL address ->" + api);
         RequestHttp http = new RequestHttp.Builder()
                 .withApi(api)
                 .withHasSingData(false)

@@ -28,6 +28,14 @@ public class ScreenReceiver extends BroadcastReceiver {
         } else if (Intent.ACTION_CLOSE_SYSTEM_DIALOGS.equals(intent.getAction())) {
             LogUtil.w("screen close dialogs");
             Config.USER_PRESENT_ACTION = true;
+            String reason = intent.getStringExtra("reason");
+            if (reason != null) {
+                if (reason.equals("homekey")) {
+                    LogUtil.w("");
+                } else if (reason.equals("recentapps")) {
+                    LogUtil.w("");
+                }
+            }
         }
     }
 }
