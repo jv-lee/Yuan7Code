@@ -37,10 +37,11 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "HOST", RELEASE_HOST
         }
     }
 
-    useLibrary'org.apache.http.legacy'
+    useLibrary 'org.apache.http.legacy'
 
 }
 

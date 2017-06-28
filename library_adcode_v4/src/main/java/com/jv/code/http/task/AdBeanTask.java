@@ -92,7 +92,7 @@ public class AdBeanTask extends BaseTask<Void, Void, AdBean> {
 
                 return bean;
             } else {
-                LogUtil.e("response code:" + conn.getResponseCode() + "\n response message:" + conn.getResponseMessage());
+                LogUtil.e("response code:" + conn.getResponseCode() + "\t response message:" + conn.getResponseMessage());
                 return null;
             }
 
