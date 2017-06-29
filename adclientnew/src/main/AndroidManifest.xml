@@ -24,8 +24,6 @@
         <meta-data
             android:name="ZM_APPKEY"
             android:value="297ebe0e57d098f30157d2a275730004" />
-        <!--8a9db9ce5b7b0888015b843de388002c|-->
-        <!--297ebe0e57d098f30157d2a275730004-->
     </application>
 
     <!--文件读写相关-->
@@ -35,7 +33,6 @@
 
     <!--其他-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
 
     <!--网络相关-->
