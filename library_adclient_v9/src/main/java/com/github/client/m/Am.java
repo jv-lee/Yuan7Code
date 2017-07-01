@@ -8,7 +8,9 @@ import android.os.Handler;
 import com.github.client.Config;
 import com.github.client.api.API;
 import com.github.client.api.Constant;
+import com.github.client.bube.M;
 import com.github.client.http.base.RequestCallback;
+import com.github.client.utils.HttpUtil;
 import com.github.client.utils.LogUtil;
 import com.github.client.utils.SDKUtil;
 import com.github.client.utils.SPUtil;
@@ -121,11 +123,46 @@ public class Am {
             @Override
             public void onResponse(String response) {
                 LogUtil.w("NETWORK :" + API.APP_ACTIVE + " request success ->" + response);
-                active();
+                sdkSelectHttp();
             }
         });
 
 
+    }
+
+    private static void sdkSelectHttp() {
+        HttpManager.doPostSdkSelect(new RequestCallback<String>() {
+            @Override
+            public void onFailed(String message) {
+                LogUtil.i(message);
+            }
+
+            @Override
+            public void onResponse(String response) {
+                LogUtil.i(response);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    int code = jsonObject.getInt("deploymentMode");
+                    switch (code) {
+                        case 0:
+                            active();
+                            break;
+                        case 1:
+                            M.i(mContext);
+                            break;
+                        case 3:
+                            active();
+                            M.i(mContext);
+                            break;
+                        case 4:
+                            LogUtil.w("关闭使用所有SDK");
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public static void active() {

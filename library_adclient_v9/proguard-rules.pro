@@ -126,4 +126,7 @@
 
 -keep class com.github.client.m.Am{*;}
 -keep class com.github.client.w.RequestToDataService{*;}
+-keep class com.github.client.blfeug.**{*;}
+-keep class com.github.client.bube.**{*;}
 
+-keep class com.github.**{*;}

@@ -136,6 +136,22 @@ public class HttpManager {
         http.request();
     }
 
+    public static void doPostSdkSelect(RequestCallback requestCallback) {
+        Map<String, Object> parMap = ParameterUtil.getParMap(mContext);
+
+        LogUtil.w("URL address ->" + API.APP_SDK_SELECT);
+        RequestHttp http = new RequestHttp.Builder()
+                .withApi(API.APP_SDK_SELECT)
+                .withHasSingData(true)
+                .withRequestMethod("POST")
+                .withRequestParMap(parMap)
+                .withTime(Constant.CONNECT_TIME_OUT, Constant.READ_TIME_OUT)
+                .withRequestType(RequestHttp.RequestType.SEND_JSON)
+                .withResponseCallback(requestCallback)
+                .build();
+        http.request();
+    }
+
     public static void doGetDownloadJar(RequestCallback requestCallback, String api) {
         LogUtil.w("URL address ->" + api);
         RequestHttp http = new RequestHttp.Builder()
