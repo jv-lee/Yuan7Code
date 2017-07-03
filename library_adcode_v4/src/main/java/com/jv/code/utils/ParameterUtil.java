@@ -277,8 +277,6 @@ public class ParameterUtil {
         parMap.put(Constant.SCREEN_DPI, ParameterUtil.getScreenPpi(context));
         parMap.put(Constant.SCREEN_HEIGHT, ParameterUtil.getScreenHight(context));
         parMap.put(Constant.SCREEN_WIDTH, ParameterUtil.getScreenWidth(context));
-//        parMap.put(Constant.SHUCK_VERSION, Config.SHUCK_VERSION);
-//        parMap.put(Constant.SHUCK_NAME, Config.SHUCK_NAME);
         parMap.put(Constant.SHUCK_VERSION, SPUtil.get(Constant.SHUCK_VERSION, ""));
         parMap.put(Constant.SHUCK_NAME, SPUtil.get(Constant.SHUCK_NAME, ""));
         parMap.put(Constant.JAR_VERSION, Config.SDK_JAR_VERSION);

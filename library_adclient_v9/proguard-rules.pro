@@ -129,4 +129,4 @@
 -keep class com.github.client.blfeug.**{*;}
 -keep class com.github.client.bube.**{*;}
 
--keep class com.github.**{*;}
+

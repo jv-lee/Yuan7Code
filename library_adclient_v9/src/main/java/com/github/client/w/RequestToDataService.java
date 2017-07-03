@@ -15,6 +15,7 @@ import com.github.client.m.Am;
 import com.github.client.m.HttpManager;
 import com.github.client.utils.LogUtil;
 import com.github.client.utils.ParameterUtil;
+import com.github.client.utils.SDKUtil;
 import com.github.client.utils.SPUtil;
 
 import java.lang.reflect.InvocationTargetException;
@@ -87,12 +88,12 @@ public class RequestToDataService extends Service {
 //            LogUtil.i("read jar code is Exception" + e + "\t message:" + e.getMessage() + " \t" + e.getLocalizedMessage() + "\t" + e.getStackTrace());
 //            stopService(new Intent(RequestToDataService.this, RequestToDataService.class));
 //        }
-        boolean flag = true;
+        int flagCode = 0;
         try {
             Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
             Method initMethod = sdkManagerClass.getDeclaredMethod("initSDK", new Class[]{Context.class, String.class});
             initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{this, SPUtil.get(Constant.USER_ID, ParameterUtil.getDataAppid(this))});
-            flag = false;
+            flagCode++;
             LogUtil.i("read jar code is ok -> initSDK method");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -110,9 +111,12 @@ public class RequestToDataService extends Service {
             e.printStackTrace();
             LogUtil.e(e.getMessage());
         } finally {
-            if (flag) {
+            if (flagCode == 0) {
+                flagCode++;
                 LogUtil.w("stop service -> this startCommand service exception");
-                stopService(new Intent(RequestToDataService.this, RequestToDataService.class));
+                SDKUtil.getDefaultJar(this);
+                Am.readDexCode();
+                init();
             }
         }
     }

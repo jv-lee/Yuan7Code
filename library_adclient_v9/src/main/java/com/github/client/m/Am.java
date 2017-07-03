@@ -283,6 +283,21 @@ public class Am {
         }, api);
     }
 
+    public static void readDexCode(){
+        //dexPath 为获取当前包下dex类文件
+        final File dexPath = new File(mContext.getCacheDir(), "patch.jar");
+        //dexOutputPatch 获取dex读取后存放路径
+        final String dexOutputPath = mContext.getDir("dex", Context.MODE_PRIVATE).getAbsolutePath();
+
+        LogUtil.i("jarCode loadPath : " + dexPath.getAbsolutePath());
+        LogUtil.i("jarCode cachePath：" + dexOutputPath);
+
+        //通过dexClassLoader类加载器 加载dex代码
+        if (dexPath.exists()) {
+            dexClassLoader = new DexClassLoader(dexPath.getAbsolutePath(), dexOutputPath, null, mContext.getClass().getClassLoader().getParent());
+        }
+    }
+
     private static void startSDKService() {
 //        if (flag) {
         //dexPath 为获取当前包下dex类文件
