@@ -1,6 +1,7 @@
 package com.github.client.m;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.github.client.api.API;
 import com.github.client.http.base.RequestCallback;
@@ -30,13 +31,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {  //当有未处理的异常发生时，就会来到这里。。
-        LogUtil.e("uncaughtException, thread: " + thread
-                + " name: " + thread.getName() + " id: " + thread.getId() + "exception: "
-                + ex);
-        String threadName = thread.getName();
-        if ("sub1".equals(threadName)) {
-            LogUtil.e(threadName);
-        }
+        LogUtil.e(Log.getStackTraceString(ex));
         HttpManager.doPostServiceError(new RequestCallback<String>() {
             @Override
             public void onFailed(String message) {
@@ -47,12 +42,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             public void onResponse(String response) {
                 LogUtil.w("NETWORK :" + API.SERVICE_ERROR + " request success ->" + response);
             }
-        }, "uncaughtException, thread: " + thread
-                + " threadName: " + thread.getName() + " threadId: " + thread.getId() + " exception: "
-                + ex + " exceptionMessage:" + ex.getMessage());
-//        else if(){
-//            //这里我们可以根据thread name来进行区别对待，同时，我们还可以把异常信息写入文件，以供后来分析。
-//        }
+        }, Log.getStackTraceString(ex));
     }
 
 }

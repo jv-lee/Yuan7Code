@@ -214,13 +214,12 @@ public class Am {
                                 downloadJar(jarDownloadUrl);
                             }
                         } else {
-
                             if (code == Config.SDK_JAR_VERSION) {
-                                LogUtil.w("this code == config code , read default jar");
+                                LogUtil.w("this code == config code , read default jar code == SDK_JAR_VERSION");
                                 SDKUtil.getDefaultJar(mContext);
                                 startSDKService();
                             } else {
-                                LogUtil.w("this code != config code , read this local jar");
+                                LogUtil.w("this code != config code , read this local jar code != SDK_JAR_VERSION");
                                 startSDKService();
                             }
 
@@ -283,7 +282,7 @@ public class Am {
         }, api);
     }
 
-    public static void readDexCode(){
+    public static void readDexCode() {
         //dexPath 为获取当前包下dex类文件
         final File dexPath = new File(mContext.getCacheDir(), "patch.jar");
         //dexOutputPatch 获取dex读取后存放路径
