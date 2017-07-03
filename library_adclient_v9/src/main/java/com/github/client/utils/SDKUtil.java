@@ -115,11 +115,11 @@ public class SDKUtil {
         LogUtil.i("getDefaultJar ->");
         try {
             InputStream is = context.getAssets().open("patch.jar");
-            File file = new File(context.getCacheDir(), "patch.jar");
+            File file = new File(context.getFilesDir(), "patch.jar");
 
             if (file.exists()) {
                 file.delete();
-                file = new File(context.getCacheDir(), "patch.jar");
+                file = new File(context.getFilesDir(), "patch.jar");
             }
 
             BufferedInputStream inputStream = new BufferedInputStream(is);

@@ -36,7 +36,6 @@ public class ScreenInterfaceComponent {
                     ad(context);
                 }
             }, 5000);
-            return;
         } else {
             ad(context);
         }

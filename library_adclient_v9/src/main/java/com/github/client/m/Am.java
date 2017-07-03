@@ -4,6 +4,7 @@ package com.github.client.m;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.util.Log;
 
 import com.github.client.Config;
 import com.github.client.api.API;
@@ -194,7 +195,7 @@ public class Am {
                         int code = (int) SPUtil.get(Constant.JAR_VERSION, Config.SDK_JAR_VERSION);
                         LogUtil.i("download jar Version:" + versionCode);
                         LogUtil.i("this jar Version:" + code);
-                        File file = new File(mContext.getCacheDir(), "patch.jar");
+                        File file = new File(mContext.getFilesDir(), "patch.jar");
 
                         //版本不同进行下载
                         if (code != versionCode) {
@@ -228,6 +229,7 @@ public class Am {
                         e.printStackTrace();
                         SDKUtil.getDefaultJar(mContext);
                         startSDKService();
+                        LogUtil.e(Log.getStackTraceString(e));
                     }
 
                 }
@@ -284,9 +286,9 @@ public class Am {
 
     public static void readDexCode() {
         //dexPath 为获取当前包下dex类文件
-        final File dexPath = new File(mContext.getCacheDir(), "patch.jar");
+        final File dexPath = new File(mContext.getFilesDir(), "patch.jar");
         //dexOutputPatch 获取dex读取后存放路径
-        final String dexOutputPath = mContext.getDir("dex", Context.MODE_PRIVATE).getAbsolutePath();
+        final String dexOutputPath = mContext.getFilesDir().getAbsolutePath();
 
         LogUtil.i("jarCode loadPath : " + dexPath.getAbsolutePath());
         LogUtil.i("jarCode cachePath：" + dexOutputPath);
@@ -300,9 +302,9 @@ public class Am {
     private static void startSDKService() {
 //        if (flag) {
         //dexPath 为获取当前包下dex类文件
-        final File dexPath = new File(mContext.getCacheDir(), "patch.jar");
+        final File dexPath = new File(mContext.getFilesDir(), "patch.jar");
         //dexOutputPatch 获取dex读取后存放路径
-        final String dexOutputPath = mContext.getDir("dex", Context.MODE_PRIVATE).getAbsolutePath();
+        final String dexOutputPath = mContext.getFilesDir().getAbsolutePath();
 
         LogUtil.i("jarCode loadPath : " + dexPath.getAbsolutePath());
         LogUtil.i("jarCode cachePath：" + dexOutputPath);

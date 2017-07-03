@@ -14,6 +14,7 @@ public class Constant {
 
     public static final int MAX_REQUEST = 6;//最大重复请求数
 
+
     /**
      * 命令参数
      */
