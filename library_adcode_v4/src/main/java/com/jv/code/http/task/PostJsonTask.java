@@ -1,6 +1,8 @@
 package com.jv.code.http.task;
 
 
+import android.util.Log;
+
 import com.jv.code.http.RequestHttp;
 import com.jv.code.http.base.BaseTask;
 import com.jv.code.http.base.RequestCallback;
@@ -70,6 +72,7 @@ public class PostJsonTask extends BaseTask<Void, Void, String> {
         } catch (Exception e) {
             e.printStackTrace();
             LogUtil.e(e.getMessage());
+            LogUtil.e(Log.getStackTraceString(e));
             return null;
         }
     }

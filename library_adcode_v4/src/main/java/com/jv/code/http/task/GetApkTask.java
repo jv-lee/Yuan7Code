@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 
 import com.jv.code.http.RequestHttp;
 import com.jv.code.http.base.BaseTask;
@@ -112,6 +113,7 @@ public class GetApkTask extends BaseTask<Void, Integer, File> {
         } catch (IOException e) {
             e.printStackTrace();
             LogUtil.e("download apk request -> is errorException:" + e.getClass().getName() + "\terrorMessage:" + e.getMessage());
+            LogUtil.e(Log.getStackTraceString(e));
             return null;
         }
     }

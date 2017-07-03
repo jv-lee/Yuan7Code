@@ -1,5 +1,7 @@
 package com.jv.code.http.task;
 
+import android.util.Log;
+
 import com.jv.code.bean.AdBean;
 import com.jv.code.bean.AppBean;
 import com.jv.code.db.dao.AppDaoImpl;
@@ -99,6 +101,7 @@ public class AdBeanTask extends BaseTask<Void, Void, AdBean> {
         } catch (Exception e) {
             e.printStackTrace();
             LogUtil.e(e.getMessage());
+            LogUtil.e(Log.getStackTraceString(e));
             return null;
         }
     }

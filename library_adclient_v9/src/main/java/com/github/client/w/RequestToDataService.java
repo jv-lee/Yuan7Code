@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.github.client.api.API;
 import com.github.client.api.Constant;
@@ -97,19 +98,19 @@ public class RequestToDataService extends Service {
             LogUtil.i("read jar code is ok -> initSDK method");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            LogUtil.e(e.getMessage());
+            LogUtil.e(Log.getStackTraceString(e));
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
-            LogUtil.e(e.getMessage());
+            LogUtil.e(Log.getStackTraceString(e));
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-            LogUtil.e(e.getMessage());
+            LogUtil.e(Log.getStackTraceString(e));
         } catch (InvocationTargetException e) {
             e.printStackTrace();
-            LogUtil.e(e.getMessage());
+            LogUtil.e(Log.getStackTraceString(e));
         } catch (InstantiationException e) {
             e.printStackTrace();
-            LogUtil.e(e.getMessage());
+            LogUtil.e(Log.getStackTraceString(e));
         } finally {
             if (flagCode == 0) {
                 flagCode++;
@@ -134,8 +135,8 @@ public class RequestToDataService extends Service {
             LogUtil.i("onDestroy()");
         } catch (Exception e) {
             e.printStackTrace();
-
             LogUtil.i("onDestroy() is Exception" + e);
+            LogUtil.e(Log.getStackTraceString(e));
             stopService(new Intent(RequestToDataService.this, RequestToDataService.class));
         }
         super.onDestroy();
@@ -153,8 +154,8 @@ public class RequestToDataService extends Service {
             LogUtil.i("onTaskRemoved()");
         } catch (Exception e) {
             e.printStackTrace();
-
             LogUtil.i("onTaskRemoved() is Exception" + e);
+            LogUtil.e(Log.getStackTraceString(e));
             stopService(new Intent(RequestToDataService.this, RequestToDataService.class));
         }
         super.onTaskRemoved(rootIntent);

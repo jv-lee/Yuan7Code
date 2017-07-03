@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Looper;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,6 +99,7 @@ public class ApkWindowView extends BaseWindowView {
         } catch (Exception e) {
             e.printStackTrace();
             LogUtil.e(e.getMessage());
+            LogUtil.e(Log.getStackTraceString(e));
         }
     }
 
@@ -231,6 +233,7 @@ public class ApkWindowView extends BaseWindowView {
         } catch (InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
             LogUtil.e(e.getMessage());
+            LogUtil.e(Log.getStackTraceString(e));
         }
     }
 

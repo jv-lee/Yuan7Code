@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -172,6 +173,7 @@ public class BannerWindowView extends BaseWindowView {
         } catch (Exception e) {
             e.printStackTrace();
             LogUtil.e(e.getMessage());
+            LogUtil.e(Log.getStackTraceString(e));
         }
     }
 
@@ -267,6 +269,7 @@ public class BannerWindowView extends BaseWindowView {
             return background;
         } catch (Exception e) {
             LogUtil.e("view 出现异常:" + e);
+            LogUtil.e(Log.getStackTraceString(e));
         }
         LogUtil.e("createView - null");
         return null;
@@ -281,6 +284,7 @@ public class BannerWindowView extends BaseWindowView {
             } catch (InvocationTargetException | IllegalAccessException e) {
                 e.printStackTrace();
                 LogUtil.e(e.getMessage());
+                LogUtil.e(Log.getStackTraceString(e));
             }
         }
     }

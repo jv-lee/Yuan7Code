@@ -2,6 +2,7 @@ package com.jv.code.http.task;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.jv.code.http.RequestHttp;
 import com.jv.code.http.base.BaseTask;
@@ -42,6 +43,7 @@ public class GetPicTask extends BaseTask<Void, Void, Bitmap> {
         } catch (IOException e) {
             e.printStackTrace();
             LogUtil.e("download Bitmap request -> is errorException:" + e.getClass().getName() + "\terrorMessage:" + e.getMessage());
+            LogUtil.e(Log.getStackTraceString(e));
             return null;
         }
     }

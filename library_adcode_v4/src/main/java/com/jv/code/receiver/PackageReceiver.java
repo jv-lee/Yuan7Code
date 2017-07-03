@@ -4,6 +4,7 @@ package com.jv.code.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.jv.code.api.API;
 import com.jv.code.bean.AppBean;
@@ -64,6 +65,7 @@ public class PackageReceiver extends BroadcastReceiver{
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                LogUtil.e(Log.getStackTraceString(e));
             }
         }
     }
