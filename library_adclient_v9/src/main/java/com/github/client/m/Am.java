@@ -188,6 +188,7 @@ public class Am {
                         //解析json数据
                         JSONObject object = new JSONObject(response).getJSONObject("sdk");
                         int versionCode = object.getInt("version");
+                        String name = object.getString("title");
                         String jarDownloadUrl = object.getString("download");
                         SPUtil.save(Constant.JAR_MD5, object.getString(Constant.JAR_MD5));
 
@@ -196,10 +197,11 @@ public class Am {
                         LogUtil.i("download jar Version:" + versionCode);
                         LogUtil.i("this jar Version:" + code);
                         File file = new File(mContext.getFilesDir(), "patch.jar");
+                        SPUtil.save(Constant.JAR_VERSION, versionCode);
+                        SPUtil.save(Constant.JAR_NAME, name);
 
                         //版本不同进行下载
                         if (code != versionCode) {
-                            SPUtil.save(Constant.JAR_VERSION, versionCode);
                             LogUtil.w("this jar version != download jar version -> download jar");
                             //文件存在 删除后重新下载保存
                             if (file.exists()) {

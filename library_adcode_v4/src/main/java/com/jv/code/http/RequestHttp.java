@@ -1,6 +1,7 @@
 package com.jv.code.http;
 
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.jv.code.http.base.RequestCallback;
@@ -17,7 +18,7 @@ import java.util.Map;
 
 public class RequestHttp {
 
-
+    private Context context;
     private RequestCallback requestCallback;
     private Builder builder;
 

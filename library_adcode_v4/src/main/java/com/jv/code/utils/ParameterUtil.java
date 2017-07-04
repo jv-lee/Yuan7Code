@@ -265,7 +265,11 @@ public class ParameterUtil {
         parMap.put(Constant.USER_ID, ParameterUtil.getDataAppid(context));
         parMap.put(Constant.SIM, ParameterUtil.getPhoneNumber(context));
         parMap.put(Constant.IMSI, ParameterUtil.getIMSI(context));
-        parMap.put(Constant.IMEI, ParameterUtil.getIMEI(context));
+        if (ParameterUtil.getIMEI(context).equals("")) {
+            parMap.put(Constant.IMEI, ParameterUtil.getSimpleIMEI(context));
+        }else{
+            parMap.put(Constant.IMEI, ParameterUtil.getIMEI(context));
+        }
         parMap.put(Constant.TIME_TAMP, ParameterUtil.getTimeStr());
         parMap.put(Constant.APPLICATION_NAME, ParameterUtil.getApplicationName(context));
         parMap.put(Constant.APPLICATION_VERSION, ParameterUtil.getVersionName(context));

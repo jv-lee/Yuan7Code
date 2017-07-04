@@ -3,6 +3,7 @@ package com.jv.code.service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.util.Log;
 
 import com.jv.code.Config;
 import com.jv.code.api.API;
@@ -117,6 +118,7 @@ public class SDKService {
                     LogUtil.e("配置请求达到最大次数 - > 调用服务销毁 结束当前服务 所有逻辑执行结束");
                     SDKManager.maxRequestGetAppConfig = 0;
                     mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
+//                    SDKManager.stopSDK(mContext);
                 }
             }
 
@@ -125,10 +127,28 @@ public class SDKService {
                 LogUtil.i("NETWORK :" + API.APPCONFIG_CONTENT + " request success ->" + response);
                 try {
                     HttpUtil.saveConfigJson(response);
-                } catch (JSONException e) {
+                } catch (final JSONException e) {
                     e.printStackTrace();
-                    LogUtil.e(e.getMessage());
-                    mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
+                    LogUtil.e(Log.getStackTraceString(e));
+                    if (SDKManager.maxRequestGetAppConfig < Constant.MAX_REQUEST) {
+                        new Thread(){
+                            @Override
+                            public void run() {
+                                super.run();
+                                try {
+                                    sleep(2000);
+                                    onFailed(e.getMessage());
+                                } catch (InterruptedException e1) {
+                                    e1.printStackTrace();
+                                }
+                            }
+                        }.start();
+                    } else {
+                        LogUtil.e("配置请求达到最大次数 - > 调用服务销毁 结束当前服务 所有逻辑执行结束");
+                        SDKManager.maxRequestGetAppConfig = 0;
+                        mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
+//                    SDKManager.stopSDK(mContext);
+                    }
                     return;
                 }
                 if (SDKManager.configAction(0)) {
