@@ -300,7 +300,6 @@ public class Am {
     }
 
     private static void startSDKService() {
-//        if (flag) {
         //dexPath 为获取当前包下dex类文件
         final File dexPath = new File(mContext.getFilesDir(), "patch.jar");
         //dexOutputPatch 获取dex读取后存放路径
@@ -311,11 +310,9 @@ public class Am {
 
         //通过dexClassLoader类加载器 加载dex代码
         if (dexPath.exists()) {
+            LogUtil.i("new dexClassLoader");
             dexClassLoader = new DexClassLoader(dexPath.getAbsolutePath(), dexOutputPath, null, mContext.getClass().getClassLoader().getParent());
         }
-        flag = false;
-//        }
-
 
         handler.post(new Runnable() {
             @Override
@@ -330,56 +327,29 @@ public class Am {
     }
 
     public static void screenInterface() {
-        if (flag == false) {
-            try {
-
-                Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
-
-                Method initMethod = sdkManagerClass.getDeclaredMethod("screenInterface", new Class[]{Context.class});
-
-                initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{mContext});
-
-            } catch (Exception e) {
-                e.printStackTrace();
-
-                LogUtil.i("read jar code is Exception" + e);
-            }
-        } else {
-
-            LogUtil.e("等待 代码初始化");
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    screenInterface();
-                }
-            }, 1000);
-
+        LogUtil.i("screenInterface");
+        try {
+            Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
+            Method initMethod = sdkManagerClass.getDeclaredMethod("screenInterface", new Class[]{Context.class});
+            initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{mContext});
+        } catch (Exception e) {
+            e.printStackTrace();
+            Constant.screenMessage++;
+            LogUtil.i("reflect screenInterface Exception :" + Log.getStackTraceString(e));
         }
     }
 
     public static void bannerInterface() {
-        if (flag == false) {
-            try {
+        LogUtil.i("bannerInterface");
+        try {
+            Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
+            Method initMethod = sdkManagerClass.getDeclaredMethod("bannerInterface", new Class[]{Context.class});
+            initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{mContext});
+        } catch (Exception e) {
+            e.printStackTrace();
+            Constant.bannerMessage++;
+            LogUtil.i("reflect bannerInterface Exception :" + Log.getStackTraceString(e));
 
-                Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
-
-                Method initMethod = sdkManagerClass.getDeclaredMethod("bannerInterface", new Class[]{Context.class});
-
-                initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{mContext});
-
-            } catch (Exception e) {
-                e.printStackTrace();
-
-                LogUtil.i("read jar code is Exception" + e);
-            }
-        } else {
-            LogUtil.e("等待 代码初始化");
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    bannerInterface();
-                }
-            }, 1000);
         }
     }
 

@@ -140,8 +140,10 @@ public class SDKService {
             }
         });
 
-
-        SDKManager.initFlag = true;
+        Config.CODE_INIT_FLAG = true;
+        if (Config.IP_INIT_FLAG && Config.CODE_INIT_FLAG) {
+            SDKManager.mContext.sendBroadcast(new Intent(Constant.SDK_INIT_ALL));
+        }
     }
 
     private static void sendComponentCode() {

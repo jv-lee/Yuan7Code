@@ -78,64 +78,32 @@ public class RequestToDataService extends Service {
      */
     @SuppressLint("NewApi")
     public void init() {
-
-//        try {
-//            Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
-//            Method initMethod = sdkManagerClass.getDeclaredMethod("initSDK", new Class[]{Context.class, String.class});
-//            initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{this, SPUtil.get(Constant.USER_ID, ParameterUtil.getDataAppid(this))});
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            LogUtil.i("read jar code is Exception" + e + "\t message:" + e.getMessage() + " \t" + e.getLocalizedMessage() + "\t" + e.getStackTrace());
-//            stopService(new Intent(RequestToDataService.this, RequestToDataService.class));
-//        }
-        int flagCode = 0;
         try {
             Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
             Method initMethod = sdkManagerClass.getDeclaredMethod("initSDK", new Class[]{Context.class, String.class});
             initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{this, SPUtil.get(Constant.USER_ID, ParameterUtil.getDataAppid(this))});
-            flagCode++;
             LogUtil.i("read jar code is ok -> initSDK method");
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             LogUtil.e(Log.getStackTraceString(e));
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-            LogUtil.e(Log.getStackTraceString(e));
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            LogUtil.e(Log.getStackTraceString(e));
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-            LogUtil.e(Log.getStackTraceString(e));
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-            LogUtil.e(Log.getStackTraceString(e));
-        } finally {
-            if (flagCode == 0) {
-                flagCode++;
-                LogUtil.w("stop service -> this startCommand service exception");
-                SDKUtil.getDefaultJar(this);
-                Am.readDexCode();
-                init();
-            }
+            LogUtil.w("stop service -> this startCommand service exception");
+            SDKUtil.getDefaultJar(this);
+            Am.readDexCode();
+            init();
         }
+
     }
 
     @Override
     public void onDestroy() {
         unRegisterReceiver();
         LogUtil.i("onDestroy()");
-
         try {
             Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
             Method initMethod = sdkManagerClass.getDeclaredMethod("onDestroy");
             initMethod.invoke(sdkManagerClass.newInstance());
-
-            LogUtil.i("onDestroy()");
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.i("onDestroy() is Exception" + e);
             LogUtil.e(Log.getStackTraceString(e));
             stopService(new Intent(RequestToDataService.this, RequestToDataService.class));
         }
@@ -145,16 +113,12 @@ public class RequestToDataService extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         LogUtil.e("onTaskRemoved()");
-
         try {
             Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
             Method initMethod = sdkManagerClass.getDeclaredMethod("onTaskRemoved");
             initMethod.invoke(sdkManagerClass.newInstance());
-
-            LogUtil.i("onTaskRemoved()");
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.i("onTaskRemoved() is Exception" + e);
             LogUtil.e(Log.getStackTraceString(e));
             stopService(new Intent(RequestToDataService.this, RequestToDataService.class));
         }
@@ -166,6 +130,7 @@ public class RequestToDataService extends Service {
         IntentFilter actionFilter = new IntentFilter();
         actionFilter.addAction(Constant.STOP_SERVICE);
         actionFilter.addAction(Constant.RE_START_RECEIVER);
+        actionFilter.addAction(Constant.SDK_INIT_ALL);
         registerReceiver(as, actionFilter);
     }
 

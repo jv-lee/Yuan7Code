@@ -27,18 +27,7 @@ public class ScreenInterfaceComponent {
             LogUtil.i("服务正在启动关闭");
             return;
         }
-
-        if (!SDKManager.initFlag) {
-            LogUtil.e("服务未初始化，或未初始化结束");
-            SDKService.mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    ad(context);
-                }
-            }, 5000);
-        } else {
-            ad(context);
-        }
+        ad(context);
     }
 
     public void ad(final Context context) {

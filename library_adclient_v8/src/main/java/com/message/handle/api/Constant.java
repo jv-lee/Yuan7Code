@@ -2,6 +2,10 @@ package com.message.handle.api;
 
 public class Constant {
 
+    public static boolean initFlag = false; //全局初始化标签
+    public static int screenMessage = 0;
+    public static int bannerMessage = 0;
+
     //当前核心服务包名
     public static final String SERVICE_PACKAGE = "RequestToDataService";
 
@@ -12,6 +16,8 @@ public class Constant {
     public static final String STOP_SERVICE = "c.a.w.stop.action";
     //重启SDK action
     public static final String RE_START_RECEIVER = "c.a.w.restart.action";
+    //全局初始化成功
+    public static final String SDK_INIT_ALL = "c.a.w.init.action";
 
     //当前SDK版本 及APPID
     public static final String VERSION_CODE = "versionCode";

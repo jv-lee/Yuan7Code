@@ -21,16 +21,6 @@ public class BannerInterfaceComponent {
             LogUtil.i("服务正在启动关闭");
             return;
         }
-        if (!SDKManager.initFlag) {
-            LogUtil.e("服务未初始化，或未初始化结束");
-            SDKService.mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    BannerInterfaceWindowView.getInstance(context).condition();
-                }
-            }, 5000);
-        } else {
-            BannerInterfaceWindowView.getInstance(context).condition();
-        }
+        BannerInterfaceWindowView.getInstance(context).condition();
     }
 }

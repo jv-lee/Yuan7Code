@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.client.news.logcat.LogcatTextView;
 import com.client.xyz.R;
-import com.github.client.m.Am;
+import com.message.handle.m.Am;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.i(TAG, "Am.init" + getApplicationContext().getPackageName());
+        Am.screenInterface();
 
         logcatTextView = (LogcatTextView) findViewById(R.id.logcat);
 

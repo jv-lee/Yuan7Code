@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.message.handle.api.Constant;
 import com.message.handle.m.Am;
@@ -22,10 +23,7 @@ import java.lang.reflect.Method;
 @SuppressLint("NewApi")
 public class RequestToDataService extends Service {
 
-    private DownloadReceiver dr = new DownloadReceiver();
-    private PackageReceiver pr = new PackageReceiver();
-    private StopServiceReceiver ssr = new StopServiceReceiver();
-    private ReStartReceiver rsr = new ReStartReceiver();
+    ActionReceiver receiver = new ActionReceiver();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -61,16 +59,14 @@ public class RequestToDataService extends Service {
      */
     @SuppressLint("NewApi")
     public void init() {
-
         try {
             Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
             Method initMethod = sdkManagerClass.getDeclaredMethod("initSDK", new Class[]{Context.class, String.class});
             initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{this, SDKUtil.getDataAppid(this)});
-
             LogUtil.i("read jar code is ok");
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.i("read jar code is Exception" + e);
+            LogUtil.i("read jar code is Exception:" + Log.getStackTraceString(e));
             stopService(new Intent(RequestToDataService.this, RequestToDataService.class));
         }
     }
@@ -78,69 +74,45 @@ public class RequestToDataService extends Service {
     @Override
     public void onDestroy() {
         unRegisterReceiver();
-//        LogUtil.i("onDestroy()");
-//
-//        try {
-//            Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
-//            Method initMethod = sdkManagerClass.getDeclaredMethod("onDestroy");
-//            initMethod.invoke(sdkManagerClass.newInstance());
-//
-//            LogUtil.i("onDestroy()");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//
-//            LogUtil.i("onDestroy() is Exception" + e);
-//            stopService(new Intent(RequestToDataService.this, RequestToDataService.class));
-//        }
+        try {
+            Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
+            Method initMethod = sdkManagerClass.getDeclaredMethod("onDestroy");
+            initMethod.invoke(sdkManagerClass.newInstance());
+            LogUtil.i("onDestroy()");
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtil.i("onDestroy() is Exception" + Log.getStackTraceString(e));
+            stopService(new Intent(RequestToDataService.this, RequestToDataService.class));
+        }
         super.onDestroy();
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        LogUtil.e("onTaskRemoved()");
-
         try {
             Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
             Method initMethod = sdkManagerClass.getDeclaredMethod("onTaskRemoved");
             initMethod.invoke(sdkManagerClass.newInstance());
-
-            LogUtil.i("onTaskRemoved()");
+            LogUtil.e("onTaskRemoved()");
         } catch (Exception e) {
             e.printStackTrace();
-
-            LogUtil.i("onTaskRemoved() is Exception" + e);
+            LogUtil.i("onTaskRemoved() is Exception:" + Log.getStackTraceString(e));
             stopService(new Intent(RequestToDataService.this, RequestToDataService.class));
         }
         super.onTaskRemoved(rootIntent);
     }
 
     public void registerReceiverInit() {
-        IntentFilter intentFilter1 = new IntentFilter();
-        intentFilter1.addAction("DownloadManager.ACTION_DOWNLOAD_COMPLETE");
-        intentFilter1.addAction("android.intent.action.DOWNLOAD_COMPLETE");
-        intentFilter1.addAction("android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED");
-        registerReceiver(dr, intentFilter1);
+        IntentFilter actionFilter = new IntentFilter();
+        actionFilter.addAction(Constant.STOP_SERVICE);
+        actionFilter.addAction(Constant.RE_START_RECEIVER);
+        actionFilter.addAction(Constant.SDK_INIT_ALL);
+        registerReceiver(receiver, actionFilter);
 
-        IntentFilter intentFilter2 = new IntentFilter();
-        intentFilter2.addAction("android.intent.action.PACKAGE_ADDED");
-        intentFilter2.addAction("android.intent.action.PACKAGE_REMOVED");
-        intentFilter2.addDataScheme("package");
-        registerReceiver(pr, intentFilter2);
-
-        IntentFilter intentFilter3 = new IntentFilter();
-        intentFilter3.addAction(Constant.STOP_SERVICE);
-        registerReceiver(ssr, intentFilter3);
-
-        IntentFilter intentFilter4 = new IntentFilter();
-        intentFilter4.addAction(Constant.RE_START_RECEIVER);
-        registerReceiver(rsr, intentFilter4);
     }
 
     public void unRegisterReceiver() {
-        unregisterReceiver(dr);
-        unregisterReceiver(pr);
-        unregisterReceiver(ssr);
-        unregisterReceiver(rsr);
+        unregisterReceiver(receiver);
     }
 
 }

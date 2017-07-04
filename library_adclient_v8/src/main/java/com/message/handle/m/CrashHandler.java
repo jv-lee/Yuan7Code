@@ -1,6 +1,7 @@
 package com.message.handle.m;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.message.handle.utils.LogUtil;
 
@@ -28,16 +29,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {  //当有未处理的异常发生时，就会来到这里。。
-        LogUtil.e("uncaughtException, thread: " + thread
-                + " name: " + thread.getName() + " id: " + thread.getId() + "exception: "
-                + ex);
-        String threadName = thread.getName();
-        if ("sub1".equals(threadName)) {
-            LogUtil.e(threadName);
-        }
-//        else if(){
-//            //这里我们可以根据thread name来进行区别对待，同时，我们还可以把异常信息写入文件，以供后来分析。
-//        }
+        LogUtil.e(Log.getStackTraceString(ex));
     }
 
 }

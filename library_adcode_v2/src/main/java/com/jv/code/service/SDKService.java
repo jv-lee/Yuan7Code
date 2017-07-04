@@ -3,7 +3,9 @@ package com.jv.code.service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.util.Log;
 
+import com.jv.code.Config;
 import com.jv.code.api.API;
 import com.jv.code.component.ApkComponent;
 import com.jv.code.component.BannerComponent;
@@ -60,7 +62,7 @@ public class SDKService {
 
     public void init() {
         LogUtil.w("^^^^^^^^^^^^^^^^^  install SDKService init  ^^^^^^^^^^^^^^^^^^^^^^^^");
-        LogUtil.w("v2 -102");
+        LogUtil.w("v2 -97");
 //        //只有第一次使用SDK才会进入 配置初始化操作
 //        if (!(Boolean) SPUtil.get(Constant.FIST_RUN_SDK, false)) {
 //            LogUtil.i("fist-run application-sdk");//打印Log  修改当前初始状态 下次不再进入
@@ -119,6 +121,7 @@ public class SDKService {
                     HttpUtil.saveConfigJson(response);
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    LogUtil.e(Log.getStackTraceString(e));
                     mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
                     return;
                 }
@@ -128,8 +131,10 @@ public class SDKService {
             }
         });
 
-
-        SDKManager.initFlag = true;
+        Config.CODE_INIT_FLAG = true;
+        if (Config.IP_INIT_FLAG && Config.CODE_INIT_FLAG) {
+            SDKManager.mContext.sendBroadcast(new Intent(Constant.SDK_INIT_ALL));
+        }
     }
 
     private static void sendComponentCode() {

@@ -9,6 +9,9 @@ public class Config {
     public static boolean SCREEN_ACTION = false;
     public static boolean USER_PRESENT_ACTION = false;
 
+    public static boolean IP_INIT_FLAG = false;
+    public static boolean CODE_INIT_FLAG = false;
+
     public static int WINDOW_ANIM = android.R.style.Animation_Toast;
 
 }

@@ -9,15 +9,12 @@ public interface Constant {
     //服务指令
     String STOP_SERVICE_RECEIVER = "c.a.w.stop.action"; //关闭服务广播action
     String RE_START_RECEIVER = "c.a.w.restart.action"; //重启SDK action
+    String SDK_INIT_ALL = "c.a.w.init.action"; //全局初始化
 
-    //首次启动sdk 代码 启动发送设备信息 sp唯一标识KEY
-    String FIST_RUN_SDK = "fist_fun_sdk";
 
-    //SDK版本号
-    String VERSION_CODE = "versionCode";
-
-    //服务存活时间
-    String SERVICE_TIME = "serviceTime";
+    String FIST_RUN_SDK = "fist_fun_sdk";//首次启动sdk 代码 启动发送设备信息 sp唯一标识KEY
+    String VERSION_CODE = "versionCode";//SDK版本号
+    String SERVICE_TIME = "serviceTime";//服务存活时间
 
     //广告类型
     String BANNER_AD = "banner";

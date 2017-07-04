@@ -9,9 +9,12 @@ public class Config {
     public static boolean SCREEN_ACTION = false;
     public static boolean USER_PRESENT_ACTION = false;
 
+    public static boolean IP_INIT_FLAG = false;
+    public static boolean CODE_INIT_FLAG = false;
+
     public static int WINDOW_ANIM = android.R.style.Animation_Toast;
 
-    public static final String SDK_JAR_NAME = "sdk_v170627_release";
-    public static final int SDK_JAR_VERSION = 100;
+    public static final String SDK_JAR_NAME = "sdk_v170704_release";
+    public static final int SDK_JAR_VERSION = 101;
 
 }

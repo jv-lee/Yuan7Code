@@ -42,7 +42,7 @@ public class HttpDownload extends Thread {
             conn.setConnectTimeout(Constant.CONNECT_TIME_OUT);
 
 
-            File file = new File(mContext.getCacheDir(), "patch.jar");
+            File file = new File(mContext.getFilesDir(), "patch.jar");
             LogUtil.i("this jar downloadPath:" + file.getAbsolutePath());
 
             BufferedInputStream inputStream = new BufferedInputStream(conn.getInputStream());

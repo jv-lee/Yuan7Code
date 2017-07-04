@@ -1,8 +1,11 @@
 package com.jv.code.component;
 
 import android.content.Context;
+import android.content.Intent;
 
+import com.jv.code.Config;
 import com.jv.code.constant.Constant;
+import com.jv.code.manager.SDKManager;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SPUtil;
 
@@ -95,6 +98,11 @@ public class IPComponent extends Thread {
 
                 SPUtil.save(Constant.PROVINCE, province);
                 SPUtil.save(Constant.CITY, city);
+
+                Config.IP_INIT_FLAG = true;
+                if (Config.IP_INIT_FLAG && Config.CODE_INIT_FLAG) {
+                    SDKManager.mContext.sendBroadcast(new Intent(Constant.SDK_INIT_ALL));
+                }
 
                 LogUtil.i("ip 查询地区信息:" + province + "," + city);
             }

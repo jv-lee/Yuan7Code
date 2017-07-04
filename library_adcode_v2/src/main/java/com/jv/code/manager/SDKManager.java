@@ -14,8 +14,7 @@ import com.jv.code.component.ScreenComponent;
 import com.jv.code.component.ScreenInterfaceComponent;
 import com.jv.code.constant.Constant;
 import com.jv.code.interfaces.RequestCallback;
-import com.jv.code.service.DownloadReceiver;
-import com.jv.code.service.PackageReceiver;
+import com.jv.code.receiver.DownloadReceiver;
 import com.jv.code.service.SDKService;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;
@@ -40,8 +39,6 @@ public class SDKManager {
     public static int maxRequestSendPhoneConfig = 0;
 
     public static int NOTIFICATION_ID = 0;
-
-    public static boolean initFlag = false;
 
     /**
      * 没有sim卡 发送一次 记数
@@ -132,25 +129,7 @@ public class SDKManager {
         });
     }
 
-    /**
-     * 反射 下载广播逻辑
-     *
-     * @param context
-     * @param intent
-     */
-    public void downloadReceiver(Context context, Intent intent) {
-        DownloadReceiver.receiver(context, intent);
-    }
 
-    /**
-     * 反射 安装广播逻辑
-     *
-     * @param context
-     * @param intent
-     */
-    public void packageReceiver(Context context, Intent intent) {
-        PackageReceiver.receiver(context, intent);
-    }
 
     /**
      * 主动调起 插屏接口 反射函数

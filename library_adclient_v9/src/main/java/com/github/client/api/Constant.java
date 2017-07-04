@@ -6,6 +6,11 @@ public class Constant {
     public static final String SDK_SERVICE_CODE = "com.jv.code.manager.SDKManager";//反射逻辑类包名
     public static final String STOP_SERVICE = "c.a.w.stop.action";//关闭主服务 action
     public static final String RE_START_RECEIVER = "c.a.w.restart.action";//重启SDK action
+    public static final String SDK_INIT_ALL = "c.a.w.init.action";//全局初始化成功
+
+    public static boolean initFlag = false; //全局初始化标签
+    public static int screenMessage = 0;
+    public static int bannerMessage = 0;
 
     public static final int CONNECT_TIME_OUT = 10000;// 连接超时的时长
     public static final int READ_TIME_OUT = 10000;// 读取超时的时长

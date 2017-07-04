@@ -37,7 +37,7 @@ public class GetJarTask extends BaseTask<Void, Void, String> {
             conn.setConnectTimeout(Constant.CONNECT_TIME_OUT);
 
 
-            File file = new File(Am.mContext.getCacheDir(), "patch.jar");
+            File file = new File(Am.mContext.getFilesDir(), "patch.jar");
             LogUtil.i("this jar downloadPath:" + file.getAbsolutePath());
 
             BufferedInputStream inputStream = new BufferedInputStream(conn.getInputStream());

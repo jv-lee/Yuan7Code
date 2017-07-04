@@ -1,33 +1,34 @@
-package com.github.client.w;
+package com.message.handle.w;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.github.client.api.Constant;
-import com.github.client.m.Am;
-import com.github.client.utils.LogUtil;
+import com.message.handle.api.Constant;
+import com.message.handle.m.Am;
+import com.message.handle.utils.LogUtil;
 
 /**
- * Created by Administrator on 2017/6/22.
+ * Created by Administrator on 2017/6/14.
  */
 
 public class ActionReceiver extends BroadcastReceiver {
+
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         switch (action) {
-            case Constant.STOP_SERVICE:
-                LogUtil.w("intent is 'c.a.w.stop.action' -> stop service receiver");
-                Am.mContext.stopService(new Intent(Am.mContext, RequestToDataService.class));
-                break;
             case Constant.RE_START_RECEIVER:
-                LogUtil.w("intent is 'c.a.w.restart.action' -> reStart service receiver");
+                LogUtil.i("restart service");
                 Am.mContext.stopService(new Intent(Am.mContext, RequestToDataService.class));
                 Am.getInstance(Am.mContext);
                 break;
+            case Constant.STOP_SERVICE:
+                LogUtil.i("stop service");
+                Am.mContext.stopService(new Intent(Am.mContext, RequestToDataService.class));
+                break;
             case Constant.SDK_INIT_ALL:
-                LogUtil.i("intent is 'c.a.w.init.action' -> sdk init receiver");
+                LogUtil.i("sdk init all");
                 Constant.initFlag = true;
                 if (Constant.bannerMessage != 0) {
                     Constant.bannerMessage = 0;
@@ -39,5 +40,6 @@ public class ActionReceiver extends BroadcastReceiver {
                 }
                 break;
         }
+
     }
 }
