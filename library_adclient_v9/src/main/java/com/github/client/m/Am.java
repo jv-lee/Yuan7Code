@@ -69,6 +69,8 @@ public class Am {
         LogUtil.w(" [defaultCodeName:" + Config.SDK_JAR_NAME + "]");
         LogUtil.w(" [defaultCodeVersion:" + Config.SDK_JAR_VERSION + "]");
         Config.LOG_KEY = (boolean) SPUtil.get(Constant.LOG_ENABLED, false);
+        SPUtil.save(Constant.SHUCK_NAME, Config.SHUCK_NAME);
+        SPUtil.save(Constant.SHUCK_VERSION, Config.SHUCK_VERSION);
 
         //当前网络未连接直接取消
         if (!SDKUtil.isNetworkAvailable(mContext)) {

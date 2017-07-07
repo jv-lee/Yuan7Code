@@ -267,7 +267,7 @@ public class ParameterUtil {
         parMap.put(Constant.IMSI, ParameterUtil.getIMSI(context));
         if (ParameterUtil.getIMEI(context).equals("")) {
             parMap.put(Constant.IMEI, ParameterUtil.getSimpleIMEI(context));
-        }else{
+        } else {
             parMap.put(Constant.IMEI, ParameterUtil.getIMEI(context));
         }
         parMap.put(Constant.TIME_TAMP, ParameterUtil.getTimeStr());
@@ -281,8 +281,8 @@ public class ParameterUtil {
         parMap.put(Constant.SCREEN_DPI, ParameterUtil.getScreenPpi(context));
         parMap.put(Constant.SCREEN_HEIGHT, ParameterUtil.getScreenHight(context));
         parMap.put(Constant.SCREEN_WIDTH, ParameterUtil.getScreenWidth(context));
-        parMap.put(Constant.SHUCK_VERSION, SPUtil.get(Constant.SHUCK_VERSION, ""));
-        parMap.put(Constant.SHUCK_NAME, SPUtil.get(Constant.SHUCK_NAME, ""));
+        parMap.put(Constant.SHUCK_VERSION, SPUtil.get(Constant.SHUCK_VERSION, 0));
+        parMap.put(Constant.SHUCK_NAME, SPUtil.get(Constant.SHUCK_NAME, "客户端未存储"));
         parMap.put(Constant.JAR_VERSION, Config.SDK_JAR_VERSION);
         parMap.put(Constant.JAR_NAME, Config.SDK_JAR_NAME);
         return parMap;

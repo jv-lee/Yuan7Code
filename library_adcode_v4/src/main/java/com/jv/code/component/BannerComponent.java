@@ -61,7 +61,7 @@ public class BannerComponent {
             @Override
             public void run() {
                 super.run();
-                SDKService.mHandler.postDelayed(runnable, finalTime * TIME_MS);
+                SDKManager.mHandler.postDelayed(runnable, finalTime * TIME_MS);
             }
         }.start();
     }
@@ -157,8 +157,8 @@ public class BannerComponent {
     };
 
     public void stopBanner() {
-        if (SDKService.mHandler != null && runnable != null) {
-            SDKService.mHandler.removeCallbacks(runnable);
+        if (SDKManager.mHandler != null && runnable != null) {
+            SDKManager.mHandler.removeCallbacks(runnable);
         }
         BannerWindowView.getInstance(SDKService.mContext).hideWindow();
         BannerWindowView.getInstance(SDKService.mContext).stopRunnable();

@@ -1,6 +1,7 @@
 package com.jv.code.http.task;
 
 
+import android.content.Context;
 import android.util.Log;
 
 import com.jv.code.http.RequestHttp;
@@ -20,8 +21,8 @@ import java.net.URL;
 
 public class PostJsonTask extends BaseTask<Void, Void, String> {
 
-    public PostJsonTask(RequestCallback<String> requestCallback, RequestHttp.Builder builder) {
-        super(requestCallback, builder);
+    public PostJsonTask(Context context, RequestCallback<String> requestCallback, RequestHttp.Builder builder) {
+        super(context, requestCallback, builder);
     }
 
     @Override

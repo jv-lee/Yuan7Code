@@ -12,6 +12,7 @@ import android.util.Log;
 import com.jv.code.http.RequestHttp;
 import com.jv.code.http.base.BaseTask;
 import com.jv.code.http.base.RequestCallback;
+import com.jv.code.manager.HttpManager;
 import com.jv.code.manager.SDKManager;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;
@@ -32,19 +33,19 @@ public class GetApkTask extends BaseTask<Void, Integer, File> {
 
     private NotificationManager notificationManager;
     private Notification.Builder notificationBuilder;
-    private int notifycationId;
+    private int notificationId;
 
-    public GetApkTask(RequestCallback<File> requestCallback, RequestHttp.Builder builder) {
-        super(requestCallback, builder);
-        notifycationId = SDKManager.NOTIFICATION_ID;
-        notificationManager = (NotificationManager) SDKManager.mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationBuilder = new Notification.Builder(SDKManager.mContext);
+    public GetApkTask(Context context, RequestCallback<File> requestCallback, RequestHttp.Builder builder) {
+        super(context, requestCallback, builder);
+        notificationId = HttpManager.NOTIFICATION_ID;
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationBuilder = new Notification.Builder(context);
         notificationBuilder.setSmallIcon(android.R.drawable.ic_menu_upload)
                 .setTicker("showProgressBar")
                 .setProgress(100, 0, true)
                 .setContentTitle(builder.requestPar)
                 .setContentText("正在下载...");
-        SDKManager.NOTIFICATION_ID++;
+        HttpManager.NOTIFICATION_ID++;
     }
 
     @Override
@@ -72,11 +73,11 @@ public class GetApkTask extends BaseTask<Void, Integer, File> {
                     int hasSize = getProgressLength(progressSize);
                     if (hasSize != 0 && hasSize != 99) {
                         notificationBuilder.setProgress(100, progressSize, false);
-                        notificationManager.notify(notifycationId, notificationBuilder.build());
+                        notificationManager.notify(notificationId, notificationBuilder.build());
                         notificationBuilder.setContentText("下载" + progressSize + "%");
                     } else if (hasSize == 99) {
                         notificationBuilder.setProgress(100, 100, false);
-                        notificationManager.notify(notifycationId, notificationBuilder.build());
+                        notificationManager.notify(notificationId, notificationBuilder.build());
                         notificationBuilder.setContentText("下载完成");
                     }
                     bos.flush();
@@ -93,9 +94,9 @@ public class GetApkTask extends BaseTask<Void, Integer, File> {
                 intent_ins.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent_ins.setDataAndType(Uri.parse("file://" + file.getAbsolutePath()), "application/vnd.android.package-archive");
 
-                PendingIntent contentIntent = PendingIntent.getActivity(SDKManager.mContext, 0, intent_ins, 0);
+                PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent_ins, 0);
                 notificationBuilder.setContentIntent(contentIntent);
-                notificationManager.notify(notifycationId, notificationBuilder.build());
+                notificationManager.notify(notificationId, notificationBuilder.build());
 
 
                 if (fos != null) {

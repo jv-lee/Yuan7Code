@@ -1,5 +1,6 @@
 package com.jv.code.http.task;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -21,8 +22,8 @@ import java.net.URL;
 public class GetPicTask extends BaseTask<Void, Void, Bitmap> {
 
 
-    public GetPicTask(RequestCallback<Bitmap> requestCallback, RequestHttp.Builder builder) {
-        super(requestCallback, builder);
+    public GetPicTask(Context context,RequestCallback<Bitmap> requestCallback, RequestHttp.Builder builder) {
+        super(context,requestCallback, builder);
     }
 
 

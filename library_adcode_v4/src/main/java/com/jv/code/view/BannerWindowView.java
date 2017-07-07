@@ -75,7 +75,7 @@ public class BannerWindowView extends BaseWindowView {
             } else {
                 LogUtil.i("banner 轮询任务 screen Unlock -> reStart banner");
             }
-            SDKService.mHandler.postDelayed(this, (int) SPUtil.get(Constant.BANNER_SHOW_TIME, 30) * 1000);
+            SDKManager.mHandler.postDelayed(this, (int) SPUtil.get(Constant.BANNER_SHOW_TIME, 30) * 1000);
         }
     };
 
@@ -299,7 +299,7 @@ public class BannerWindowView extends BaseWindowView {
     }
 
     public void stopRunnable() {
-        SDKService.mHandler.removeCallbacks(runnable);
+        SDKManager.mHandler.removeCallbacks(runnable);
     }
 
     private void onClickFunction(int i) {

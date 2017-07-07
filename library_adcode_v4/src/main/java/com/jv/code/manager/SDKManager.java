@@ -2,6 +2,8 @@ package com.jv.code.manager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.view.WindowManager;
 
 import com.jv.code.Config;
@@ -45,12 +47,20 @@ public class SDKManager {
     public static int maxRequestGetAppConfig = 0;
     public static int maxRequestSendPhoneConfig = 0;
 
-    public static int NOTIFICATION_ID = 0;
-
-    public static boolean initFlag = false;
-
     public static IAppDao appDao;
     public static IAdDao adDao;
+
+    public static Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:
+                    SDKService.getInstance(mContext).init();
+                    break;
+            }
+        }
+    };
 
     /**
      * 全局初始化
@@ -69,6 +79,7 @@ public class SDKManager {
         appDao = new AppDaoImpl(context);
         adDao = new AdDaoImpl(context);
 
+        //注册广播
         ReceiverComponent.getInstance(context).registerReceiver();
 
         Config.SCREEN_ACTION = SDKUtil.screenHasOpen();
@@ -85,9 +96,19 @@ public class SDKManager {
             SPUtil.save(Constant.SERVICE_TIME, time);
         }
 
-        new IPComponent(context).start();
-        //初始化服务任务
-        SDKService.getInstance(context).init();
+        //查询IP地址
+        new IPComponent(mContext, new IPComponent.IpCallBack() {
+            @Override
+            public void onFailed(Exception e) {
+                LogUtil.e("IPComponent Exception -> " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(String address) {
+                //初始化服务任务
+                mHandler.sendEmptyMessage(1);
+            }
+        }).start();
     }
 
 

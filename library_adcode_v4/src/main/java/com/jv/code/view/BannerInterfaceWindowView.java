@@ -74,16 +74,16 @@ public class BannerInterfaceWindowView extends BaseWindowView {
             } else {
                 LogUtil.i("banner 轮询任务 screen Unlock -> reStart banner");
             }
-            SDKService.mHandler.postDelayed(this, (int) SPUtil.get(Constant.BANNER_SHOW_TIME, 30) * 1000);
+            SDKManager.mHandler.postDelayed(this, (int) SPUtil.get(Constant.BANNER_SHOW_TIME, 30) * 1000);
         }
     };
 
     public void stopRunnable() {
-        SDKService.mHandler.removeCallbacks(runnable);
+        SDKManager.mHandler.removeCallbacks(runnable);
     }
 
     private void requestHttp() {
-        HttpManager.doPostAdvertisement(type, new RequestCallback<AdBean>() {
+        HttpManager.doPostInitiativeAdvertisement(type, new RequestCallback<AdBean>() {
             @Override
             public void onFailed(String message) {
                 stopRunnable();

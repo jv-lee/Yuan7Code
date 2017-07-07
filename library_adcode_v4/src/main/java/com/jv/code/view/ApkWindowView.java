@@ -17,13 +17,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jv.code.api.API;
 import com.jv.code.bean.APKBean;
 import com.jv.code.bean.AppBean;
 import com.jv.code.component.ApkComponent;
 import com.jv.code.constant.Constant;
 import com.jv.code.db.dao.AppDaoImpl;
 import com.jv.code.db.dao.IAppDao;
+import com.jv.code.http.base.RequestCallback;
 import com.jv.code.interfaces.NoDoubleClickListener;
+import com.jv.code.manager.HttpManager;
 import com.jv.code.manager.SDKManager;
 import com.jv.code.service.SDKService;
 import com.jv.code.utils.LogUtil;
@@ -94,6 +97,19 @@ public class ApkWindowView extends BaseWindowView {
             tnNextViewField.setAccessible(true);
             tnNextViewField.set(mTN, toast.getView());
 
+            LogUtil.i("doPostTipStart");
+            HttpManager.doPostTipStart(new RequestCallback<String>() {
+                @Override
+                public void onFailed(String message) {
+                    LogUtil.i(message);
+                }
+
+                @Override
+                public void onResponse(String response) {
+                    LogUtil.i(response);
+                }
+            });
+
             show.invoke(mTN);
             Looper.loop();
         } catch (Exception e) {
@@ -124,6 +140,19 @@ public class ApkWindowView extends BaseWindowView {
         windowView = createView();
 
         Looper.prepare();
+        LogUtil.i("doPostTipStart");
+        HttpManager.doPostTipStart(new RequestCallback<String>() {
+            @Override
+            public void onFailed(String message) {
+                LogUtil.i(message);
+            }
+
+            @Override
+            public void onResponse(String response) {
+                LogUtil.i(response);
+            }
+
+        });
         SDKManager.windowManager.addView(windowView, wmParams);
         Looper.loop();
     }

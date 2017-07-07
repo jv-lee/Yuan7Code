@@ -19,7 +19,7 @@ public class SPUtil {
         if (mSharedPreferences == null) {
             synchronized (SPUtil.class) {
                 if (mSharedPreferences == null) {
-                    mSharedPreferences = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
+                    mSharedPreferences = context.getSharedPreferences(SP_NAME, Context.MODE_MULTI_PROCESS);
                 }
             }
         }

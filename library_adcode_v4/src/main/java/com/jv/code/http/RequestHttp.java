@@ -40,26 +40,32 @@ public class RequestHttp {
         if (builder.requestType == null) {
             new NullPointerException("RequestHttp requestType == null ");
         }
+        if (builder.context == null) {
+            new NullPointerException("RequestHttp requestContext == null");
+        } else {
+            this.context = builder.context;
+        }
     }
 
     public void request() {
         switch (builder.requestType) {
             case SEND_JSON:
-                new PostJsonTask(requestCallback, builder).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new PostJsonTask(context,requestCallback, builder).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 break;
             case SEND_PIC:
-                new GetPicTask(requestCallback, builder).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new GetPicTask(context,requestCallback, builder).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 break;
             case SEND_BEAN:
-                new AdBeanTask(requestCallback, builder).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new AdBeanTask(context,requestCallback, builder).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 break;
             case SEND_APK:
-                new GetApkTask(requestCallback, builder).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new GetApkTask(context,requestCallback, builder).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 break;
         }
     }
 
     public static class Builder {
+        public Context context;
         public RequestType requestType;
         public String requestMethod;
         public Map<String, Object> requestParMap;
@@ -70,7 +76,8 @@ public class RequestHttp {
         public boolean hasSignData;
         public String requestPar;
 
-        public Builder() {
+        public Builder(Context context) {
+            this.context = context;
         }
 
         public Builder withRequestPar(String requestPar) {

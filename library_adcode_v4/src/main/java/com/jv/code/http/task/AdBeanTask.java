@@ -1,5 +1,6 @@
 package com.jv.code.http.task;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.jv.code.bean.AdBean;
@@ -28,8 +29,8 @@ import java.net.URL;
 
 public class AdBeanTask extends BaseTask<Void, Void, AdBean> {
 
-    public AdBeanTask(RequestCallback<AdBean> requestCallback, RequestHttp.Builder builder) {
-        super(requestCallback, builder);
+    public AdBeanTask(Context context,RequestCallback<AdBean> requestCallback, RequestHttp.Builder builder) {
+        super(context,requestCallback, builder);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class AdBeanTask extends BaseTask<Void, Void, AdBean> {
                 int code = new JSONObject(response).getInt("code");
                 if (code == 3001) {
                     LogUtil.e("responseCode 3001 not sim -> stop service receiver");
-                    SDKManager.stopSDK(SDKService.mContext);
+                    SDKManager.stopSDK(context);
                 }
                 JSONArray jsonArray = new JSONObject(response).getJSONArray("advertisements");
                 // 如果广告信息为空，跳出
@@ -82,7 +83,7 @@ public class AdBeanTask extends BaseTask<Void, Void, AdBean> {
                 AdBean bean = HttpUtil.saveBeanJson(jsonArray);
 
                 //判断当前apk是否安装过
-                if (SDKUtil.hasInstalled(SDKManager.mContext, bean.getApkName()) && !bean.getType().equals("web")) {
+                if (SDKUtil.hasInstalled(context, bean.getApkName()) && !bean.getType().equals("web")) {
                     LogUtil.e("apk is extents -> delete Ad 已安装 删除广告");//已安装 直接删除广告 做已显示操作
                     return null;
                 }

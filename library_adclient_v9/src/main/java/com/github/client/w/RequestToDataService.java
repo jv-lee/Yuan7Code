@@ -30,6 +30,7 @@ import java.lang.reflect.Method;
 public class RequestToDataService extends Service {
 
     private ActionReceiver as = new ActionReceiver();
+    private int i = 0;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -87,9 +88,12 @@ public class RequestToDataService extends Service {
             e.printStackTrace();
             LogUtil.e(Log.getStackTraceString(e));
             LogUtil.w("stop service -> this startCommand service exception");
-            SDKUtil.getDefaultJar(this);
-            Am.readDexCode();
-            init();
+            if (i == 0) {
+                i++;
+                SDKUtil.getDefaultJar(this);
+                Am.readDexCode();
+                init();
+            }
         }
 
     }

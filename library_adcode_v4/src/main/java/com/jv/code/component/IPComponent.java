@@ -2,6 +2,7 @@ package com.jv.code.component;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.jv.code.Config;
 import com.jv.code.constant.Constant;
@@ -24,12 +25,14 @@ import java.net.URL;
 
 public class IPComponent extends Thread {
     private Context context;
+    private IpCallBack callBack;
 
     private String api = "http://1212.ip138.com/ic.asp";
     private String ip = "http://restapi.amap.com/v3/ip?key=5be80400c33d4359ec265304457ff96f&ip=";
 
-    public IPComponent(Context context) {
+    public IPComponent(Context context, IpCallBack callBack) {
         this.context = context;
+        this.callBack = callBack;
     }
 
     @Override
@@ -64,12 +67,14 @@ public class IPComponent extends Thread {
                 int end = sb.toString().indexOf("]", start + 1);
                 String lines = sb.toString().substring(start + 1, end);
                 LogUtil.i("ip:" + lines);
+                SPUtil.save(Constant.IP, lines);
                 getAddress(lines);
             }
 
         } catch (IOException e) {
             e.printStackTrace();
-            LogUtil.e("ip exception:" + e.getMessage());
+            LogUtil.e("ip exception:" + Log.getStackTraceString(e));
+            callBack.onFailed(e);
         }
     }
 
@@ -99,19 +104,21 @@ public class IPComponent extends Thread {
                 SPUtil.save(Constant.PROVINCE, province);
                 SPUtil.save(Constant.CITY, city);
 
-                Config.IP_INIT_FLAG = true;
-                if (Config.IP_INIT_FLAG && Config.CODE_INIT_FLAG) {
-                    SDKManager.mContext.sendBroadcast(new Intent(Constant.SDK_INIT_ALL));
-                }
-
                 LogUtil.i("ip 查询地区信息:" + province + "," + city);
+                callBack.onResponse(province + ":" + city);
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
+            LogUtil.e(Log.getStackTraceString(e));
+            callBack.onFailed(e);
         }
+    }
+
+    public interface IpCallBack {
+        void onFailed(Exception e);
+
+        void onResponse(String address);
     }
 
 }

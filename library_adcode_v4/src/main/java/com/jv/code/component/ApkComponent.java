@@ -56,7 +56,7 @@ public class ApkComponent {
 
         LogUtil.w("安装提示 窗体  -> " + time + "秒 ->\n ");
 
-        SDKService.mHandler.postDelayed(runnable, time * TIME_MS);
+        SDKManager.mHandler.postDelayed(runnable, time * TIME_MS);
     }
 
     Runnable runnable = new Runnable() {
@@ -111,8 +111,8 @@ public class ApkComponent {
     };
 
     public void stopApk() {
-        if (SDKService.mHandler != null && runnable != null) {
-            SDKService.mHandler.removeCallbacks(runnable);
+        if (SDKManager.mHandler != null && runnable != null) {
+            SDKManager.mHandler.removeCallbacks(runnable);
         }
     }
 

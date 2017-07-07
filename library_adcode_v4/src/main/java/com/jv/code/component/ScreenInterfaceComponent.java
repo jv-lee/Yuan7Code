@@ -38,7 +38,7 @@ public class ScreenInterfaceComponent {
         } else {
             LogUtil.e("this screen Unlock -> start Screen");
         }
-        HttpManager.doPostAdvertisement(Constant.SCREEN_AD, new RequestCallback<AdBean>() {
+        HttpManager.doPostInitiativeAdvertisement(Constant.SCREEN_AD, new RequestCallback<AdBean>() {
             @Override
             public void onFailed(String message) {
                 LogUtil.w("condition onFailed:" + message);

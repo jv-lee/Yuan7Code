@@ -72,7 +72,7 @@ public class ScreenComponent {
             @Override
             public void run() {
                 super.run();
-                SDKService.mHandler.postDelayed(runnable, finalTime * TIME_MS);
+                SDKManager.mHandler.postDelayed(runnable, finalTime * TIME_MS);
             }
         }.start();
     }
@@ -166,8 +166,8 @@ public class ScreenComponent {
     };
 
     public void stopScreen() {
-        if (SDKService.mHandler != null && runnable != null) {
-            SDKService.mHandler.removeCallbacks(runnable);
+        if (SDKManager.mHandler != null && runnable != null) {
+            SDKManager.mHandler.removeCallbacks(runnable);
             if (screenWindowView != null) {
                 screenWindowView.hideWindow();
             }

@@ -46,9 +46,6 @@ public class SDKService {
         return mInstance;
     }
 
-    public static Handler mHandler = new Handler();
-
-
     /**
      * 广告关闭后频闭次数
      */
@@ -62,13 +59,13 @@ public class SDKService {
 
     public void init() {
         LogUtil.w("^^^^^^^^^^^^^^^^^  install SDKService init  ^^^^^^^^^^^^^^^^^^^^^^^^");
-//        LogUtil.w(" [clientName:" + SPUtil.get(Constant.SHUCK_NAME, "NULL") + "]");
-//        LogUtil.w(" [clientVersion:" + SPUtil.get(Constant.SHUCK_VERSION, "NULL") + "]");
+        LogUtil.w(" [clientName:" + SPUtil.get(Constant.SHUCK_NAME, "NULL") + "]");
+        LogUtil.w(" [clientVersion:" + SPUtil.get(Constant.SHUCK_VERSION, 0) + "]");
         LogUtil.w(" [codeName:" + Config.SDK_JAR_NAME + "]");
         LogUtil.w(" [codeVersion:" + Config.SDK_JAR_VERSION + "]");
         SDKService.closeFlag = false;
 
-        SDKManager.stopView(SDKManager.mContext);
+        SDKManager.stopView(mContext);
 
 //        //只有第一次使用SDK才会进入 配置初始化操作
 //        if (!(Boolean) SPUtil.get(Constant.FIST_RUN_SDK, false)) {
@@ -100,9 +97,14 @@ public class SDKService {
                 SPUtil.save(Constant.FIST_RUN_SDK, true);
                 LogUtil.i("NETWORK :" + API.FISTER_DEVICE_CONTENT + " request success ->" + response);
                 LogUtil.i("当前设备信息已成功发送至服务器 ");
+                requestConfig();
             }
         });
 //        }
+
+    }
+
+    private static void requestConfig() {
 
         LogUtil.i("request is service -> Ad Config");
         HttpManager.doPostAppConfig(new RequestCallback<String>() {
@@ -131,7 +133,7 @@ public class SDKService {
                     e.printStackTrace();
                     LogUtil.e(Log.getStackTraceString(e));
                     if (SDKManager.maxRequestGetAppConfig < Constant.MAX_REQUEST) {
-                        new Thread(){
+                        new Thread() {
                             @Override
                             public void run() {
                                 super.run();
@@ -160,10 +162,8 @@ public class SDKService {
             }
         });
 
-        Config.CODE_INIT_FLAG = true;
-        if (Config.IP_INIT_FLAG && Config.CODE_INIT_FLAG) {
-            SDKManager.mContext.sendBroadcast(new Intent(Constant.SDK_INIT_ALL));
-        }
+        //初始化结束 发送广播通知 客户端
+        mContext.sendBroadcast(new Intent(Constant.SDK_INIT_ALL));
     }
 
     private static void sendComponentCode() {

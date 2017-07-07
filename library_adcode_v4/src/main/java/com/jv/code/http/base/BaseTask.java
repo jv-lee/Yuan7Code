@@ -1,6 +1,7 @@
 package com.jv.code.http.base;
 
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.jv.code.http.RequestHttp;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 public abstract class BaseTask<P, V, R> extends AsyncTask<P, V, R> {
 
+    protected Context context;
     protected BufferedReader br;
     protected StringBuilder sb;
     protected RequestCallback requestCallback;
@@ -25,7 +27,8 @@ public abstract class BaseTask<P, V, R> extends AsyncTask<P, V, R> {
     protected Map<String, Object> requestParMap;
     protected boolean hasSignData;
 
-    public BaseTask(RequestCallback requestCallback, RequestHttp.Builder builder) {
+    public BaseTask(Context context, RequestCallback requestCallback, RequestHttp.Builder builder) {
+        this.context = context;
         this.requestCallback = requestCallback;
         this.requestMethod = builder.requestMethod == null ? "GET" : builder.requestMethod;
         this.connectTimeout = builder.connectTime == 0 ? 15000 : builder.connectTime;
