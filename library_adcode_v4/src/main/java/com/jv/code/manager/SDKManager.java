@@ -101,6 +101,7 @@ public class SDKManager {
             @Override
             public void onFailed(Exception e) {
                 LogUtil.e("IPComponent Exception -> " + e.getMessage());
+                mHandler.sendEmptyMessage(1);
             }
 
             @Override

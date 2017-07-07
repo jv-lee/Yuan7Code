@@ -456,31 +456,42 @@ public class SDKUtil {
     public static boolean deleteFileDir(Context context) {
         if (isExternalStorageWritable()) {
             File fileDir = new File(Environment.getExternalStorageDirectory() + "/.apk");
-
+            File[] files = null;
             if (fileDir.exists()) {
-                fileDir.delete();
+                files = fileDir.listFiles();
+                for (int i = 0; i < files.length; i++) {
+                    files[i].delete();
+                }
             }
-
-            if (!fileDir.exists()) {
-                fileDir.mkdirs();
-                return true;
+            if (files != null) {
+                if (files.length == 0) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
         } else {
 
             File fileDir = context.getDir("downloads", Context.MODE_WORLD_WRITEABLE);
-
+            File[] files = null;
             if (fileDir.exists()) {
-                fileDir.delete();
+                files = fileDir.listFiles();
+                for (int i = 0; i < files.length; i++) {
+                    files[i].delete();
+                }
             }
-
-            if (!fileDir.exists()) {
-                fileDir.mkdirs();
-                return true;
+            if (files != null) {
+                if (files.length == 0) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
+
         }
     }
 

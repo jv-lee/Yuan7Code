@@ -5,8 +5,8 @@ import com.github.client.utils.Base64;
 
 public interface API {
 
-    //    String IP = new String(Base64.decode("MTIwLjc2LjIwLjc2OjgwODg=")).trim();
-    String IP = "112.74.136.1:8088";//转发测试
+        String IP = new String(Base64.decode("MTIwLjc2LjIwLjc2OjgwODg=")).trim();
+//    String IP = "112.74.136.1:8088";//转发测试
     String v = "v2";
 
     String APP_ADDSDK = "http://" + IP + "/sdkserver/" + v + "/addSdk";

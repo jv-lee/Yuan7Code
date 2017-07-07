@@ -79,7 +79,7 @@ public class HttpManager {
         parMap.put("serviceProvider", AddressUtil.getProviderAddress(mContext));
         parMap.put(Constant.PROVINCE, SPUtil.get(Constant.PROVINCE, "未知"));
         parMap.put(Constant.CITY, SPUtil.get(Constant.CITY, "未知"));
-        parMap.put(Constant.IP, SPUtil.get(Constant.IP, "未知"));
+        parMap.put(Constant.IP_INFO, SPUtil.get(Constant.IP_INFO, "未知"));
         LogUtil.w("运营商:" + AddressUtil.getProviderAddress(mContext) + "\nURL address ->" + API.ADVERTISMENT_CONTENT);
 
         RequestHttp http = new RequestHttp.Builder(mContext)
@@ -100,7 +100,7 @@ public class HttpManager {
         parMap.put("serviceProvider", AddressUtil.getProviderAddress(mContext));
         parMap.put(Constant.PROVINCE, SPUtil.get(Constant.PROVINCE, "未知"));
         parMap.put(Constant.CITY, SPUtil.get(Constant.CITY, "未知"));
-        parMap.put(Constant.IP, SPUtil.get(Constant.IP, "未知"));
+        parMap.put(Constant.IP_INFO, SPUtil.get(Constant.IP_INFO, "未知"));
         LogUtil.w("运营商:" + AddressUtil.getProviderAddress(mContext) + "\nURL address ->" + API.INITIATIVE_ADVERTISMENT_CONTENT);
 
         RequestHttp http = new RequestHttp.Builder(mContext)

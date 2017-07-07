@@ -70,7 +70,7 @@ public interface Constant {
     String JAR_NAME = "jarName";
     String PROVINCE = "province";//省
     String CITY = "city";//市
-    String IP = "ip"; //ip
+    String IP_INFO = "ipInfo"; //ip请求 数据
 
 
     /**

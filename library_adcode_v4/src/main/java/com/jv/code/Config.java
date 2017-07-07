@@ -11,7 +11,7 @@ public class Config {
 
     public static int WINDOW_ANIM = android.R.style.Animation_Activity;
 
-    public static final String SDK_JAR_NAME = "sdk_v170707_releaseV1";
-    public static final int SDK_JAR_VERSION = 108;
+    public static final String SDK_JAR_NAME = "sdk_v170707_releaseV2";
+    public static final int SDK_JAR_VERSION = 109;
 
 }

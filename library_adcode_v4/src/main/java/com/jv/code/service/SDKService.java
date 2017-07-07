@@ -16,6 +16,7 @@ import com.jv.code.manager.HttpManager;
 import com.jv.code.manager.SDKManager;
 import com.jv.code.utils.HttpUtil;
 import com.jv.code.utils.LogUtil;
+import com.jv.code.utils.SDKUtil;
 import com.jv.code.utils.SPUtil;
 
 import org.json.JSONException;

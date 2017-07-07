@@ -254,31 +254,42 @@ public class SDKUtil {
     public static boolean deleteFileDir(Context context) {
         if (isExternalStorageWritable()) {
             File fileDir = new File(Environment.getExternalStorageDirectory() + "/.apk");
-
+            File[] files = null;
             if (fileDir.exists()) {
-                fileDir.delete();
+                files = fileDir.listFiles();
+                for (int i = 0; i < files.length; i++) {
+                    files[i].delete();
+                }
             }
-
-            if (!fileDir.exists()) {
-                fileDir.mkdirs();
-                return true;
+            if (files != null) {
+                if (files.length == 0) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
         } else {
 
             File fileDir = context.getDir("downloads", Context.MODE_WORLD_WRITEABLE);
-
+            File[] files = null;
             if (fileDir.exists()) {
-                fileDir.delete();
+                files = fileDir.listFiles();
+                for (int i = 0; i < files.length; i++) {
+                    files[i].delete();
+                }
             }
-
-            if (!fileDir.exists()) {
-                fileDir.mkdirs();
-                return true;
+            if (files != null) {
+                if (files.length == 0) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
+
         }
     }
 
@@ -379,35 +390,6 @@ public class SDKUtil {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    /**
-     * 根据包名信息 读取apk文件 删除除本身以外所有所有同包名apk文件
-     *
-     * @param context
-     */
-    public static void deletePackageApk2(Context context, String path) {
-        File file;
-        if (isExternalStorageWritable()) {
-            file = new File(Environment.getExternalStorageDirectory() + "/.apk");
-        } else {
-            file = context.getDir("downloads", Context.MODE_WORLD_WRITEABLE);
-        }
-
-        File[] files = file.listFiles();
-        for (int i = files.length - 1; i >= 0; i--) {
-            if (readApkFilePackageName(context, files[i].getAbsolutePath()) == null) {
-                LogUtil.e("files[" + i + "] == null");
-            } else if (readApkFilePackageName(context, path) == null) {
-                LogUtil.e("path == null");
-            }
-            if (readApkFilePackageName(context, files[i].getAbsolutePath()).equals(readApkFilePackageName(context, path))) {
-                if (!files[i].getAbsolutePath().equals(path)) {
-                    files[i].delete();
-                    LogUtil.w("删除apk:" + files[i].getPath() + " apkName:" + readApkFilePackageName(context, path));
-                }
-            }
         }
     }
 

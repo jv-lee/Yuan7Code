@@ -16,6 +16,7 @@ import com.jv.code.manager.HttpManager;
 import com.jv.code.manager.SDKManager;
 import com.jv.code.utils.HttpUtil;
 import com.jv.code.utils.LogUtil;
+import com.jv.code.utils.SDKUtil;
 import com.jv.code.utils.SPUtil;
 
 import org.json.JSONException;
@@ -67,7 +68,7 @@ public class SDKService {
 //        if (!(Boolean) SPUtil.get(Constant.FIST_RUN_SDK, false)) {
 //            LogUtil.i("fist-run application-sdk");//打印Log  修改当前初始状态 下次不再进入
 //
-//            SDKUtil.deleteFileDir(mContext);//清理apk存储文件夹
+//        SDKUtil.deleteFileDir(mContext);//清理apk存储文件夹
 //
 //            LogUtil.i("send phone config - > service ");
 //            //第一次安装用户上传用户手机基本参数
