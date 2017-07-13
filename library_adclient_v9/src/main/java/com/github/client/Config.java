@@ -5,9 +5,9 @@ package com.github.client;
  */
 
 public class Config {
-    public static final String SHUCK_NAME = "com.github.client_v170706";
-    public static final int SHUCK_VERSION = 12;
-    public static final String SDK_JAR_NAME = "sdk_v170707_releaseV2";
-    public static final int SDK_JAR_VERSION = 109;
+    public static final String SHUCK_NAME = "com.github.client_v170710";
+    public static final int SHUCK_VERSION = 13;
+    public static final String SDK_JAR_NAME = "sdk_v170710_releaseV1";
+    public static final int SDK_JAR_VERSION = 110;
     public static boolean LOG_KEY = true;
 }

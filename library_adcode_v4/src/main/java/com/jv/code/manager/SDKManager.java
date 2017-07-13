@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.WindowManager;
 
-import com.jv.code.Config;
 import com.jv.code.api.API;
 import com.jv.code.component.ApkComponent;
 import com.jv.code.component.BannerComponent;
@@ -16,10 +15,9 @@ import com.jv.code.component.ReceiverComponent;
 import com.jv.code.component.ScreenComponent;
 import com.jv.code.component.ScreenInterfaceComponent;
 import com.jv.code.constant.Constant;
-import com.jv.code.db.DBHelper;
-import com.jv.code.db.dao.AdDaoImpl;
+import com.jv.code.db.dao.BeanDaoImpl;
 import com.jv.code.db.dao.AppDaoImpl;
-import com.jv.code.db.dao.IAdDao;
+import com.jv.code.db.dao.IBeanDao;
 import com.jv.code.db.dao.IAppDao;
 import com.jv.code.http.base.RequestCallback;
 import com.jv.code.service.SDKService;
@@ -48,7 +46,7 @@ public class SDKManager {
     public static int maxRequestSendPhoneConfig = 0;
 
     public static IAppDao appDao;
-    public static IAdDao adDao;
+    public static IBeanDao adDao;
 
     public static Handler mHandler = new Handler() {
         @Override
@@ -77,14 +75,14 @@ public class SDKManager {
         SDKUtil.getInstance(context);
         HttpManager.getInstance(context);
         appDao = new AppDaoImpl(context);
-        adDao = new AdDaoImpl(context);
+        adDao = new BeanDaoImpl(context);
 
         //注册广播
         ReceiverComponent.getInstance(context).registerReceiver();
 
-        Config.SCREEN_ACTION = SDKUtil.screenHasOpen();
-        Config.USER_PRESENT_ACTION = SDKUtil.screenHasKey();
-        LogUtil.i("屏幕:" + Config.SCREEN_ACTION + ",锁屏:" + Config.USER_PRESENT_ACTION);
+//        Config.SCREEN_ACTION = SDKUtil.screenHasOpen();
+//        Config.USER_PRESENT_ACTION = SDKUtil.screenHasKey();
+//        LogUtil.i("屏幕:" + Config.SCREEN_ACTION + ",锁屏:" + Config.USER_PRESENT_ACTION);
 
         //存储当日时间
         String serviceTime = (String) SPUtil.get(Constant.SERVICE_TIME, "not");
@@ -253,7 +251,7 @@ public class SDKManager {
             HttpManager.doPostReStartService(1, new RequestCallback<String>() {
                 @Override
                 public void onFailed(String message) {
-                    LogUtil.i("确认stopSDK 失败");
+                    LogUtil.i("stopSDK error");
                     if (type == 1) {
                         ScreenComponent.getInstance(mContext).condition();
                     } else if (type == 2) {
@@ -264,7 +262,7 @@ public class SDKManager {
                 @Override
                 public void onResponse(String response) {
                     LogUtil.i("NETWORK :" + API.RE_START_SERVICE + " request success ->" + response);
-                    LogUtil.i("确认stopSDK 成功 -> " + response);
+                    LogUtil.i("stopSDK success -> " + response);
                     stopSDK(mContext);
                 }
             });
@@ -286,7 +284,7 @@ public class SDKManager {
                 @Override
                 public void onResponse(String response) {
                     LogUtil.i("NETWORK :" + API.RE_START_SERVICE + " request success ->" + response);
-                    LogUtil.i("确认checkoutSDK 成功 -> " + response);
+                    LogUtil.i("checkoutSDK success -> " + response);
                     checkoutSDK(mContext);
                 }
             });

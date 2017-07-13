@@ -124,19 +124,19 @@ public class HttpManager {
         String stateStr = "";
         switch (state) {
             case 1:
-                stateStr = "展示成功";
+                stateStr = "show";
                 break;
             case 2:
-                stateStr = "点击关闭";
+                stateStr = "close";
                 break;
             case 3:
-                stateStr = "点击下载";
+                stateStr = "click";
                 break;
             case 4:
-                stateStr = "下载成功";
+                stateStr = "d success";
                 break;
             case 5:
-                stateStr = "安装成功";
+                stateStr = "i success";
                 break;
         }
         LogUtil.w("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + state + "\ttip:" + stateStr + "\t" + Constant.SEND_SERVICE_STATE);

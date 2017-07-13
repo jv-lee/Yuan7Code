@@ -7,10 +7,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.jv.code.bean.AdBean;
+import com.jv.code.bean.BBean;
 import com.jv.code.bean.AppBean;
-import com.jv.code.db.dao.AppDaoImpl;
-import com.jv.code.db.dao.IAppDao;
 import com.jv.code.utils.LogUtil;
 
 import java.lang.reflect.Method;
@@ -31,7 +29,7 @@ public abstract class BaseWindowView {
     protected Method hide;
 
     protected String type;
-    protected AdBean adBean;
+    protected BBean bBean;
     protected AppBean appBean;
     protected Bitmap bitmap;
 
@@ -42,11 +40,11 @@ public abstract class BaseWindowView {
         this.type = type;
     }
 
-    public BaseWindowView(Context context, String type, AdBean bean, Bitmap bitmap) {
+    public BaseWindowView(Context context, String type, BBean bean, Bitmap bitmap) {
         this.mContext = context;
         this.type = type;
         this.bitmap = bitmap;
-        this.adBean = bean;
+        this.bBean = bean;
         appBean = new AppBean(bean.getId(), bean.getApkName(), bean.getSendRecordId());
     }
 

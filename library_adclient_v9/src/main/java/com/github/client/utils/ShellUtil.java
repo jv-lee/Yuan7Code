@@ -10,9 +10,9 @@ import java.util.List;
  *     desc  : Shell相关工具类
  * </pre>
  */
-public class ShellUtils {
+public class ShellUtil {
 
-    private ShellUtils() {
+    private ShellUtil() {
         throw new UnsupportedOperationException("u can't instantiate me...");
     }
 

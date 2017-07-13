@@ -4,7 +4,7 @@ package com.jv.code.component;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.jv.code.bean.AdBean;
+import com.jv.code.bean.BBean;
 import com.jv.code.constant.Constant;
 import com.jv.code.http.base.RequestCallback;
 import com.jv.code.manager.HttpManager;
@@ -44,7 +44,7 @@ public class ScreenComponent {
         return mInstance;
     }
 
-    public static AdBean screenBean;
+    public static BBean screenBean;
     public Context mContext;
     //当前Time换算值
     public final int TIME_MS = 1000;
@@ -53,7 +53,7 @@ public class ScreenComponent {
 
     public void condition() {
         if (SDKService.closeFlag) {
-            LogUtil.i("服务正在启动关闭");
+            LogUtil.i("service close ing");
             return;
         }
 
@@ -66,7 +66,7 @@ public class ScreenComponent {
             time = (int) SPUtil.get(Constant.SCREEN_TIME, SPUtil.get(Constant.SCREEN_SHOW_TIME, 30));
         }
 
-        LogUtil.w("插屏 窗体 " + time + "秒 -> 发送广告请求\n ");
+        LogUtil.w("screen window " + time + "秒 -> send request\n ");
         final int finalTime = time;
         new Thread() {
             @Override
@@ -107,14 +107,14 @@ public class ScreenComponent {
                         return;
                     }
                     if (SDKManager.configAction(1)) {
-                        LogUtil.i("停止广告逻辑");
+                        LogUtil.i("stop service action");
                         return;
                     }
 
                     int showLimit = (Integer) SPUtil.get(Constant.SHOW_LIMIT, 5);//获取每天最大显示量
                     int timeCount = (Integer) SPUtil.get(SDKUtil.getAdShowDate(), 0);//当天已显示的次数
 
-                    LogUtil.w("** 插屏 :" + timeCount + "/" + showLimit + "  **");
+                    LogUtil.w("** screen :" + timeCount + "/" + showLimit + "  **");
                     //继续发送
                     if (timeCount < showLimit) {
 
@@ -125,7 +125,7 @@ public class ScreenComponent {
 
                         switch ((int) SPUtil.get(Constant.SCREEN_ENABLED, 3)) {
                             case 1: //应用内显示
-                                LogUtil.i("插屏 显示模式:应用 - 内显示");
+                                LogUtil.i("screen showModel: 1 show");
                                 if (SDKUtil.isThisAppRuningOnTop(mContext)) {
                                     sendScreen();
                                 } else {
@@ -133,31 +133,31 @@ public class ScreenComponent {
                                 }
                                 break;
                             case 2: //应用外显示
-                                LogUtil.i("插屏 显示模式:应用 - 外显示");
+                                LogUtil.i("screen showModel: 2 show");
                                 if (!SDKUtil.isThisAppRuningOnTop(mContext)) {
                                     if (SDKService.screenShowCount == 0) {
-                                        LogUtil.w("不在当前应用 -> 频闭次数 =  0 ， 发起screen 推送");
+                                        LogUtil.w("not application -> num =  0 ， send screen");
                                         sendScreen();
                                     } else {
                                         SPUtil.save(Constant.SCREEN_TIME, SPUtil.get(Constant.SCREEN_SHOW_TIME, 10));
                                         //不在应用内 不推送广告 减少当前频闭次数
                                         SDKService.screenShowCount--;
-                                        LogUtil.w("不在应用内 -> 频闭次数剩余 ：" + SDKService.screenShowCount);
+                                        LogUtil.w("not application -> screen num ：" + SDKService.screenShowCount);
                                         condition();
                                     }
                                 } else {
                                     SDKService.screenShowCount = (int) SPUtil.get(Constant.SCREEN_SHOW_COUNT, 5);
-                                    LogUtil.w(" 回到应用内 重置 频闭次数 -> screenShowCount -> " + SDKService.screenShowCount);
+                                    LogUtil.w(" restart application , restart num -> screenShowCount -> " + SDKService.screenShowCount);
                                     condition();
                                 }
                                 break;
                             case 3: //应用内外显示
-                                LogUtil.i("插屏 显示模式:应用 - 内外显示");
+                                LogUtil.i("screen showModel: 3 show");
                                 sendScreen();
                                 break;
                         }
                     } else {
-                        LogUtil.w("当天广告全部发送完毕 ：showLimit >=timeCount -> close service");
+                        LogUtil.w("this day send ok ：showLimit >=timeCount -> close service");
                         SDKManager.stopSDK(SDKService.mContext);
                     }
                 }
@@ -176,7 +176,7 @@ public class ScreenComponent {
 
     public void sendScreen() {
         if (screenBean == null) {
-            HttpManager.doPostAdvertisement(Constant.SCREEN_AD, new RequestCallback<AdBean>() {
+            HttpManager.doPostAdvertisement(Constant.SCREEN_TYPE, new RequestCallback<BBean>() {
                 @Override
                 public void onFailed(String message) {
                     LogUtil.w("sendScreen onFailed:" + message);
@@ -184,7 +184,7 @@ public class ScreenComponent {
                 }
 
                 @Override
-                public void onResponse(AdBean response) {
+                public void onResponse(BBean response) {
                     screenBean = response;
                     requestPic();
                 }

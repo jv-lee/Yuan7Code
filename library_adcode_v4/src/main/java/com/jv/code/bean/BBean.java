@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 
 @SuppressWarnings("serial")
-public class AdBean implements Serializable {
+public class BBean implements Serializable {
 
     private int noid;
     private String id;
@@ -21,7 +21,7 @@ public class AdBean implements Serializable {
     private String apkName;
     private int showType;
 
-    public AdBean() {
+    public BBean() {
     }
 
     public int getShowType() {

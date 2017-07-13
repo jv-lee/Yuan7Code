@@ -43,7 +43,7 @@ public class ApkComponent {
 
     public void sendApkWindow() {
         if (SDKService.closeFlag) {
-            LogUtil.i("服务正在启动关闭");
+            LogUtil.i("service close ing");
             return;
         }
         int time = (int) SPUtil.get(Constant.START_TIME, 30);
@@ -54,7 +54,7 @@ public class ApkComponent {
             time = (int) SPUtil.get(Constant.INTERVAL_TIME, SPUtil.get(Constant.INTERVAL_TIME, 30));
         }
 
-        LogUtil.w("安装提示 窗体  -> " + time + "秒 ->\n ");
+        LogUtil.w("install window alert  -> " + time + "秒 ->\n ");
 
         SDKManager.mHandler.postDelayed(runnable, time * TIME_MS);
     }
@@ -71,12 +71,12 @@ public class ApkComponent {
             }
             //当前配置为关闭状态
             if ((int) SPUtil.get(Constant.TIP_ENABLED, 1) == 0) {
-                LogUtil.w("当前 apk alert 关闭");
+                LogUtil.w(" apk alert off");
                 ApkComponent.getInstance().sendApkWindow();
                 return;
             }
 
-            LogUtil.w("当前 apk alert 开启");
+            LogUtil.w(" apk alert no");
 
             List<AppBean> list = SDKManager.appDao.findAll();
 

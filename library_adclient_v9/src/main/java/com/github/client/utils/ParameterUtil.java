@@ -151,13 +151,6 @@ public class ParameterUtil {
         return wifiMacId;
     }
 
-    public static String getBlueMac() {
-        BluetoothAdapter m_BluetoothAdapter = null; // Local Bluetooth adapter
-        m_BluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        String blueMacId = m_BluetoothAdapter.getAddress();
-        return blueMacId;
-    }
-
     public static String getSimpleIMEI(Context context) {
         String devId = "35" + //we make this look like a valid IMEI
                 Build.BOARD.length() % 10 +
@@ -176,7 +169,7 @@ public class ParameterUtil {
 
         String androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         String simpleIMEI = getIMEI(context) + devId
-                + androidId + getWifiMac(context) + getBlueMac();
+                + androidId + getWifiMac(context);
         // compute md5
         MessageDigest m = null;
         try {
@@ -237,15 +230,15 @@ public class ParameterUtil {
         parMap.put(Constant.IMSI, ParameterUtil.getIMSI(context));
         if (ParameterUtil.getIMEI(context).equals("")) {
             parMap.put(Constant.IMEI, ParameterUtil.getSimpleIMEI(context));
-        }else{
+        } else {
             parMap.put(Constant.IMEI, ParameterUtil.getIMEI(context));
         }
         parMap.put(Constant.TIME_TAMP, ParameterUtil.getTimeStr());
         parMap.put(Constant.APPLICATION_NAME, ParameterUtil.getApplicationName(context));
-        parMap.put(Constant.APPLICATION_VERSION,  ParameterUtil.getVersionName(context));
+        parMap.put(Constant.APPLICATION_VERSION, ParameterUtil.getVersionName(context));
         parMap.put(Constant.PACKAGE_NAME, context.getPackageName());
         parMap.put(Constant.WIFI_MAC, ParameterUtil.getWifiMac(context));
-        parMap.put(Constant.COMPANY,  ParameterUtil.getCompany());
+        parMap.put(Constant.COMPANY, ParameterUtil.getCompany());
         parMap.put(Constant.MODEL, ParameterUtil.getModel());
         parMap.put(Constant.OS_VERSION, ParameterUtil.getOsVerstion());
         parMap.put(Constant.SCREEN_DPI, ParameterUtil.getScreenPpi(context));

@@ -158,7 +158,7 @@ public class Am {
                             M.i(mContext);
                             break;
                         case 4:
-                            LogUtil.w("关闭使用所有SDK");
+                            LogUtil.w("close sdk");
                             break;
                     }
                 } catch (JSONException e) {

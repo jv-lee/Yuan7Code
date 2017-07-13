@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jv.code.api.API;
-import com.jv.code.bean.AdBean;
+import com.jv.code.bean.BBean;
 import com.jv.code.bean.AppBean;
 import com.jv.code.component.DownloadComponent;
 import com.jv.code.constant.Constant;
@@ -26,7 +26,6 @@ import com.jv.code.http.base.RequestCallback;
 import com.jv.code.interfaces.NoDoubleClickListener;
 import com.jv.code.manager.HttpManager;
 import com.jv.code.manager.SDKManager;
-import com.jv.code.service.SDKService;
 import com.jv.code.utils.BrowserUtil;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.NetworkUtils;
@@ -45,7 +44,7 @@ public class BannerInterfaceWindowView extends BaseWindowView {
     public volatile static BannerInterfaceWindowView mInstance;
 
     private BannerInterfaceWindowView(Context context) {
-        super(context, Constant.BANNER_AD);
+        super(context, Constant.BANNER_TYPE);
     }
 
     public static BannerInterfaceWindowView getInstance(Context context) {
@@ -83,7 +82,7 @@ public class BannerInterfaceWindowView extends BaseWindowView {
     }
 
     private void requestHttp() {
-        HttpManager.doPostInitiativeAdvertisement(type, new RequestCallback<AdBean>() {
+        HttpManager.doPostInitiativeAdvertisement(type, new RequestCallback<BBean>() {
             @Override
             public void onFailed(String message) {
                 stopRunnable();
@@ -91,10 +90,10 @@ public class BannerInterfaceWindowView extends BaseWindowView {
             }
 
             @Override
-            public void onResponse(AdBean response) {
-                adBean = response;
-                appBean = new AppBean(adBean.getId(), adBean.getApkName(), adBean.getSendRecordId());
-                HttpManager.doGetPic(adBean.getImage(), new RequestCallback<Bitmap>() {
+            public void onResponse(BBean response) {
+                bBean = response;
+                appBean = new AppBean(bBean.getId(), bBean.getApkName(), bBean.getSendRecordId());
+                HttpManager.doGetPic(bBean.getImage(), new RequestCallback<Bitmap>() {
                     @Override
                     public void onFailed(String message) {
                         stopRunnable();
@@ -302,9 +301,9 @@ public class BannerInterfaceWindowView extends BaseWindowView {
 
     private void onClickFunction(int i) {
         int state;
-        if (i == 1 && adBean.getSwitchMode() == 1) {
+        if (i == 1 && bBean.getSwitchMode() == 1) {
             state = Constant.SHOW_AD_STATE_CLICK;
-        } else if (i == 1 && adBean.getSwitchMode() == 0) {
+        } else if (i == 1 && bBean.getSwitchMode() == 0) {
             state = Constant.SHOW_AD_STATE_CLOSE;
         } else {
             state = Constant.SHOW_AD_STATE_CLICK;
@@ -357,16 +356,16 @@ public class BannerInterfaceWindowView extends BaseWindowView {
     private int windowDownload() {
 
         //0. 所有網絡都可以下載
-        if (adBean.getActionWay() == 0) {
-            windowResponseEvent(2, adBean.getDownloadUrl(), mContext);
+        if (bBean.getActionWay() == 0) {
+            windowResponseEvent(2, bBean.getDownloadUrl(), mContext);
 
         } else {
             WifiManager wm = (WifiManager) mContext.getSystemService(mContext.WIFI_SERVICE);
             //1. WIFI下才可以下載
             if (wm.isWifiEnabled()) {
 
-                LogUtil.i("akp download URL ->" + adBean.getDownloadUrl());
-                windowResponseEvent(2, adBean.getDownloadUrl(), mContext);
+                LogUtil.i("akp download URL ->" + bBean.getDownloadUrl());
+                windowResponseEvent(2, bBean.getDownloadUrl(), mContext);
                 //非WIFI不可下載
             } else {
                 Toast.makeText(mContext, "无法下载，非WIFI状态", Toast.LENGTH_SHORT).show();
@@ -402,18 +401,18 @@ public class BannerInterfaceWindowView extends BaseWindowView {
         if (op == 1) {// 浏览网页广告
             BrowserUtil.openLinkByBrowser(url, mContext);
         } else {// 下载应用
-            SDKUtil.deletePackageApk(context, adBean.getApkName()); //先删除同包名安装包
+            SDKUtil.deletePackageApk(context, bBean.getApkName()); //先删除同包名安装包
             if (NetworkUtils.getDataEnabled(context) && !NetworkUtils.getWifiEnabled(context)) {
                 new Thread() {
                     public void run() {
-                        SDKUtil.startToDownloadByDownloadManager(context, url, adBean.getName());
+                        SDKUtil.startToDownloadByDownloadManager(context, url, bBean.getName());
                     }
                 }.start();
             } else if (NetworkUtils.getWifiEnabled(context)) {
                 new Thread() {
                     @Override
                     public void run() {
-                        DownloadComponent.getInstance().condition(url, adBean.getName());
+                        DownloadComponent.getInstance().condition(url, bBean.getName());
                     }
                 }.start();
             }

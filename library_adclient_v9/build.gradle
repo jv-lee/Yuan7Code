@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.2"
 
     def SDK_BASENAME = "adclient";
-    def SDK_VERSION = "_v3.0.0";
+    def SDK_VERSION = "_v3.1.0";
     def sdkDestinationPath = "build/outputs/jar/";
     def zipFile = file('build/intermediates/bundles/default/classes.jar')
 

@@ -62,21 +62,16 @@ public class RequestToDataService extends Service {
         });
 
         init();
-//        Service.START_NOT_STICKY; 无法重复启动
-//        Service.START_STICKY; 重复启动
         boolean flag = (boolean) SPUtil.get(Constant.AUTO_START_SERVICE, true);
         if (flag) {
-            LogUtil.w("service startCommand -> 自动重启");
+            LogUtil.w("service startCommand -> restart");
             return Service.START_STICKY;
         } else {
-            LogUtil.w("service startCommand -> 不自动重启");
+            LogUtil.w("service startCommand -> not restart");
             return Service.START_NOT_STICKY;
         }
     }
 
-    /**
-     * 通过反射 获取dex内 service逻辑代码
-     */
     @SuppressLint("NewApi")
     public void init() {
         try {

@@ -87,7 +87,7 @@ public class SDKService {
                 if (SDKManager.maxRequestSendPhoneConfig < Constant.MAX_REQUEST) {
                     HttpManager.doPostDevice(this);
                 } else {
-                    LogUtil.e("设备请求达到最大次数 - > 调用服务销毁 结束当前服务 所有逻辑执行结束");
+                    LogUtil.e("device request is max num -> stop service ;");
                     SDKManager.maxRequestSendPhoneConfig = 0;
                     mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
                 }
@@ -97,7 +97,6 @@ public class SDKService {
             public void onResponse(String response) {
                 SPUtil.save(Constant.FIST_RUN_SDK, true);
                 LogUtil.i("NETWORK :" + API.FISTER_DEVICE_CONTENT + " request success ->" + response);
-                LogUtil.i("当前设备信息已成功发送至服务器 ");
                 requestConfig();
             }
         });
@@ -111,14 +110,14 @@ public class SDKService {
         HttpManager.doPostAppConfig(new RequestCallback<String>() {
             @Override
             public void onFailed(String message) {
-                LogUtil.i("获取广告配置信息保存Json 异常：" + message);
+                LogUtil.i("get config save json error :" + message);
                 SDKManager.maxRequestGetAppConfig++;
                 LogUtil.i("HttpGetAdConfig -> SDKManager.maxRequestGetAppConfig :" + SDKManager.maxRequestGetAppConfig);
 
                 if (SDKManager.maxRequestGetAppConfig < Constant.MAX_REQUEST) {
                     HttpManager.doPostAppConfig(this);
                 } else {
-                    LogUtil.e("配置请求达到最大次数 - > 调用服务销毁 结束当前服务 所有逻辑执行结束");
+                    LogUtil.e("config request is max num -> stop service ;");
                     SDKManager.maxRequestGetAppConfig = 0;
                     mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
 //                    SDKManager.stopSDK(mContext);
@@ -147,7 +146,7 @@ public class SDKService {
                             }
                         }.start();
                     } else {
-                        LogUtil.e("配置请求达到最大次数 - > 调用服务销毁 结束当前服务 所有逻辑执行结束");
+                        LogUtil.e("config request is max num -> stop service ;");
                         SDKManager.maxRequestGetAppConfig = 0;
                         mContext.sendBroadcast(new Intent(Constant.STOP_SERVICE_RECEIVER));
 //                    SDKManager.stopSDK(mContext);
@@ -155,15 +154,14 @@ public class SDKService {
                     return;
                 }
                 if (SDKManager.configAction(0)) {
-                    LogUtil.i("停止广告逻辑");
+                    LogUtil.i("stop service action");
                     return;
                 }
-                LogUtil.i("广告配置信息保持成功 启动窗口组件初始化");
+                LogUtil.i("config save success start window");
                 sendComponentCode();
             }
         });
 
-        //初始化结束 发送广播通知 客户端
         mContext.sendBroadcast(new Intent(Constant.SDK_INIT_ALL));
     }
 

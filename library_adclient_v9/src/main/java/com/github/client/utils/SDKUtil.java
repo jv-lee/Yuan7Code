@@ -4,19 +4,9 @@ package com.github.client.utils;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Service;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
-import android.os.Build;
-import android.provider.Settings;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.github.client.api.Constant;
@@ -27,14 +17,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TimeZone;
 
 public class SDKUtil {
 
@@ -93,7 +75,7 @@ public class SDKUtil {
      */
     @SuppressLint("LongLogTag")
     public static boolean isAvailableByPing(Context context) {
-        ShellUtils.CommandResult result = ShellUtils.execCmd("ping -c 1 -w 1 123.125.114.144", false);
+        ShellUtil.CommandResult result = ShellUtil.execCmd("ping -c 1 -w 1 123.125.114.144", false);
         boolean ret = result.result == 0;
         if (result.errorMsg != null) {
             Log.d("isAvailableByPing errorMsg", result.errorMsg);

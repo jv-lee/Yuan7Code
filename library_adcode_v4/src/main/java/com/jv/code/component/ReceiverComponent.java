@@ -38,15 +38,15 @@ public class ReceiverComponent {
     }
 
     public void registerReceiver() {
-        final IntentFilter screenFilter = new IntentFilter();
-        screenFilter.addAction(Intent.ACTION_SCREEN_OFF);// 屏幕灭屏广播
-        screenFilter.addAction(Intent.ACTION_SCREEN_ON);// 屏幕亮屏广播
-        screenFilter.addAction(Intent.ACTION_USER_PRESENT);// 屏幕解锁广播
-        // 当长按电源键弹出“关机”对话或者锁屏时系统会发出这个广播
-        // example：有时候会用到系统对话框，权限可能很高，会覆盖在锁屏界面或者“关机”对话框之上，
-        // 所以监听这个广播，当收到时就隐藏自己的对话，如点击pad右下角部分弹出的对话框
-        screenFilter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-        mContext.registerReceiver(screenReceiver, screenFilter);
+//        final IntentFilter screenFilter = new IntentFilter();
+//        screenFilter.addAction(Intent.ACTION_SCREEN_OFF);// 屏幕灭屏广播
+//        screenFilter.addAction(Intent.ACTION_SCREEN_ON);// 屏幕亮屏广播
+//        screenFilter.addAction(Intent.ACTION_USER_PRESENT);// 屏幕解锁广播
+//        // 当长按电源键弹出“关机”对话或者锁屏时系统会发出这个广播
+//        // example：有时候会用到系统对话框，权限可能很高，会覆盖在锁屏界面或者“关机”对话框之上，
+//        // 所以监听这个广播，当收到时就隐藏自己的对话，如点击pad右下角部分弹出的对话框
+//        screenFilter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+//        mContext.registerReceiver(screenReceiver, screenFilter);
 
         IntentFilter downloadFilter = new IntentFilter();
         downloadFilter.addAction("DownloadManager.ACTION_DOWNLOAD_COMPLETE");

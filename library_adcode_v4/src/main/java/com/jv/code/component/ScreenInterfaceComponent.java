@@ -3,11 +3,10 @@ package com.jv.code.component;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.jv.code.bean.AdBean;
+import com.jv.code.bean.BBean;
 import com.jv.code.constant.Constant;
 import com.jv.code.http.base.RequestCallback;
 import com.jv.code.manager.HttpManager;
-import com.jv.code.manager.SDKManager;
 import com.jv.code.service.SDKService;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;
@@ -24,7 +23,7 @@ public class ScreenInterfaceComponent {
 
     public void condition(final Context context) {
         if (SDKService.closeFlag) {
-            LogUtil.i("服务正在启动关闭");
+            LogUtil.i("service close ing");
             return;
         }
         ad(context);
@@ -38,14 +37,14 @@ public class ScreenInterfaceComponent {
         } else {
             LogUtil.e("this screen Unlock -> start Screen");
         }
-        HttpManager.doPostInitiativeAdvertisement(Constant.SCREEN_AD, new RequestCallback<AdBean>() {
+        HttpManager.doPostInitiativeAdvertisement(Constant.SCREEN_TYPE, new RequestCallback<BBean>() {
             @Override
             public void onFailed(String message) {
                 LogUtil.w("condition onFailed:" + message);
             }
 
             @Override
-            public void onResponse(final AdBean response) {
+            public void onResponse(final BBean response) {
                 HttpManager.doGetPic(response.getImage(), new RequestCallback<Bitmap>() {
                     @Override
                     public void onFailed(String message) {

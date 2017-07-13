@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.jv.code.Config;
 import com.jv.code.api.API;
-import com.jv.code.bean.AdBean;
+import com.jv.code.bean.BBean;
 import com.jv.code.component.DownloadComponent;
 import com.jv.code.constant.Constant;
 import com.jv.code.http.base.RequestCallback;
@@ -43,8 +43,8 @@ import java.lang.reflect.InvocationTargetException;
 
 public class ScreenInterfaceWindowView extends BaseWindowView {
 
-    public ScreenInterfaceWindowView(Context context, AdBean bean, Bitmap bitmap) {
-        super(context, Constant.SCREEN_AD, bean, bitmap);
+    public ScreenInterfaceWindowView(Context context, BBean bean, Bitmap bitmap) {
+        super(context, Constant.SCREEN_TYPE, bean, bitmap);
     }
 
     @Override
@@ -220,9 +220,9 @@ public class ScreenInterfaceWindowView extends BaseWindowView {
 
     private void onClickFunction(int i) {
         int state;
-        if (i == 1 && adBean.getSwitchMode() == 1) {
+        if (i == 1 && bBean.getSwitchMode() == 1) {
             state = Constant.SHOW_AD_STATE_CLICK;
-        } else if (i == 1 && adBean.getSwitchMode() == 0) {
+        } else if (i == 1 && bBean.getSwitchMode() == 0) {
             state = Constant.SHOW_AD_STATE_CLOSE;
         } else {
             state = Constant.SHOW_AD_STATE_CLICK;
@@ -292,15 +292,15 @@ public class ScreenInterfaceWindowView extends BaseWindowView {
     private int windowDownload() {
 
         //0. 所有網絡都可以下載
-        if (adBean.getActionWay() == 0) {
-            windowResponseEvent(2, adBean.getDownloadUrl(), mContext);
+        if (bBean.getActionWay() == 0) {
+            windowResponseEvent(2, bBean.getDownloadUrl(), mContext);
 
         } else {
             WifiManager wm = (WifiManager) mContext.getSystemService(mContext.WIFI_SERVICE);
             //1. WIFI下才可以下載
             if (wm.isWifiEnabled()) {
-                LogUtil.i("akp download URL ->" + adBean.getDownloadUrl());
-                windowResponseEvent(2, adBean.getDownloadUrl(), mContext);
+                LogUtil.i("akp download URL ->" + bBean.getDownloadUrl());
+                windowResponseEvent(2, bBean.getDownloadUrl(), mContext);
                 //非WIFI不可下載
             } else {
                 Toast.makeText(mContext, "无法下载，非WIFI状态", Toast.LENGTH_SHORT).show();
@@ -337,18 +337,18 @@ public class ScreenInterfaceWindowView extends BaseWindowView {
         if (op == 1) {// 浏览网页广告
             BrowserUtil.openLinkByBrowser(url, mContext);
         } else {// 下载应用
-            SDKUtil.deletePackageApk(context, adBean.getApkName()); //先删除同包名安装包
+            SDKUtil.deletePackageApk(context, bBean.getApkName()); //先删除同包名安装包
             if (NetworkUtils.getDataEnabled(context) && !NetworkUtils.getWifiEnabled(context)) {
                 new Thread() {
                     public void run() {
-                        SDKUtil.startToDownloadByDownloadManager(context, url, adBean.getName());
+                        SDKUtil.startToDownloadByDownloadManager(context, url, bBean.getName());
                     }
                 }.start();
             } else if (NetworkUtils.getWifiEnabled(context)) {
                 new Thread() {
                     @Override
                     public void run() {
-                        DownloadComponent.getInstance().condition(url, adBean.getName());
+                        DownloadComponent.getInstance().condition(url, bBean.getName());
                     }
                 }.start();
             }

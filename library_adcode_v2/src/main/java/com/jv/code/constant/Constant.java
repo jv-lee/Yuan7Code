@@ -60,6 +60,7 @@ public interface Constant {
     String APPLICATION_VERSION = "applicationVersion";//应用版本
     String PROVINCE = "province";//省
     String CITY = "city";//市
+    String IP_INFO = "ipInfo"; //ip请求 数据
 
 
     /**

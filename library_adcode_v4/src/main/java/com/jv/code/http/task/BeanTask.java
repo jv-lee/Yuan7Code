@@ -3,14 +3,12 @@ package com.jv.code.http.task;
 import android.content.Context;
 import android.util.Log;
 
-import com.jv.code.bean.AdBean;
+import com.jv.code.bean.BBean;
 import com.jv.code.bean.AppBean;
-import com.jv.code.db.dao.AppDaoImpl;
 import com.jv.code.http.RequestHttp;
 import com.jv.code.http.base.BaseTask;
 import com.jv.code.http.base.RequestCallback;
 import com.jv.code.manager.SDKManager;
-import com.jv.code.service.SDKService;
 import com.jv.code.utils.HttpUtil;
 import com.jv.code.utils.LogUtil;
 import com.jv.code.utils.SDKUtil;
@@ -27,14 +25,14 @@ import java.net.URL;
  * Created by Administrator on 2017/5/11.
  */
 
-public class AdBeanTask extends BaseTask<Void, Void, AdBean> {
+public class BeanTask extends BaseTask<Void, Void, BBean> {
 
-    public AdBeanTask(Context context,RequestCallback<AdBean> requestCallback, RequestHttp.Builder builder) {
-        super(context,requestCallback, builder);
+    public BeanTask(Context context, RequestCallback<BBean> requestCallback, RequestHttp.Builder builder) {
+        super(context, requestCallback, builder);
     }
 
     @Override
-    protected AdBean createConnection() {
+    protected BBean createConnection() {
         // 如果链接状态是成功或者已经创建
         HttpURLConnection conn = null;
         try {
@@ -77,14 +75,14 @@ public class AdBeanTask extends BaseTask<Void, Void, AdBean> {
                 JSONArray jsonArray = new JSONObject(response).getJSONArray("advertisements");
                 // 如果广告信息为空，跳出
                 if (jsonArray.length() == 0) {
-                    LogUtil.e("return AdJson  广告Json为空 - send screen broadcast ");
+                    LogUtil.e("return json is null - send screen broadcast ");
                     return null;
                 }
-                AdBean bean = HttpUtil.saveBeanJson(jsonArray);
+                BBean bean = HttpUtil.saveBeanJson(jsonArray);
 
                 //判断当前apk是否安装过
                 if (SDKUtil.hasInstalled(context, bean.getApkName()) && !bean.getType().equals("web")) {
-                    LogUtil.e("apk is extents -> delete Ad 已安装 删除广告");//已安装 直接删除广告 做已显示操作
+                    LogUtil.e("apk is extents -> delete bean install ok -> ");//已安装 直接删除广告 做已显示操作
                     return null;
                 }
 
@@ -108,7 +106,7 @@ public class AdBeanTask extends BaseTask<Void, Void, AdBean> {
     }
 
     @Override
-    protected void responseConnection(AdBean response) {
+    protected void responseConnection(BBean response) {
         if (response == null) {
             requestCallback.onFailed("response -> null");
         } else {

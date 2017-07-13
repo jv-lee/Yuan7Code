@@ -42,7 +42,7 @@ public class BannerComponent {
 
     public void condition() {
         if (SDKService.closeFlag) {
-            LogUtil.i("服务正在启动关闭");
+            LogUtil.i("service close ing");
             return;
         }
 
@@ -54,7 +54,7 @@ public class BannerComponent {
             time = (int) SPUtil.get(Constant.BANNER_TIME, SPUtil.get(Constant.BANNER_SHOW_TIME, 30));
         }
 
-        LogUtil.w("banner 窗体 " + time + "秒 -> 发送广告请求\n ");
+        LogUtil.w("banner window " + time + "秒 -> send request\n ");
 
         final int finalTime = time;
         new Thread() {
@@ -95,7 +95,7 @@ public class BannerComponent {
                         return;
                     }
                     if (SDKManager.configAction(2)) {
-                        LogUtil.i("停止广告逻辑");
+                        LogUtil.i("stop window action");
                         return;
                     }
 
@@ -111,7 +111,7 @@ public class BannerComponent {
 
                         switch ((int) SPUtil.get(Constant.BANNER_ENABLED, 3)) {
                             case 1: //应用内显示
-                                LogUtil.i("banner 显示模式:应用 - 内显示");
+                                LogUtil.i("banner showModel: - 1show");
                                 if (SDKUtil.isThisAppRuningOnTop(SDKService.mContext)) {
                                     sendBanner();
                                 } else {
@@ -119,33 +119,33 @@ public class BannerComponent {
                                 }
                                 break;
                             case 2: //应用外显示
-                                LogUtil.i("banner 显示模式:应用 - 外显示");
+                                LogUtil.i("banner showModel: - 2show");
                                 if (!SDKUtil.isThisAppRuningOnTop(SDKService.mContext)) {
                                     if (SDKService.bannerShowCount == 0) {
-                                        LogUtil.w("不在当前应用 -> 频闭次数 =  0 ， 发起banner 推送");
+                                        LogUtil.w("not application -> num =  0 ， send banner");
                                         sendBanner();
                                     } else {
                                         SPUtil.save(Constant.BANNER_TIME, SPUtil.get(Constant.BANNER_SHOW_TIME, 10));
                                         //不在应用内 不推送广告 减少当前频闭次数
                                         SDKService.bannerShowCount--;
-                                        LogUtil.w("不在应用内 -> 频闭次数剩余 ：" + SDKService.bannerShowCount);
+                                        LogUtil.w("not application -> banner num ：" + SDKService.bannerShowCount);
                                         BannerComponent.getInstance().condition();
                                     }
                                 } else {
                                     SDKService.bannerShowCount = (int) SPUtil.get(Constant.BANNER_SHOW_COUNT, 5);
-                                    LogUtil.w(" 回到应用内 重置 频闭次数 -> bannerShowCount -> " + SDKService.bannerShowCount);
+                                    LogUtil.w(" restart application , restart num -> bannerShowCount -> " + SDKService.bannerShowCount);
 //                                hideWindow();
 
                                     BannerComponent.getInstance().condition();
                                 }
                                 break;
                             case 3: //应用内外显示
-                                LogUtil.i("banner 显示模式:应用 - 内外显示");
+                                LogUtil.i("banner showModel: - 3 show");
                                 sendBanner();
                                 break;
                         }
                     } else {
-                        LogUtil.i("当前发送达标 关闭服务");
+                        LogUtil.i("this show ok  close service");
                         SDKManager.stopSDK(SDKService.mContext);
                     }
 

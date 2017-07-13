@@ -3,7 +3,7 @@ package com.jv.code.db.dao;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.jv.code.bean.AdBean;
+import com.jv.code.bean.BBean;
 import com.jv.code.db.DBHelper;
 
 import java.util.List;
@@ -13,11 +13,11 @@ import java.util.List;
  * Created by jv on 2016/9/28.
  */
 
-public class AdDaoImpl implements IAdDao {
+public class BeanDaoImpl implements IBeanDao {
 
     private DBHelper db;
 
-    public AdDaoImpl(Context context) {
+    public BeanDaoImpl(Context context) {
         this.db = DBHelper.getInstance(context);
     }
 
@@ -27,11 +27,11 @@ public class AdDaoImpl implements IAdDao {
      * @param datas
      */
     @Override
-    public void save(List<AdBean> datas) {
+    public void save(List<BBean> datas) {
 
         if (datas != null) {
 
-            for (AdBean bean : datas) {
+            for (BBean bean : datas) {
                 db.getReadableDatabase().execSQL("insert into advertisements values(null,?,?,?,?,?,?,?,?,?,?)", new Object[]{bean.getId(), bean.getName(), bean.getImage(), bean.getSwitchMode(), bean.getActionWay(), bean.getType(), bean.getSendRecordId(), bean.getDownloadUrl(), bean.getShowType(), bean.getApkName()});
             }
 
@@ -55,15 +55,15 @@ public class AdDaoImpl implements IAdDao {
      * @return
      */
     @Override
-    public AdBean findByCurr(int type) {//where showType = ?
+    public BBean findByCurr(int type) {//where showType = ?
         Cursor cursor = db.getReadableDatabase().rawQuery("select * from advertisements where showType = ? limit 1", new String[]{type + ""});
 
-        AdBean bean = null;
+        BBean bean = null;
 
         if (cursor != null) {
 
             while (cursor.moveToNext()) {
-                bean = new AdBean();
+                bean = new BBean();
                 bean.setNoid(cursor.getInt(cursor.getColumnIndex("noid")));
                 bean.setId(cursor.getString(cursor.getColumnIndex("id")));
                 bean.setName(cursor.getString(cursor.getColumnIndex("name")));

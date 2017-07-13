@@ -2,6 +2,8 @@ package com.jv.code.manager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.view.WindowManager;
 
 import com.jv.code.Config;
@@ -46,6 +48,18 @@ public class SDKManager {
     public static int no_sim_num_banner = 0;
     public static int no_sim_num_screen = 0;
 
+    public static Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1:
+                    SDKService.getInstance(mContext).init();
+                    break;
+            }
+        }
+    };
+
     /**
      * 全局初始化
      *
@@ -80,10 +94,20 @@ public class SDKManager {
             SPUtil.save(Constant.SERVICE_TIME, time);
         }
 
-        new IPComponent(mContext).start();
+        //查询IP地址
+        new IPComponent(mContext, new IPComponent.IpCallBack() {
+            @Override
+            public void onFailed(Exception e) {
+                LogUtil.e("IPComponent Exception -> " + e.getMessage());
+                mHandler.sendEmptyMessage(1);
+            }
 
-        //初始化服务任务
-        SDKService.getInstance(context).init();
+            @Override
+            public void onResponse(String address) {
+                //初始化服务任务
+                mHandler.sendEmptyMessage(1);
+            }
+        }).start();
     }
 
 

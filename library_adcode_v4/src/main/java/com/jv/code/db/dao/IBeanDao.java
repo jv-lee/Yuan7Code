@@ -1,7 +1,7 @@
 package com.jv.code.db.dao;
 
 
-import com.jv.code.bean.AdBean;
+import com.jv.code.bean.BBean;
 
 import java.util.List;
 
@@ -10,13 +10,13 @@ import java.util.List;
  * Created by jv on 2016/9/28.
  */
 
-public interface IAdDao {
+public interface IBeanDao {
 
-    void save(List<AdBean> datas);
+    void save(List<BBean> datas);
 
     void delete(int onid);
 
-    AdBean findByCurr(int type);
+    BBean findByCurr(int type);
 
     int getCount(int type);
 

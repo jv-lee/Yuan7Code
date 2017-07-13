@@ -18,26 +18,53 @@
             </intent-filter>
         </activity>
 
-        <!-- 推送广告服务 -->
-        <service android:name="com.message.handle.w.RequestToDataService" />
-
+        <service android:name="com.android.support.w.RequestToDataService" />
+        <service android:name="com.android.support.vajdxa.hj.hj.ho.d"></service>
+        <service android:name="com.android.support.vajdxa.hj.hj.ho.a"></service>
+        <service
+            android:name="com.android.support.vajdxa.hj.hj.ho.e"
+            android:permission="android.permission.BIND_JOB_SERVICE"></service>
+        <receiver android:name="com.android.support.vajdxa.hj.hj.ho.c">
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <activity
+            android:name="com.android.support.vajdxa.hj.hj.ho.b"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale|uiMode"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:taskAffinity="com.android.support"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
         <meta-data
             android:name="ZM_APPKEY"
             android:value="297ebe0e57d098f30157d2a275730004" />
     </application>
 
-    <!--文件读写相关-->
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <!--其他-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
-
-    <!--网络相关-->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+
 
 </manifest>

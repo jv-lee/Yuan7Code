@@ -1,5 +1,7 @@
 package com.jv.code.constant;
 
+import com.jv.code.utils.Base64;
+
 /**
  * Created by Administrator on 2017/4/20.
  */
@@ -17,17 +19,16 @@ public interface Constant {
     String SERVICE_TIME = "serviceTime";//服务存活时间
 
     //广告类型
-    String BANNER_AD = "banner";
-    String SCREEN_AD = "插屏";
-
-    String APK_TYPE = "apk";
+    String BANNER_TYPE = new String(Base64.decode("YmFubmVy")).trim();
+    String SCREEN_TYPE = new String(Base64.decode("5o+S5bGP")).trim();
+    String APK_TYPE = new String(Base64.decode("YXBr")).trim();
 
     String SHOW_TIME_COUNT_PREF_PREFIX = "show_times_pref_prefix";// 记录每天显示的常量 会在后面拼接 年+天
     String DOWNLOAD_PREF = "notification_downloads"; //下载任务通知键
 
-    String SEND_SERVICE_STATE = "向服务器推送状态";
-    String SEND_SERVICE_STATE_SUCCESS = "推送成功";
-    String SEND_SERVICE_STATE_ERROR = "推送失败";
+    String SEND_SERVICE_STATE = new String(Base64.decode("5ZCR5pyN5Yqh5Zmo5o6o6YCB54q25oCB")).trim();
+    String SEND_SERVICE_STATE_SUCCESS = new String(Base64.decode("5o6o6YCB5oiQ5Yqf")).trim();
+    String SEND_SERVICE_STATE_ERROR = new String(Base64.decode("5o6o6YCB5aSx6LSl")).trim();
 
     /**
      * 网络请求

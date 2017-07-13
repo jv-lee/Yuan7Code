@@ -1,6 +1,6 @@
 package com.jv.code.utils;
 
-import com.jv.code.bean.AdBean;
+import com.jv.code.bean.BBean;
 import com.jv.code.constant.Constant;
 
 import org.json.JSONArray;
@@ -104,8 +104,8 @@ public class HttpUtil {
         LogUtil.w("appConfig update -> is ok");
     }
 
-    public static AdBean saveBeanJson(JSONArray jsonArray) throws JSONException {
-        AdBean bean = new AdBean();
+    public static BBean saveBeanJson(JSONArray jsonArray) throws JSONException {
+        BBean bean = new BBean();
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject obj = (JSONObject) jsonArray.get(i);
             bean.setSendRecordId(obj.getString("sendRecordId"));

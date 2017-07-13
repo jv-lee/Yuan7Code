@@ -18,7 +18,7 @@ public class BannerInterfaceComponent {
 
     public void condition(final Context context) {
         if (SDKService.closeFlag) {
-            LogUtil.i("服务正在启动关闭");
+            LogUtil.i("service close ing");
             return;
         }
             BannerInterfaceWindowView.getInstance(context).condition();
