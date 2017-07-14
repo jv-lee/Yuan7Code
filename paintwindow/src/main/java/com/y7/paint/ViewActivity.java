@@ -40,8 +40,8 @@ public class ViewActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view);
 
-//        initToastView();
-        initWindowView();
+        initToastView();
+//        initWindowView();
     }
 
     public void initToastView() {
@@ -177,7 +177,6 @@ public class ViewActivity extends Activity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                Toast.makeText(ViewActivity.this, "click close view", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -199,17 +198,14 @@ public class ViewActivity extends Activity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-//                try {
+                try {
                     contentLayout.setVisibility(View.GONE);
-//                    hide.invoke(mTN);
-                    getWindowManager().removeView(windowView);
+                    hide.invoke(mTN);
+//                    getWindowManager().removeView(windowView);
                     finish();
-//                } catch (IllegalAccessException e) {
-//                    e.printStackTrace();
-//                } catch (InvocationTargetException e) {
-//                    e.printStackTrace();
-//                }
-                Toast.makeText(ViewActivity.this, "click close view", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

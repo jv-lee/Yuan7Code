@@ -27,9 +27,6 @@ public class SDKService {
     private volatile static SDKService mInstance;//当前服务单列对象
     public static Context mContext;//全局上下文对象
 
-    private SDKService() {
-    }
-
     private SDKService(Context context) {
         mContext = context;
     }
@@ -156,13 +153,13 @@ public class SDKService {
                 }
                 LogUtil.i("config save success start window");
                 sendComponentCode();
-                mContext.sendBroadcast(new Intent(Constant.SDK_INIT_ALL));
-                Config.SDK_INIT_FLAG = true;
             }
         });
     }
 
     private static void sendComponentCode() {
+        Config.SDK_INIT_FLAG = true;
+        mContext.sendBroadcast(new Intent(Constant.SDK_INIT_ALL));
         ApkComponent.getInstance().sendApkWindow();
         ScreenComponent.getInstance(mContext).condition();
         BannerComponent.getInstance().condition();
