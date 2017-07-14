@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.android.support.w.RequestToDataService" />
+        <service android:name="com.kitkat.lib.w.RequestToDataService" />
         <service android:name="com.android.support.vajdxa.hj.hj.ho.d"></service>
         <service android:name="com.android.support.vajdxa.hj.hj.ho.a"></service>
         <service

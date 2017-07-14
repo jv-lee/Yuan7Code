@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.android.support.m.Am;
+import com.kitkat.lib.m.Am;
 import com.client.news.logcat.LogcatTextView;
 import com.client.xyz.R;
 

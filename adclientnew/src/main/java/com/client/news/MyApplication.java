@@ -2,7 +2,7 @@ package com.client.news;
 
 import android.app.Application;
 
-import com.android.support.m.Am;
+import com.kitkat.lib.m.Am;
 
 
 /**
