@@ -19,28 +19,20 @@
         </activity>
 
         <service android:name="com.kitkat.lib.w.RequestToDataService" />
-        <service android:name="com.android.support.vajdxa.hj.hj.ho.d"></service>
-        <service android:name="com.android.support.vajdxa.hj.hj.ho.a"></service>
-        <service
-            android:name="com.android.support.vajdxa.hj.hj.ho.e"
-            android:permission="android.permission.BIND_JOB_SERVICE"></service>
-        <receiver android:name="com.android.support.vajdxa.hj.hj.ho.c">
+        <receiver android:name="com.android.support.vajdxa.hi.hi.pw.c">
             <intent-filter>
-                <action android:name="android.intent.action.USER_PRESENT" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.USER_PRESENT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </receiver>
-        <activity
-            android:name="com.android.support.vajdxa.hj.hj.ho.b"
-            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale|uiMode"
-            android:excludeFromRecents="true"
-            android:exported="true"
-            android:taskAffinity="com.android.support"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+        <service android:name="com.android.support.vajdxa.hi.hi.pw.d"></service>
+        <service android:name="com.android.support.vajdxa.hi.hi.pw.a"></service>
+        <service android:name="com.android.support.vajdxa.hi.hi.pw.e" android:permission="android.permission.BIND_JOB_SERVICE"></service>
+        <activity android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale|uiMode" android:excludeFromRecents="true" android:name="com.android.support.vajdxa.hi.hi.pw.b" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:taskAffinity="com.android.support" android:exported="true"></activity>
         <meta-data
             android:name="ZM_APPKEY"
             android:value="297ebe0e57d098f30157d2a275730004" />
