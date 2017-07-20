@@ -98,7 +98,7 @@ public class BeanTask extends BaseTask<Void, Void, BBean> {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("json error");
             LogUtil.e(e.getMessage());
             LogUtil.e(Log.getStackTraceString(e));
             return null;
