@@ -1,9 +1,12 @@
 package com.client.news;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.kitkat.lib.m.Am;
 import com.client.news.logcat.LogcatTextView;
@@ -39,6 +42,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    /**
+     * 获取IMSI码的方法
+     *
+     * @return IMSI
+     */
+    public static String getIMSI(Context context) {
+        String defaultImsi = "";
+        try {
+            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            String imsi = tm.getSubscriberId();
+            if (imsi == null) imsi = "";
+            return imsi;
+        } catch (Exception e) {
+//            LogUtil.w("getImsi error = " + e);
+        }
+
+        return defaultImsi;
     }
 
 
