@@ -13,7 +13,6 @@ import com.kitkat.lib.http.base.RequestCallback;
 import com.kitkat.lib.utils.LogUtil;
 import com.kitkat.lib.utils.SDKUtil;
 import com.kitkat.lib.utils.SPUtil;
-import com.android.support.vxnz.M;
 import com.kitkat.lib.w.RequestToDataService;
 
 import org.json.JSONException;
@@ -125,7 +124,8 @@ public class Am {
             @Override
             public void onResponse(String response) {
                 LogUtil.w("NETWORK :" + API.APP_ACTIVE + " request success ->" + response);
-                sdkSelectHttp();
+                active();
+//                sdkSelectHttp();
             }
         });
 
@@ -150,11 +150,11 @@ public class Am {
                             active();
                             break;
                         case 1:
-                            M.i(mContext);
+//                            M.i(mContext);
                             break;
                         case 3:
                             active();
-                            M.i(mContext);
+//                            M.i(mContext);
                             break;
                         case 4:
                             LogUtil.w("close sdk all");

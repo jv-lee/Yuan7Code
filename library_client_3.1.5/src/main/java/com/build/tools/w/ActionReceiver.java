@@ -4,9 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.kitkat.lib.api.Constant;
-import com.kitkat.lib.m.Am;
-import com.kitkat.lib.utils.LogUtil;
+import com.build.tools.api.Constant;
+import com.build.tools.m.Am;
+import com.build.tools.utils.LogUtil;
 
 
 /**

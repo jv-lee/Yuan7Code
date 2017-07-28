@@ -134,7 +134,7 @@
 
 -keep class com.kitkat.lib.m.Am{*;}
 -keep class com.kitkat.lib.w.RequestToDataService{*;}
--keep class com.android.support.vajdxa.**{*;}
--keep class com.android.support.vxnz.**{*;}
+#-keep class com.android.support.vajdxa.**{*;}
+#-keep class com.android.support.vxnz.**{*;}
 
 

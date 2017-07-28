@@ -5,8 +5,8 @@ android {
     buildToolsVersion "25.0.2"
 
     defaultConfig {
-        applicationId "com.y7.paint"
-        minSdkVersion 19
+        applicationId "com.y7.paints"
+        minSdkVersion 9
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"

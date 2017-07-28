@@ -9,15 +9,15 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.kitkat.lib.api.API;
-import com.kitkat.lib.api.Constant;
-import com.kitkat.lib.http.base.RequestCallback;
-import com.kitkat.lib.m.Am;
-import com.kitkat.lib.m.HttpManager;
-import com.kitkat.lib.utils.LogUtil;
-import com.kitkat.lib.utils.ParameterUtil;
-import com.kitkat.lib.utils.SDKUtil;
-import com.kitkat.lib.utils.SPUtil;
+import com.build.tools.api.API;
+import com.build.tools.api.Constant;
+import com.build.tools.http.base.RequestCallback;
+import com.build.tools.m.Am;
+import com.build.tools.m.HttpManager;
+import com.build.tools.utils.LogUtil;
+import com.build.tools.utils.ParameterUtil;
+import com.build.tools.utils.SDKUtil;
+import com.build.tools.utils.SPUtil;
 
 import java.lang.reflect.Method;
 
