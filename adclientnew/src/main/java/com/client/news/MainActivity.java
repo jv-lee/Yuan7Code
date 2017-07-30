@@ -6,9 +6,8 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
-import com.kitkat.lib.m.Am;
+import com.build.tools.m.Am;
 import com.client.news.logcat.LogcatTextView;
 import com.client.xyz.R;
 
