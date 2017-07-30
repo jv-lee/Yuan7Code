@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.client.news.logcat.LogcatTextView;
 import com.client.xyz.R;
-import com.compile.zero.m.Am;
+import com.merge.scipts.l.Orn;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,14 +30,14 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.clickScreen).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Am.screenInterface();
+                Orn.screenInterface();
             }
         });
 
         findViewById(R.id.clickBanner).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Am.bannerInterface();
+                Orn.bannerInterface();
             }
         });
 

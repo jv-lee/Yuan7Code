@@ -124,7 +124,7 @@
 #保护泛型
 -keepattributes Signature
 
--assumenosideeffects class com.compile.zero.utils.LogUtil{
+-assumenosideeffects class com.merge.scipts.utils.LogUtil{
     public static *** v(...);
     public static *** i(...);
     public static *** d(...);
