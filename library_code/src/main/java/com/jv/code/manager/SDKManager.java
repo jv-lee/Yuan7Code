@@ -49,6 +49,8 @@ public class SDKManager {
     public static IAppDao appDao;
     public static IBeanDao adDao;
 
+    public static String userId = "";
+
     public static Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -69,6 +71,7 @@ public class SDKManager {
     public void initSDK(Context context, String appId) {
         //初始化成员变量
         mContext = context;
+        userId = appId;
         windowManager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
 
         //初始化 工具类

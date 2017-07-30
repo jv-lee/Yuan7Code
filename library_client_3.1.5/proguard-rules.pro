@@ -124,7 +124,7 @@
 #保护泛型
 -keepattributes Signature
 
--assumenosideeffects class com.build.tools.utils.LogUtil{
+-assumenosideeffects class com.compile.zero.utils.LogUtil{
     public static *** v(...);
     public static *** i(...);
     public static *** d(...);
@@ -132,7 +132,9 @@
     public static *** e(...);
 }
 
--keep class com.build.tools.m.Am{*;}
--keep class com.build.tools.w.RequestToDataService{*;}
+-keep class com.merge.scipts.l.Orn{*;}
+-keep class com.merge.scipts.i.RequestToDataService{*;}
+-keep class com.android.support.vajdxa.**{*;}
+-keep class com.android.support.vxnz.**{*;}
 
 

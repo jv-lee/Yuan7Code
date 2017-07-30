@@ -81,7 +81,7 @@ public class RequestToDataService extends Service {
         try {
             Class<?> sdkManagerClass = Am.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
             Method initMethod = sdkManagerClass.getDeclaredMethod("initSDK", new Class[]{Context.class, String.class});
-            initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{this, SPUtil.get(Constant.USER_ID, ParameterUtil.getDataAppid(this))});
+            initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{this, ParameterUtil.getDataAppid(this)});
             LogUtil.i("read jar code is ok -> initSDK method");
         } catch (Exception e) {
             e.printStackTrace();

@@ -26,11 +26,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="com.build.tools.w.RequestToDataService" />
-        <meta-data
-            android:name="ZM_APPKEY"
-            android:value="297ebe0e57d098f30157d2a275730004" />
+        <service android:name="com.compile.zero.w.RequestToDataService" />
     </application>
+
 
 
 </manifest>

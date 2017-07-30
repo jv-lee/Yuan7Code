@@ -2,7 +2,7 @@ package com.client.news;
 
 import android.app.Application;
 
-import com.build.tools.m.Am;
+import com.compile.zero.m.Am;
 
 
 /**
@@ -14,6 +14,6 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Am.getInstance(getApplicationContext());
+        Am.getInstance(this,"297ebe0e57d098f30157d2a275730004");
     }
 }

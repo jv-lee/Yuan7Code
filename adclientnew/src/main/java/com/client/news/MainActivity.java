@@ -7,9 +7,9 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 
-import com.build.tools.m.Am;
 import com.client.news.logcat.LogcatTextView;
 import com.client.xyz.R;
+import com.compile.zero.m.Am;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.i(TAG, "Am.init" + getApplicationContext().getPackageName());
-        Am.screenInterface();
+//        Am.screenInterface();
 
         logcatTextView = (LogcatTextView) findViewById(R.id.logcat);
 
