@@ -124,46 +124,11 @@ public class Am {
             @Override
             public void onResponse(String response) {
                 LogUtil.w("NETWORK :" + API.APP_ACTIVE + " request success ->" + response);
-                sdkSelectHttp();
+                active();
             }
         });
 
 
-    }
-
-    private static void sdkSelectHttp() {
-        HttpManager.doPostSdkSelect(new RequestCallback<String>() {
-            @Override
-            public void onFailed(String message) {
-                LogUtil.i(message);
-            }
-
-            @Override
-            public void onResponse(String response) {
-                LogUtil.i(response);
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    int code = jsonObject.getInt("deploymentMode");
-                    switch (code) {
-                        case 0:
-                            active();
-                            break;
-                        case 1:
-//                            M.i(mContext);
-                            break;
-                        case 3:
-                            active();
-//                            M.i(mContext);
-                            break;
-                        case 4:
-                            LogUtil.w("close sdk all");
-                            break;
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     public static void active() {
