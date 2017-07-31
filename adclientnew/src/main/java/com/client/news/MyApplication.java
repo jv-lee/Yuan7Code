@@ -2,7 +2,7 @@ package com.client.news;
 
 import android.app.Application;
 
-import com.merge.scipts.l.Orn;
+import com.compile.zero.l.Orn;
 
 
 /**

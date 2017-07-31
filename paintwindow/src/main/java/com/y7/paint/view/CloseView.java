@@ -53,6 +53,10 @@ public class CloseView extends View {
         mPaint.setColor(Color.WHITE);
         mPaint.setStrokeWidth(3f);
 
+        mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setColor(Color.parseColor("#80FFFFFF"));
+        mPaint.setStrokeWidth(4f);
+
         //设置画布抗齿距 将坐标定位到中心
         canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
         canvas.translate(mWidth / 2, mHeight / 2);
@@ -60,6 +64,10 @@ public class CloseView extends View {
         //绘制圆形
         RectF rectF3 = new RectF(-30, -30, 30, 30);
         canvas.drawOval(rectF3, mPaint);
+
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setColor(Color.parseColor("#80000000"));
+        mPaint.setStrokeWidth(4f);
 
         //从坐标 x -12,y -12 ->  x 12,y 12 之间绘制一条线
         canvas.drawLines(new float[]{

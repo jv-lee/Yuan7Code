@@ -139,9 +139,9 @@ public class ViewActivity extends Activity {
 
             //点击关闭 图标
             CloseView closeView = new CloseView(this);
-            RelativeLayout.LayoutParams closeParams = new RelativeLayout.LayoutParams(SizeUtils.dp2px(this, 50), SizeUtils.dp2px(this, 50));
-            closeParams.addRule(RelativeLayout.BELOW, 2);
-            closeParams.addRule(RelativeLayout.CENTER_IN_PARENT, 2);
+            RelativeLayout.LayoutParams closeParams = new RelativeLayout.LayoutParams(SizeUtils.dp2px(this, 25), SizeUtils.dp2px(this,25));
+            closeParams.addRule(RelativeLayout.ALIGN_RIGHT, 2);
+            closeParams.addRule(RelativeLayout.ALIGN_TOP, 2);
             closeView.setLayoutParams(closeParams);
             closeView.setId(1);
             closeView.setOnClickListener(new View.OnClickListener() {
