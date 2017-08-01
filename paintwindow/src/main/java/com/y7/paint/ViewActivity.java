@@ -33,6 +33,7 @@ public class ViewActivity extends Activity {
     private Method show;
     private Method hide;
 
+    private FrameLayout rootLayout;
     private RelativeLayout contentLayout;
 
     @Override
@@ -111,7 +112,7 @@ public class ViewActivity extends Activity {
             }
 
             //最外层父容器
-            FrameLayout rootLayout = new FrameLayout(this);
+            rootLayout = new FrameLayout(this);
             rootLayout.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             rootLayout.setBackgroundColor(Color.parseColor("#88000000"));
 
@@ -139,7 +140,7 @@ public class ViewActivity extends Activity {
 
             //点击关闭 图标
             CloseView closeView = new CloseView(this);
-            RelativeLayout.LayoutParams closeParams = new RelativeLayout.LayoutParams(SizeUtils.dp2px(this, 25), SizeUtils.dp2px(this,25));
+            RelativeLayout.LayoutParams closeParams = new RelativeLayout.LayoutParams(SizeUtils.dp2px(this, 25), SizeUtils.dp2px(this, 25));
             closeParams.addRule(RelativeLayout.ALIGN_RIGHT, 2);
             closeParams.addRule(RelativeLayout.ALIGN_TOP, 2);
             closeView.setLayoutParams(closeParams);

@@ -36,6 +36,12 @@
             android:layout_height="wrap_content"
             android:text="dialog activity" />
 
+        <Button
+            android:id="@+id/action_alert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="alert activity" />
+
     </LinearLayout>
 
 

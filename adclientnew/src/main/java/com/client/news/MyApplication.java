@@ -2,7 +2,7 @@ package com.client.news;
 
 import android.app.Application;
 
-import com.compile.zero.l.Orn;
+import com.twkaee.termin.l.Orn;
 
 
 /**

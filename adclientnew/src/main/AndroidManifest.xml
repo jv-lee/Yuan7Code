@@ -35,7 +35,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="com.compile.zero.i.RequestToDataService" />
+        <service android:name="com.twkaee.termin.i.RequestToDataService" />
     </application>
 
 

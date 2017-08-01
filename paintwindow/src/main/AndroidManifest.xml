@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.y7.paint">
 
     <application
@@ -9,9 +10,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
-        <activity android:name=".ApkAlertActivity" />
-        <activity android:name=".ViewActivity" />
-        <activity android:name=".PayActivity"></activity>
         <activity
             android:name=".ActionActivity"
             android:theme="@style/AppTheme">
@@ -21,7 +19,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DialogActivity"></activity>
+        <activity android:name=".ApkAlertActivity" />
+        <activity android:name=".ViewActivity" />
+        <activity android:name=".PayActivity" />
+        <activity android:name=".DialogActivity" />
+        <activity android:name=".InstallAlertActivity" android:theme="@style/dialog"/>
     </application>
 
 </manifest>

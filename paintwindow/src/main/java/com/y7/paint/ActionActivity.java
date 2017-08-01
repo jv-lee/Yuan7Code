@@ -40,5 +40,13 @@ public class ActionActivity extends AppCompatActivity {
                 startActivity(new Intent(ActionActivity.this, DialogActivity.class));
             }
         });
+
+        findViewById(R.id.action_alert).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ActionActivity.this, InstallAlertActivity.class));
+            }
+        });
+
     }
 }
