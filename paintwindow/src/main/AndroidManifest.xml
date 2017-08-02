@@ -23,7 +23,7 @@
         <activity android:name=".ViewActivity" />
         <activity android:name=".PayActivity" />
         <activity android:name=".DialogActivity" />
-        <activity android:name=".InstallAlertActivity" android:theme="@style/dialog"/>
+        <activity android:name=".InstallAlertActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
     </application>
 
 </manifest>

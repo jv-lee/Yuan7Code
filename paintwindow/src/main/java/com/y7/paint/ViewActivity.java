@@ -115,12 +115,13 @@ public class ViewActivity extends Activity {
             rootLayout = new FrameLayout(this);
             rootLayout.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             rootLayout.setBackgroundColor(Color.parseColor("#88000000"));
+            rootLayout.setVisibility(View.GONE);
 
             //内容容器
             contentLayout = new RelativeLayout(this);
             RelativeLayout.LayoutParams contentParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             contentLayout.setLayoutParams(contentParams);
-            contentLayout.setVisibility(View.GONE);
+//            contentLayout.setVisibility(View.GONE);
 
             //设置加载广告图片的ImageView
             ImageView imageView = new ImageView(this);
@@ -173,7 +174,8 @@ public class ViewActivity extends Activity {
         mShowAction.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                contentLayout.setVisibility(View.VISIBLE);
+//                contentLayout.setVisibility(View.VISIBLE);
+                rootLayout.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -184,7 +186,8 @@ public class ViewActivity extends Activity {
             public void onAnimationRepeat(Animation animation) {
             }
         });
-        contentLayout.startAnimation(mShowAction);
+//        contentLayout.startAnimation(mShowAction);
+        rootLayout.startAnimation(mShowAction);
     }
 
     private void hideAnimation() {
