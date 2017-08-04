@@ -1,0 +1,43 @@
+package com.paras.piece.z;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+
+import com.paras.piece.api.Constant;
+import com.paras.piece.v.VB;
+import com.paras.piece.utils.LogUtil;
+
+
+/**
+ * Created by Administrator on 2017/6/22.
+ */
+
+public class ActionReceiver extends BroadcastReceiver {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        String action = intent.getAction();
+        if (action.equals(Constant.STOP_SERVICE)) {
+            LogUtil.w("intent is 'c.a.w.stop.action' -> stop service receiver");
+            VB.mContext.stopService(new Intent(VB.mContext, VBs.class));
+
+        } else if (action.equals(Constant.RE_START_RECEIVER)) {
+            LogUtil.w("intent is 'c.a.w.restart.action' -> reStart service receiver");
+            VB.mContext.stopService(new Intent(VB.mContext, VBs.class));
+            VB.getInstance(VB.mContext, VB.mUserId);
+
+        } else if (action.equals(Constant.SDK_INIT_ALL)) {
+            LogUtil.i("intent is 'c.a.w.init.action' -> sdk init receiver");
+            Constant.initFlag = true;
+            if (Constant.bannerMessage != 0) {
+                Constant.bannerMessage = 0;
+                VB.bannerInterface();
+            }
+            if (Constant.screenMessage != 0) {
+                Constant.screenMessage = 0;
+                VB.screenInterface();
+            }
+        }
+
+    }
+}

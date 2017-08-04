@@ -12,6 +12,8 @@
       <module fileurl="file://$PROJECT_DIR$/library_client_3.1.5/library_client_3.1.5.iml" filepath="$PROJECT_DIR$/library_client_3.1.5/library_client_3.1.5.iml" />
       <module fileurl="file://$PROJECT_DIR$/library_client_3.1.6/library_client_3.1.6.iml" filepath="$PROJECT_DIR$/library_client_3.1.6/library_client_3.1.6.iml" />
       <module fileurl="file://$PROJECT_DIR$/library_client_3.1.7/library_client_3.1.7.iml" filepath="$PROJECT_DIR$/library_client_3.1.7/library_client_3.1.7.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library_client_3.1.8/library_client_3.1.8.iml" filepath="$PROJECT_DIR$/library_client_3.1.8/library_client_3.1.8.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library_client_3.1.9/library_client_3.1.9.iml" filepath="$PROJECT_DIR$/library_client_3.1.9/library_client_3.1.9.iml" />
       <module fileurl="file://$PROJECT_DIR$/library_code/library_code.iml" filepath="$PROJECT_DIR$/library_code/library_code.iml" />
       <module fileurl="file://$PROJECT_DIR$/paintwindow/paintwindow.iml" filepath="$PROJECT_DIR$/paintwindow/paintwindow.iml" />
     </modules>
