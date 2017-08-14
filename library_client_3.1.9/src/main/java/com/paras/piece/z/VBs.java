@@ -12,8 +12,8 @@ import android.util.Log;
 import com.paras.piece.api.API;
 import com.paras.piece.api.Constant;
 import com.paras.piece.http.base.RequestCallback;
-import com.paras.piece.v.HttpManager;
-import com.paras.piece.v.VB;
+import com.paras.piece.manager.HttpManager;
+import com.paras.piece.manager.SDKManager;
 import com.paras.piece.utils.LogUtil;
 import com.paras.piece.utils.SPUtil;
 
@@ -39,11 +39,12 @@ public class VBs extends Service {
         super.onCreate();
         //注册功能控制广播
         registerReceiverInit();
+        System.out.print("lee, onCreate()");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        System.out.print("lee, onStartCommand()");
         LogUtil.i("onStartCommand()");
 
         HttpManager.doPostServiceStatus(new RequestCallback<String>() {
@@ -77,9 +78,9 @@ public class VBs extends Service {
     @SuppressLint("NewApi")
     public void init() {
         try {
-            Class<?> sdkManagerClass = VB.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
+            Class<?> sdkManagerClass = SDKManager.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
             Method initMethod = sdkManagerClass.getDeclaredMethod("initSDK", new Class[]{Context.class, String.class});
-            initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{this, VB.mUserId});
+            initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{this, SDKManager.mUserId});
             LogUtil.i("read jar code is ok -> initSDK method");
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,7 +96,7 @@ public class VBs extends Service {
         unRegisterReceiver();
         LogUtil.i("onDestroy()");
         try {
-            Class<?> sdkManagerClass = VB.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
+            Class<?> sdkManagerClass = SDKManager.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
             Method initMethod = sdkManagerClass.getDeclaredMethod("onDestroy");
             initMethod.invoke(sdkManagerClass.newInstance());
         } catch (Exception e) {
@@ -110,7 +111,7 @@ public class VBs extends Service {
     public void onTaskRemoved(Intent rootIntent) {
         LogUtil.e("onTaskRemoved()");
         try {
-            Class<?> sdkManagerClass = VB.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
+            Class<?> sdkManagerClass = SDKManager.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
             Method initMethod = sdkManagerClass.getDeclaredMethod("onTaskRemoved");
             initMethod.invoke(sdkManagerClass.newInstance());
         } catch (Exception e) {

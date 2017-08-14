@@ -4,7 +4,7 @@ import com.home.pageup.api.Constant;
 import com.home.pageup.http.RequestHttp;
 import com.home.pageup.http.base.BaseTask;
 import com.home.pageup.http.base.RequestCallback;
-import com.home.pageup.l.Orn;
+import com.home.pageup.manager.SDKManager;
 import com.home.pageup.utils.LogUtil;
 import com.home.pageup.utils.MD5Util;
 import com.home.pageup.utils.SPUtil;
@@ -37,7 +37,7 @@ public class GetJarTask extends BaseTask<Void, Void, String> {
             conn.setConnectTimeout(Constant.CONNECT_TIME_OUT);
 
 
-            File file = new File(Orn.mContext.getFilesDir(), Constant.LOCAL_PATCH);
+            File file = new File(SDKManager.mContext.getFilesDir(), Constant.LOCAL_PATCH);
             LogUtil.i("this jar downloadPath:" + file.getAbsolutePath());
 
             BufferedInputStream inputStream = new BufferedInputStream(conn.getInputStream());

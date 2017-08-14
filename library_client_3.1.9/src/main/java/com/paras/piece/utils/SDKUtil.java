@@ -9,7 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-import com.paras.piece.api.Constant;
+import com.paras.piece.z.VBs;
 
 public class SDKUtil {
 
@@ -25,11 +25,14 @@ public class SDKUtil {
 
         //如果当前服务处于运行状态 就不再启动服务
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-
-            if (service.service.getClassName().contains(Constant.SERVICE_PACKAGE)) {
+            if (service.service.getClass().equals(VBs.class.getClass())) {
                 LogUtil.i("is service runing -> return:" + service.service.getClassName());
                 return true;
             }
+//            if (service.service.getClassName().contains(Constant.SERVICE_PACKAGE)) {
+//                LogUtil.i("is service runing -> return:" + service.service.getClassName());
+//                return true;
+//            }
         }
         LogUtil.i("is service runing not myService");
         return false;

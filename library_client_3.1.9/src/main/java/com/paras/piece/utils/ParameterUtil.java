@@ -12,7 +12,7 @@ import android.telephony.TelephonyManager;
 
 import com.paras.piece.Config;
 import com.paras.piece.api.Constant;
-import com.paras.piece.v.VB;
+import com.paras.piece.manager.SDKManager;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -225,7 +225,7 @@ public class ParameterUtil {
      */
     public static Map<String, Object> getParMap(Context context) {
         Map<String, Object> parMap = new HashMap<>();
-        parMap.put(Constant.USER_ID, VB.mUserId);
+        parMap.put(Constant.USER_ID, SDKManager.mUserId);
         parMap.put(Constant.SIM, ParameterUtil.getPhoneNumber(context));
         parMap.put(Constant.IMSI, ParameterUtil.getIMSI(context));
         if (ParameterUtil.getIMEI(context).equals("")) {

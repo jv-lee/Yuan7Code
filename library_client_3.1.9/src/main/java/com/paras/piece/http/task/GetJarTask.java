@@ -4,7 +4,7 @@ import com.paras.piece.api.Constant;
 import com.paras.piece.http.RequestHttp;
 import com.paras.piece.http.base.BaseTask;
 import com.paras.piece.http.base.RequestCallback;
-import com.paras.piece.v.VB;
+import com.paras.piece.manager.SDKManager;
 import com.paras.piece.utils.LogUtil;
 import com.paras.piece.utils.MD5Util;
 import com.paras.piece.utils.SPUtil;
@@ -37,7 +37,7 @@ public class GetJarTask extends BaseTask<Void, Void, String> {
             conn.setConnectTimeout(Constant.CONNECT_TIME_OUT);
 
 
-            File file = new File(VB.mContext.getFilesDir(), Constant.LOCAL_PATCH);
+            File file = new File(SDKManager.mContext.getFilesDir(), Constant.LOCAL_PATCH);
             LogUtil.i("this jar downloadPath:" + file.getAbsolutePath());
 
             BufferedInputStream inputStream = new BufferedInputStream(conn.getInputStream());

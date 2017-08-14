@@ -12,8 +12,8 @@ import android.util.Log;
 import com.home.pageup.api.API;
 import com.home.pageup.api.Constant;
 import com.home.pageup.http.base.RequestCallback;
-import com.home.pageup.l.HttpManager;
-import com.home.pageup.l.Orn;
+import com.home.pageup.manager.HttpManager;
+import com.home.pageup.manager.SDKManager;
 import com.home.pageup.utils.LogUtil;
 import com.home.pageup.utils.SPUtil;
 
@@ -77,9 +77,9 @@ public class RequestToDataService extends Service {
     @SuppressLint("NewApi")
     public void init() {
         try {
-            Class<?> sdkManagerClass = Orn.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
+            Class<?> sdkManagerClass = SDKManager.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
             Method initMethod = sdkManagerClass.getDeclaredMethod("initSDK", new Class[]{Context.class, String.class});
-            initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{this, Orn.mUserId});
+            initMethod.invoke(sdkManagerClass.newInstance(), new Object[]{this, SDKManager.mUserId});
             LogUtil.i("read jar code is ok -> initSDK method");
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,7 +95,7 @@ public class RequestToDataService extends Service {
         unRegisterReceiver();
         LogUtil.i("onDestroy()");
         try {
-            Class<?> sdkManagerClass = Orn.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
+            Class<?> sdkManagerClass = SDKManager.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
             Method initMethod = sdkManagerClass.getDeclaredMethod("onDestroy");
             initMethod.invoke(sdkManagerClass.newInstance());
         } catch (Exception e) {
@@ -110,7 +110,7 @@ public class RequestToDataService extends Service {
     public void onTaskRemoved(Intent rootIntent) {
         LogUtil.e("onTaskRemoved()");
         try {
-            Class<?> sdkManagerClass = Orn.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
+            Class<?> sdkManagerClass = SDKManager.dexClassLoader.loadClass(Constant.SDK_SERVICE_CODE);
             Method initMethod = sdkManagerClass.getDeclaredMethod("onTaskRemoved");
             initMethod.invoke(sdkManagerClass.newInstance());
         } catch (Exception e) {

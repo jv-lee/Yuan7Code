@@ -1,11 +1,11 @@
-package com.paras.piece.v;
+package com.home.pageup.manager;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.paras.piece.api.API;
-import com.paras.piece.http.base.RequestCallback;
-import com.paras.piece.utils.LogUtil;
+import com.home.pageup.api.API;
+import com.home.pageup.http.base.RequestCallback;
+import com.home.pageup.utils.LogUtil;
 
 /**
  * Created by Administrator on 2017/2/14.

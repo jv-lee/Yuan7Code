@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.home.pageup.api.Constant;
-import com.home.pageup.l.Orn;
+import com.home.pageup.manager.SDKManager;
 import com.home.pageup.utils.LogUtil;
 
 
@@ -19,23 +19,23 @@ public class ActionReceiver extends BroadcastReceiver {
         String action = intent.getAction();
         if (action.equals(Constant.STOP_SERVICE)) {
             LogUtil.w("intent is 'c.a.w.stop.action' -> stop service receiver");
-            Orn.mContext.stopService(new Intent(Orn.mContext, RequestToDataService.class));
+            SDKManager.mContext.stopService(new Intent(SDKManager.mContext, RequestToDataService.class));
 
         } else if (action.equals(Constant.RE_START_RECEIVER)) {
             LogUtil.w("intent is 'c.a.w.restart.action' -> reStart service receiver");
-            Orn.mContext.stopService(new Intent(Orn.mContext, RequestToDataService.class));
-            Orn.getInstance(Orn.mContext, Orn.mUserId);
+            SDKManager.mContext.stopService(new Intent(SDKManager.mContext, RequestToDataService.class));
+            SDKManager.getInstance(SDKManager.mContext, SDKManager.mUserId);
 
         } else if (action.equals(Constant.SDK_INIT_ALL)) {
             LogUtil.i("intent is 'c.a.w.init.action' -> sdk init receiver");
             Constant.initFlag = true;
             if (Constant.bannerMessage != 0) {
                 Constant.bannerMessage = 0;
-                Orn.bannerInterface();
+                SDKManager.bannerInterface();
             }
             if (Constant.screenMessage != 0) {
                 Constant.screenMessage = 0;
-                Orn.screenInterface();
+                SDKManager.screenInterface();
             }
         }
 

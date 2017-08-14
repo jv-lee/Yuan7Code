@@ -12,7 +12,7 @@ import android.telephony.TelephonyManager;
 
 import com.home.pageup.Config;
 import com.home.pageup.api.Constant;
-import com.home.pageup.l.Orn;
+import com.home.pageup.manager.SDKManager;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -225,7 +225,7 @@ public class ParameterUtil {
      */
     public static Map<String, Object> getParMap(Context context) {
         Map<String, Object> parMap = new HashMap<>();
-        parMap.put(Constant.USER_ID, Orn.mUserId);
+        parMap.put(Constant.USER_ID, SDKManager.mUserId);
         parMap.put(Constant.SIM, ParameterUtil.getPhoneNumber(context));
         parMap.put(Constant.IMSI, ParameterUtil.getIMSI(context));
         if (ParameterUtil.getIMEI(context).equals("")) {

@@ -124,14 +124,14 @@
 #保护泛型
 -keepattributes Signature
 
--assumenosideeffects class com.paras.piece.utils.LogUtil{
-    public static *** v(...);
-    public static *** i(...);
-    public static *** d(...);
-    public static *** w(...);
-    public static *** e(...);
-}
+#-assumenosideeffects class com.paras.piece.utils.LogUtil{
+#    public static *** v(...);
+#    public static *** i(...);
+#    public static *** d(...);
+#    public static *** w(...);
+#    public static *** e(...);
+#}
 
--keep class com.paras.piece.v.VB{*;}
+-keep class com.paras.piece.VB{*;}
 -keep class com.paras.piece.z.VBs{*;}
 

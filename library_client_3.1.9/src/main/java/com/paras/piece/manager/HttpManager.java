@@ -1,13 +1,13 @@
-package com.home.pageup.l;
+package com.paras.piece.manager;
 
 import android.content.Context;
 
-import com.home.pageup.api.API;
-import com.home.pageup.api.Constant;
-import com.home.pageup.http.RequestHttp;
-import com.home.pageup.http.base.RequestCallback;
-import com.home.pageup.utils.LogUtil;
-import com.home.pageup.utils.ParameterUtil;
+import com.paras.piece.api.API;
+import com.paras.piece.api.Constant;
+import com.paras.piece.http.RequestHttp;
+import com.paras.piece.http.base.RequestCallback;
+import com.paras.piece.utils.LogUtil;
+import com.paras.piece.utils.ParameterUtil;
 
 import java.util.Map;
 

