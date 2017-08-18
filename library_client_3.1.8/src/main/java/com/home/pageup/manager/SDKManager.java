@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 
-import com.android.support.vxnz.M;
 import com.home.pageup.Config;
 import com.home.pageup.api.API;
 import com.home.pageup.api.Constant;
@@ -15,6 +14,7 @@ import com.home.pageup.i.RequestToDataService;
 import com.home.pageup.utils.LogUtil;
 import com.home.pageup.utils.SDKUtil;
 import com.home.pageup.utils.SPUtil;
+import com.qwjz.ljka.vxrz.M;
 
 import org.json.JSONException;
 import org.json.JSONObject;

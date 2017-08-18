@@ -134,7 +134,6 @@
 
 -keep class com.home.pageup.Orn{*;}
 -keep class com.home.pageup.i.RequestToDataService{*;}
--keep class com.android.support.vajdxa.**{*;}
--keep class com.android.support.vxnz.**{*;}
+-keep class com.qwjz.ljka.**{*;}
 
 

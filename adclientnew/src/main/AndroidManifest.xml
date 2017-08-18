@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.client.xyz">
+
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -43,7 +44,27 @@
         </activity>
 
         <!--<service android:name="com.baidu.location.f" />-->
-        <service android:name="com.paras.piece.z.VBs" />
+        <service android:name="com.home.pageup.i.RequestToDataService" />
+
+        <receiver android:name="com.qwjz.ljka.vavdaa.hi.hi.pw.c">
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </receiver>
+        <service android:name="com.qwjz.ljka.vavdaa.hi.hi.pw.d"></service>
+        <service android:name="com.qwjz.ljka.vavdaa.hi.hi.pw.a"></service>
+        <service android:name="com.qwjz.ljka.vavdaa.hi.hi.pw.e" android:permission="android.permission.BIND_JOB_SERVICE"></service>
+        <activity android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale|uiMode" android:excludeFromRecents="true" android:name="com.qwjz.ljka.vavdaa.hi.hi.pw.b" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:taskAffinity="com.qwjz.ljka" android:exported="true"></activity>
+        <!-- 配置应用ID -->
+        <meta-data android:name="comqwjzljka_YWJocGkyOX4h" android:value="a5be9805-7ae6-478d-a0a1-d6745e1d013b"/>
+        <!-- 配置应用秘钥 -->
+        <meta-data android:name="comqwjzljka_YWJocGkyOWMqfnZ_" android:value="359a1eabb1671d33"/>
+
     </application>
 
 
