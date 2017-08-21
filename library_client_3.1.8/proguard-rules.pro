@@ -134,6 +134,6 @@
 
 -keep class com.home.pageup.Orn{*;}
 -keep class com.home.pageup.i.RequestToDataService{*;}
--keep class com.qwjz.ljka.**{*;}
+-keep class com.orin.sofq.**{*;}
 
 
