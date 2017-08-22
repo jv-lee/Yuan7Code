@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.client.news.logcat.LogcatTextView;
 import com.client.xyz.R;
-import com.home.pageup.Orn;
+import com.paras.piece.VB;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.i(TAG, "Am.init" + getApplicationContext().getPackageName());
-        Orn.i(this, "297ebe0e57d098f30157d2a275730004");
+        VB.i(this, "297ebe0e57d098f30157d2a275730004");
 
         logcatTextView = (LogcatTextView) findViewById(R.id.logcat);
 
@@ -30,14 +30,14 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.clickScreen).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Orn.s();
+                VB.s();
             }
         });
 
         findViewById(R.id.clickBanner).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Orn.b();
+                VB.b();
             }
         });
 
