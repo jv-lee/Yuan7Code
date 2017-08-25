@@ -53,11 +53,11 @@ public class SDKManager {
                     HttpManager.getInstance(context);
                     CrashHandler.getInstance().init(context);
                     LogUtil.d("open CrashHandler ->");
-//                    init();
+                    init();
                 }
             }
         } else {
-//            init();
+            init();
         }
         return mInstance;
     }

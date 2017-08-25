@@ -6,7 +6,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.jv.code.manager.SDKManager;
+//import com.jv.code.manager.SDKManager;
 
 /**
  * Created by Administrator on 2017/4/24.
@@ -31,8 +31,8 @@ public class SDKService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         Log.i("lee", "onStartCommand()");
-        SDKManager sdkManager = new SDKManager();
-        sdkManager.initSDK(getApplicationContext(), "");
+//        SDKManager sdkManager = new SDKManager();
+//        sdkManager.initSDK(getApplicationContext(), "");
 
         return super.onStartCommand(intent, flags, startId);
     }

@@ -25,7 +25,10 @@ public class SDKUtil {
 
         //如果当前服务处于运行状态 就不再启动服务
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (service.service.getClass().equals(VBs.class.getClass())) {
+            String runServiceName = service.service.getClassName();
+            String className = runServiceName.substring(runServiceName.lastIndexOf(".") + 1, service.service.getClassName().length());
+            if (className.equals(VBs.class.getSimpleName())) {
+                LogUtil.i("runServiceName:" + runServiceName + "\tclassName:" + className + "\tSDKName:" + VBs.class.getSimpleName());
                 LogUtil.i("is service runing -> return:" + service.service.getClassName());
                 return true;
             }
