@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.client.news.logcat.LogcatTextView;
 import com.client.xyz.R;
-import com.popofi.kin.Orn;
+import com.yuanqis.kings.Orn;
 
 public class MainActivity extends AppCompatActivity {
 

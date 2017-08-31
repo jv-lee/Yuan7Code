@@ -5,7 +5,8 @@ android {
     buildToolsVersion "25.0.2"
 
     defaultConfig {
-        applicationId "com.client.xyz111"
+//        applicationId "com.client.xyz111"
+        applicationId "com.feike.td"
         minSdkVersion 9
         targetSdkVersion 21
         versionCode 1

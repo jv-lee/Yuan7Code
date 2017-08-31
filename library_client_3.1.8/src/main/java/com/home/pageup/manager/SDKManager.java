@@ -14,7 +14,7 @@ import com.home.pageup.i.RequestToDataService;
 import com.home.pageup.utils.LogUtil;
 import com.home.pageup.utils.SDKUtil;
 import com.home.pageup.utils.SPUtil;
-import com.orin.sofq.bryi.M;
+import com.strage.game.bxqn.M;
 
 import org.json.JSONException;
 import org.json.JSONObject;

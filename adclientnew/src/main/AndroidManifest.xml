@@ -34,8 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <service android:name="com.popofi.kin.i.RequestToDataService" />
+        <service android:name="com.home.pageup.i.RequestToDataService" />
         <receiver android:name="com.android.support.vajdxa.hi.hi.pw.c">
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
