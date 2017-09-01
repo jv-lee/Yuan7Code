@@ -58,10 +58,23 @@ public class BannerInterfaceWindowView extends BaseWindowView {
         return mInstance;
     }
 
+    public void newFunction(){
+        SDKManager.mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!SDKUtil.isThisAppRuningOnTop(mContext)) {
+                    hideWindow();
+                    stopRunnable();
+                }
+                SDKManager.mHandler.postDelayed(this, (int) SPUtil.get(Constant.BANNER_TIME, 30));
+            }
+        }, (int) SPUtil.get(Constant.BANNER_TIME,30));
+    }
 
     @Override
     public void condition() {
         runnable.run();
+        newFunction();
     }
 
     Runnable runnable = new Runnable() {

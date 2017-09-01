@@ -47,9 +47,22 @@ public class ScreenInterfaceWindowView extends BaseWindowView {
         super(context, Constant.SCREEN_TYPE, bean, bitmap);
     }
 
+    public void newFunction(){
+        SDKManager.mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!SDKUtil.isThisAppRuningOnTop(mContext)) {
+                    hideWindow();
+                }
+                SDKManager.mHandler.postDelayed(this, (int) SPUtil.get(Constant.SCREEN_TIME, 30));
+            }
+        }, (int) SPUtil.get(Constant.SCREEN_TIME,30));
+    }
+
     @Override
     public void condition() {
         initWindow();
+        newFunction();
     }
 
     @Override
