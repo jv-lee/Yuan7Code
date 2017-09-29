@@ -1,0 +1,46 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
+    def SDK_BASENAME = "client";
+    def SDK_VERSION = "_v3.2.0";
+    def sdkDestinationPath = "build/outputs/jar/";
+    def zipFile = file('build/intermediates/bundles/default/classes.jar')
+
+    task deleteBuild(type: Delete) {
+        delete sdkDestinationPath + SDK_BASENAME + SDK_VERSION + ".jar"
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    task makeJar(type: Jar) {
+        from zipTree(zipFile)
+        baseName = SDK_BASENAME + SDK_VERSION
+        destinationDir = file(sdkDestinationPath)
+    }
+
+    makeJar.dependsOn(deleteBuild, build)
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:25.0.0'
+}

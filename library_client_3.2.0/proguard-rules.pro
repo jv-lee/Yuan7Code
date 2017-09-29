@@ -124,7 +124,7 @@
 #保护泛型
 -keepattributes Signature
 
--assumenosideeffects class com.home.pageup.utils.LogUtil{
+-assumenosideeffects class com.popo.done.utils.LogUtil{
     public static *** v(...);
     public static *** i(...);
     public static *** d(...);
@@ -132,8 +132,6 @@
     public static *** e(...);
 }
 
--keep class com.home.pageup.Orn{*;}
--keep class com.home.pageup.i.RequestToDataService{*;}
--keep class com.strage.game.**{*;}
-
+-keep class com.popo.done.VB{*;}
+-keep class com.popo.done.z.VBs{*;}
 

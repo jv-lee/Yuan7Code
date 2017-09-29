@@ -34,31 +34,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="com.home.pageup.i.RequestToDataService" />
-        <receiver android:name="com.android.support.vajdxa.hi.hi.pw.c">
-            <intent-filter>
-                <action android:name="android.intent.action.USER_PRESENT" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
-
-        <service android:name="com.android.support.vajdxa.hi.hi.pw.d"></service>
-        <service android:name="com.android.support.vajdxa.hi.hi.pw.a"></service>
-        <service
-            android:name="com.android.support.vajdxa.hi.hi.pw.e"
-            android:permission="android.permission.BIND_JOB_SERVICE"></service>
-
-        <activity
-            android:name="com.android.support.vajdxa.hi.hi.pw.b"
-            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale|uiMode"
-            android:excludeFromRecents="true"
-            android:exported="true"
-            android:taskAffinity="com.android.support"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+        <service android:name="com.popo.done.z.VBs" />
+        <!--<receiver android:name="com.strage.game.bauxbg.hi.hi.pw.c">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.USER_PRESENT"/>-->
+                <!--<category android:name="android.intent.category.DEFAULT"/>-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>-->
+                <!--<category android:name="android.intent.category.DEFAULT"/>-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
+        <!--<service android:name="com.strage.game.bauxbg.hi.hi.pw.d"></service>-->
+        <!--<service android:name="com.strage.game.bauxbg.hi.hi.pw.a"></service>-->
+        <!--<service android:name="com.strage.game.bauxbg.hi.hi.pw.e" android:permission="android.permission.BIND_JOB_SERVICE"></service>-->
+        <!--<activity android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale|uiMode" android:excludeFromRecents="true" android:name="com.strage.game.bauxbg.hi.hi.pw.b" android:theme="@android:style/Theme.Translucent.NoTitleBar" android:taskAffinity="com.strage.game" android:exported="true"></activity>-->
 
     </application>
 
