@@ -20,7 +20,6 @@ import com.y7.paint.utils.SizeUtils;
 import com.y7.paint.view.CloseView;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class ViewActivity extends Activity {
@@ -121,7 +120,6 @@ public class ViewActivity extends Activity {
             contentLayout = new RelativeLayout(this);
             RelativeLayout.LayoutParams contentParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             contentLayout.setLayoutParams(contentParams);
-//            contentLayout.setVisibility(View.GONE);
 
             //设置加载广告图片的ImageView
             ImageView imageView = new ImageView(this);
@@ -159,6 +157,9 @@ public class ViewActivity extends Activity {
             contentLayout.addView(imageView);
             contentLayout.addView(closeView);
             return rootLayout;
+//            FloatingImageView floatingImageView = new FloatingImageView(this);
+//            floatingImageView.setLayoutParams(new FrameLayout.LayoutParams(SizeUtils.dp2px(this, 100), SizeUtils.dp2px(this, 100)));
+//            return floatingImageView;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -171,23 +172,8 @@ public class ViewActivity extends Activity {
         ScaleAnimation mShowAction = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f,
                 Animation.RELATIVE_TO_PARENT, 0.5f, Animation.RELATIVE_TO_PARENT, 0.5f);
         mShowAction.setDuration(300);
-        mShowAction.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-//                contentLayout.setVisibility(View.VISIBLE);
-                rootLayout.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-//        contentLayout.startAnimation(mShowAction);
-        rootLayout.startAnimation(mShowAction);
+        contentLayout.startAnimation(mShowAction);
+        rootLayout.setVisibility(View.VISIBLE);
     }
 
     private void hideAnimation() {

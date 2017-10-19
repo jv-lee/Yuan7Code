@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.y7.paint">
 
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,7 +25,10 @@
         <activity android:name=".ViewActivity" />
         <activity android:name=".PayActivity" />
         <activity android:name=".DialogActivity" />
-        <activity android:name=".InstallAlertActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+        <activity
+            android:name=".InstallAlertActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
+        <activity android:name=".FloatingActivity"></activity>
     </application>
 
 </manifest>

@@ -27,6 +27,13 @@ public class ActionActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.action_floating).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ActionActivity.this, FloatingActivity.class));
+            }
+        });
+
         findViewById(R.id.action_apk).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
