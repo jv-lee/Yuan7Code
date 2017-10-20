@@ -1,13 +1,12 @@
 package com.client.news;
 
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
 import com.client.news.logcat.LogcatTextView;
 import com.client.xyz.R;
-import com.popo.done.VB;
+import com.home.pageup.Orn;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,12 +18,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                VB.i(MainActivity.this, "297ebe0e57d098f30157d2a275730004");
-            }
-        });
+
+
+//        VB.i(MainActivity.this, "297ebe0e57d098f30157d2a275730004");
 
         logcatTextView = (LogcatTextView) findViewById(R.id.logcat);
         logcatTextView.refreshLogcat();
@@ -32,14 +28,14 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.clickBanner).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                VB.b();
+                Orn.b();
             }
         });
 
         findViewById(R.id.clickScreen).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                VB.s();
+                Orn.s();
             }
         });
 

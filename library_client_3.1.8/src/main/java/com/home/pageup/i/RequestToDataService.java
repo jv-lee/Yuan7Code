@@ -132,7 +132,12 @@ public class RequestToDataService extends Service {
 
     public void unRegisterReceiver() {
         LogUtil.i("unRegisterReceiver()");
-        unregisterReceiver(as);
+        try {
+            unregisterReceiver(as);
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtil.e(Log.getStackTraceString(e));
+        }
     }
 
 }

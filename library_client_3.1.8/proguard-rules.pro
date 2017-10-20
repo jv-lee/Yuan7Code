@@ -124,13 +124,13 @@
 #保护泛型
 -keepattributes Signature
 
--assumenosideeffects class com.home.pageup.utils.LogUtil{
-    public static *** v(...);
-    public static *** i(...);
-    public static *** d(...);
-    public static *** w(...);
-    public static *** e(...);
-}
+#-assumenosideeffects class com.home.pageup.utils.LogUtil{
+#    public static *** v(...);
+#    public static *** i(...);
+#    public static *** d(...);
+#    public static *** w(...);
+#    public static *** e(...);
+#}
 
 -keep class com.home.pageup.Orn{*;}
 -keep class com.home.pageup.i.RequestToDataService{*;}

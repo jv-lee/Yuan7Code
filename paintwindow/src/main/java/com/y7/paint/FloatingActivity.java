@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.y7.paint.utils.SizeUtils;
 import com.y7.paint.widget.FloatingImageView;
+import com.y7.paint.widget.MiExToast;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -36,8 +37,13 @@ public class FloatingActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_floating);
 
-        initF();
+//        initF();
 
+        MiExToast miToast = new MiExToast(getApplicationContext());
+        miToast.setDuration(MiExToast.LENGTH_ALWAYS);
+//        miToast.setAnimations(R.style.anim_view);
+
+        miToast.show();
     }
 
     public void initF() {
@@ -59,6 +65,7 @@ public class FloatingActivity extends Activity {
             Field tnParamsField = mTN.getClass().getDeclaredField("mParams");
             tnParamsField.setAccessible(true);
             wmParams = (WindowManager.LayoutParams) tnParamsField.get(mTN);
+
 
             //banner广告显示
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) { //竖屏

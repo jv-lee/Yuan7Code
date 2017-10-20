@@ -4,6 +4,7 @@
     package="com.y7.paint">
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -28,7 +29,10 @@
         <activity
             android:name=".InstallAlertActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
-        <activity android:name=".FloatingActivity"></activity>
+        <activity android:name=".FloatingActivity" />
+        <activity
+            android:name=".RotateActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -34,7 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="com.popo.done.z.VBs" />
+        <service android:name="com.home.pageup.i.RequestToDataService" />
         <!--<receiver android:name="com.strage.game.bauxbg.hi.hi.pw.c">-->
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.USER_PRESENT"/>-->
