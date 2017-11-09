@@ -157,9 +157,6 @@ public class ViewActivity extends Activity {
             contentLayout.addView(imageView);
             contentLayout.addView(closeView);
             return rootLayout;
-//            FloatingImageView floatingImageView = new FloatingImageView(this);
-//            floatingImageView.setLayoutParams(new FrameLayout.LayoutParams(SizeUtils.dp2px(this, 100), SizeUtils.dp2px(this, 100)));
-//            return floatingImageView;
         } catch (Exception e) {
             e.printStackTrace();
         }

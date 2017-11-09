@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">library_client_4.0.0</string>
+
+    <string name="json">{"code":1001,"message":"","splashConfig":{"waitTime":11,"showSwitch":false,"instruct":1},"advertisement":{"downloadurl":"http://yuan7ad.oss-cn-shenzhen.aliyuncs.com/adData/adInfo/adApk/1508834825065.apk","name":"他的汤姆猫","image":"http://yuan7ad.oss-cn-shenzhen.aliyuncs.com/adData/adInfo/adApk/1508834825065.apk","type":"apply","icon":"http://yuan7ad.oss-cn-shenzhen.aliyuncs.com/adData/adInfo/adImages/1508835972274.jpg","broadcastImage":["http://yuan7ad.oss-cn-shenzhen.aliyuncs.com/adData/adInfo/adImages/1508835972274.jpg","http://yuan7ad.oss-cn-shenzhen.aliyuncs.com/adData/adInfo/adImages/1508835972274.jpg","http://yuan7ad.oss-cn-shenzhen.aliyuncs.com/adData/adInfo/adImages/1508835972274.jpg"],"brief":"这是汤姆猫咨询应用，啦啦啦"}}</string>
+</resources>

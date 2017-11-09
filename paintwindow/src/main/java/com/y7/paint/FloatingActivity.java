@@ -10,6 +10,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,6 +33,8 @@ public class FloatingActivity extends Activity {
     private Method show;
     private Method hide;
 
+    MiExToast miToast;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,11 +42,29 @@ public class FloatingActivity extends Activity {
 
 //        initF();
 
-        MiExToast miToast = new MiExToast(getApplicationContext());
+        miToast = new MiExToast(getApplicationContext(), createViewSimple());
         miToast.setDuration(MiExToast.LENGTH_ALWAYS);
-//        miToast.setAnimations(R.style.anim_view);
+        miToast.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(FloatingActivity.this, "onClick", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        miToast.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(FloatingActivity.this, "onLongClick", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
 
         miToast.show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     public void initF() {
@@ -97,6 +118,18 @@ public class FloatingActivity extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public View createViewSimple() {
+        FrameLayout framelayout = new FrameLayout(this);
+        framelayout.setLayoutParams(new FrameLayout.LayoutParams(SizeUtils.dp2px(this,56), SizeUtils.dp2px(this,56)));
+        framelayout.setBackgroundColor(Color.parseColor("#000000"));
+        TextView tvText = new TextView(this);
+        tvText.setLayoutParams(new FrameLayout.LayoutParams(SizeUtils.dp2px(this,56), SizeUtils.dp2px(this,56)));
+        tvText.setText("Floating");
+        tvText.setTextSize(36);
+        framelayout.addView(tvText);
+        return framelayout;
     }
 
     protected View createView() {

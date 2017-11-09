@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.y7.paint.utils.SizeUtils;
+
 /**
  * Created by Administrator on 2017/6/23.
  */
@@ -62,17 +64,17 @@ public class CloseView extends View {
         canvas.translate(mWidth / 2, mHeight / 2);
 
         //绘制圆形
-        RectF rectF3 = new RectF(-30, -30, 30, 30);
+        RectF rectF3 = new RectF(SizeUtils.dp2px(getContext(),-10), SizeUtils.dp2px(getContext(),-10),SizeUtils.dp2px(getContext(),10), SizeUtils.dp2px(getContext(),10));
         canvas.drawOval(rectF3, mPaint);
 
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setColor(Color.parseColor("#80000000"));
-        mPaint.setStrokeWidth(4f);
+        mPaint.setStrokeWidth(2f);
 
         //从坐标 x -12,y -12 ->  x 12,y 12 之间绘制一条线
         canvas.drawLines(new float[]{
-                -12, -12, 12, 12,
-                12, -12, -12, 12
+                SizeUtils.dp2px(getContext(),-4), SizeUtils.dp2px(getContext(),-4), SizeUtils.dp2px(getContext(),4), SizeUtils.dp2px(getContext(),4),
+                SizeUtils.dp2px(getContext(),4), SizeUtils.dp2px(getContext(),-4), SizeUtils.dp2px(getContext(),-4), SizeUtils.dp2px(getContext(),4)
         }, mPaint);
 
     }

@@ -37,4 +37,16 @@ public class MIUIUtils {
                 || prop.getProperty(KEY_MIUI_INTERNAL_STORAGE, null) != null;
         return isMIUI;
     }
+
+    public static int miuiCode() {
+        Properties prop = new Properties();
+        boolean isMIUI;
+        try {
+            prop.load(new FileInputStream(new File(Environment.getRootDirectory(), "build.prop")));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return 0;
+        }
+        return Integer.parseInt(prop.getProperty(KEY_MIUI_VERSION_CODE, null));
+    }
 }

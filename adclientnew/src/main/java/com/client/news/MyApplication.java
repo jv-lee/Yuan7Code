@@ -2,7 +2,7 @@ package com.client.news;
 
 import android.app.Application;
 
-import com.home.pageup.Orn;
+import com.lck.rox.Orn;
 
 
 /**

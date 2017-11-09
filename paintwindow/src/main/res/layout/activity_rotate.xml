@@ -8,8 +8,25 @@
 
     <ImageView
         android:id="@+id/iv_rotate"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        android:layout_gravity="center"
+        android:src="@drawable/zp" />
+
+    <ImageView
+        android:id="@+id/iv_rotate_btn"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        android:layout_gravity="center"
+        android:src="@drawable/zz" />
+
+
+    <Button
+        android:id="@+id/btn_click"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/rotate" />
+        android:layout_gravity="center"
+        android:layout_marginTop="200dp"
+        android:text="点击领取" />
 
 </FrameLayout>

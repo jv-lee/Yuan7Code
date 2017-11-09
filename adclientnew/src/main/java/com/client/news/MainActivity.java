@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.client.news.logcat.LogcatTextView;
 import com.client.xyz.R;
-import com.home.pageup.Orn;
+import com.lck.rox.Orn;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,8 +17,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
 
 //        VB.i(MainActivity.this, "297ebe0e57d098f30157d2a275730004");
 
@@ -38,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
                 Orn.s();
             }
         });
-
     }
 
 

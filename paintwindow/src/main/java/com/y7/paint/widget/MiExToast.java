@@ -9,22 +9,28 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.y7.paint.R;
+import com.y7.paint.utils.MIUIUtils;
+import com.y7.paint.utils.SizeUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class MiExToast implements View.OnTouchListener {
+public class MiExToast implements View.OnTouchListener, GestureDetector.OnGestureListener {
     private static final String TAG = "ExToast";
+
+    private int statusHeight = 0;
 
     public static final int LENGTH_ALWAYS = 0;
     public static final int LENGTH_SHORT = 2;
@@ -47,24 +53,31 @@ public class MiExToast implements View.OnTouchListener {
     private float mTouchStartY;
     private float x;
     private float y;
+    private long firstTime;
+    Runnable runnable;
 
     private Handler handler = new Handler();
+    private View.OnClickListener onClickListener;
+    private View.OnLongClickListener onLongClickListener;
+    private GestureDetector mGestureDetector = new GestureDetector(this);
 
-    public MiExToast(Context context) {
+
+    public MiExToast(Context context, View view) {
         this.mContext = context;
+        this.mView = view;
+        statusHeight = getStatusHeight(context);
         if (toast == null) {
             toast = new Toast(mContext);
         }
-        LayoutInflater inflate = (LayoutInflater)
-                mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mView = inflate.inflate(R.layout.float_tips_layout, null);
-        mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mContext, "click", Toast.LENGTH_SHORT).show();
-            }
-        });
         mView.setOnTouchListener(this);
+    }
+
+    public void setOnClickListener(View.OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
+
+    public void setOnLongClickListener(View.OnLongClickListener onLongClickListener) {
+        this.onLongClickListener = onLongClickListener;
     }
 
     private Runnable hideRunnable = new Runnable() {
@@ -79,10 +92,9 @@ public class MiExToast implements View.OnTouchListener {
      */
     @SuppressLint("NewApi")
     public void show() {
-        if (isShow) return;
-        TextView tv = (TextView) mView.findViewById(R.id.message);
-//        TextView tv = new TextView(mContext);
-        tv.setText("悬浮窗");
+        if (isShow) {
+            return;
+        }
         toast.setView(mView);
         initTN();
         try {
@@ -104,7 +116,9 @@ public class MiExToast implements View.OnTouchListener {
      */
     @SuppressLint("NewApi")
     public void hide() {
-        if (!isShow) return;
+        if (!isShow) {
+            return;
+        }
         try {
             hide.invoke(mTN);
         } catch (InvocationTargetException | IllegalAccessException e) {
@@ -164,18 +178,18 @@ public class MiExToast implements View.OnTouchListener {
         return toast.getYOffset();
     }
 
-    public static MiExToast makeText(Context context, CharSequence text, int duration) {
+    public static MiExToast makeText(Context context, CharSequence text, int duration, View view) {
         Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
-        MiExToast exToast = new MiExToast(context);
+        MiExToast exToast = new MiExToast(context, view);
         exToast.toast = toast;
         exToast.mDuration = duration;
 
         return exToast;
     }
 
-    public static MiExToast makeText(Context context, int resId, int duration)
+    public static MiExToast makeText(Context context, int resId, int duration, View view)
             throws Resources.NotFoundException {
-        return makeText(context, context.getResources().getText(resId), duration);
+        return makeText(context, context.getResources().getText(resId), duration, view);
     }
 
     public void setText(int resId) {
@@ -222,40 +236,115 @@ public class MiExToast implements View.OnTouchListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        setGravity(Gravity.LEFT | Gravity.TOP, 0, 0);
+        setGravity(Gravity.LEFT | Gravity.TOP, 900, 1500);
+
     }
 
     private void updateViewPosition() {
         //更新浮动窗口位置参数
         params.x = (int) (x - mTouchStartX);
-        params.y = (int) (y - mTouchStartY);
+        params.y = (int) (y - mTouchStartY) - getStatusHeight(mContext);
+        Log.i("onTouch", "params.y:" + params.y + "   view.height:" + mView.getMeasuredHeight());
         mWM.updateViewLayout(toast.getView(), params);  //刷新显示
     }
 
+
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    public boolean onTouch(final View v, final MotionEvent event) {
         //获取相对屏幕的坐标，即以屏幕左上角为原点
         x = event.getRawX();
         y = event.getRawY();
-        Log.i("currP", "currX" + x + "====currY" + y);
+        Log.i(TAG, "currX" + x + "====currY" + y);
         switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:    //捕获手指触摸按下动作
+            //捕获手指触摸按下动作
+            case MotionEvent.ACTION_DOWN:
                 //获取相对View的坐标，即以此View左上角为原点
                 mTouchStartX = event.getX();
                 mTouchStartY = event.getY();
-                Log.i("startP", "startX" + mTouchStartX + "====startY" + mTouchStartY);
+                Log.i(TAG, "DOWN startX" + mTouchStartX + "====startY" + mTouchStartY);
                 break;
-            case MotionEvent.ACTION_MOVE:   //捕获手指触摸移动动作
-                updateViewPosition();
-                break;
-            case MotionEvent.ACTION_UP:    //捕获手指触摸离开动作
-                if (mTouchStartX == event.getX() && mTouchStartY == event.getY()) {
-                    Toast.makeText(mContext, "1", Toast.LENGTH_SHORT).show();
+            //捕获手指触摸移动动作
+            case MotionEvent.ACTION_MOVE:
+                int updateX = (int) (mTouchStartX - event.getX());
+                int updateY = (int) (mTouchStartY - event.getY());
+                if (MIUIUtils.isMIUI()) {
+                    if (MIUIUtils.miuiCode() < 6 ||
+                            Math.abs(updateX) > ViewConfiguration.get(mContext).getScaledTouchSlop() ||
+                            Math.abs(updateY) > ViewConfiguration.get(mContext).getScaledTouchSlop()) {
+                        updateViewPosition();
+                    }
+                } else {
+                    if (Math.abs(updateX) > ViewConfiguration.get(mContext).getScaledTouchSlop() ||
+                            Math.abs(updateY) > ViewConfiguration.get(mContext).getScaledTouchSlop()) {
+                        updateViewPosition();
+                    }
                 }
-//                updateViewPosition();
+                break;
+            //捕获手指触摸离开动作
+            case MotionEvent.ACTION_UP:
+                Log.i(TAG, "UP startX" + x + "====startY" + y);
                 break;
         }
-        return true;
+//        return true;
+        return mGestureDetector.onTouchEvent(event);
     }
 
+    /**
+     * 获得状态栏的高度
+     *
+     * @param context
+     * @return
+     */
+    public static int getStatusHeight(Context context) {
+
+
+        int statusHeight = -1;
+        try {
+            Class clazz = Class.forName("com.android.internal.R$dimen");
+            Object object = clazz.newInstance();
+            int height = Integer.parseInt(clazz.getField("status_bar_height")
+                    .get(object).toString());
+            statusHeight = context.getResources().getDimensionPixelSize(height);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return statusHeight;
+    }
+
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        Log.i("GestureListener", "onDown");
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+        Log.i("GestureListener", "onShowPress");
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        onClickListener.onClick(getView());
+        Log.i("GestureListener", "onSingleTapUp -> 单击唯一事件");
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+//        Log.i("GestureListener", "onScroll -> distanceX:" + distanceX + "  distanceY:" + distanceY);
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+        onLongClickListener.onLongClick(getView());
+        Log.i("GestureListener", "onLongPress -> 长按唯一事件");
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        Log.i("GestureListener", "onFling");
+        return false;
+    }
 }

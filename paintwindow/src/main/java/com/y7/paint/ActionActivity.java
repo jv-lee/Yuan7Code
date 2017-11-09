@@ -37,6 +37,8 @@ public class ActionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_action);
 
+        Log.i("lee", ActionActivity.class.getPackage().getName());
+
         Log.i("ABCCCC",getIMEI(this));
         Toast.makeText(this, "MIUI is - " + MIUIUtils.isMIUI(), Toast.LENGTH_LONG).show();
 
