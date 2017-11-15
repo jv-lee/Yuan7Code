@@ -27,6 +27,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="200dp"
-        android:text="点击领取" />
+        android:background="@drawable/button" />
 
 </FrameLayout>
