@@ -176,7 +176,7 @@ public class HttpManager {
         http.request();
     }
 
-    public static void doPostClickState(int state, String sendRecordId , RequestCallback requestCallback) {
+    public static void doPostClickState(int state, String sendRecordId, RequestCallback requestCallback) {
         Map<String, Object> parMap = ParameterUtil.getParMap(mContext);
         parMap.put("sendRecordId", sendRecordId);
         parMap.put("state", state);
@@ -246,6 +246,19 @@ public class HttpManager {
                 .withRequestMethod("GET")
                 .withTime(Constant.CONNECT_TIME_OUT, Constant.READ_TIME_OUT)
                 .withRequestType(RequestHttp.RequestType.SEND_PIC)
+                .withResponseCallback(requestCallback)
+                .build();
+        http.request();
+    }
+
+    public static void doGetFile(String url, RequestCallback requestCallback) {
+        LogUtil.w("URL address ->" + url);
+        RequestHttp http = new RequestHttp.Builder(mContext)
+                .withApi(url)
+                .withHasSingData(false)
+                .withRequestMethod("GET")
+                .withTime(Constant.CONNECT_TIME_OUT, Constant.READ_TIME_OUT)
+                .withRequestType(RequestHttp.RequestType.SEND_FILE)
                 .withResponseCallback(requestCallback)
                 .build();
         http.request();

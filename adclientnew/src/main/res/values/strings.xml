@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">xyz广告客户端</string>
+    <string name="app_name">广告SDK 新版</string>
+    <!--<string name="app_name">嘟嘟应用测试包</string>-->
+
 </resources>

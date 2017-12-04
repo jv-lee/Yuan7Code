@@ -226,7 +226,7 @@ public class SDKUtil {
         }
     }
 
-    public static String savePic(Bitmap bitmap, String name) {
+    public static String savePicPng(Bitmap bitmap, String name) {
         //将bitmap保存为本地文件
         File avaterFile = new File(Environment.getExternalStorageDirectory(), name + ".png");//设置文件名称
         if (avaterFile.exists()) {

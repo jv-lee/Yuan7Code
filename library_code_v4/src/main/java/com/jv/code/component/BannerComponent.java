@@ -76,7 +76,7 @@ public class BannerComponent {
                 condition();
                 return;
             } else {
-                LogUtil.e("this screen Unlock -> start Screen");
+                LogUtil.e("this screen Unlock -> start Banner");
             }
             HttpManager.doPostAppConfig(new RequestCallback<String>() {
                 @Override

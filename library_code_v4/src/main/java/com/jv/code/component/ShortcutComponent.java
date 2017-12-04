@@ -7,6 +7,7 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Parcelable;
 
+import com.jv.code.api.API;
 import com.jv.code.api.Constant;
 import com.jv.code.http.base.RequestCallback;
 import com.jv.code.manager.HttpManager;
@@ -99,7 +100,7 @@ public class ShortcutComponent {
                             LogUtil.i("addShortcut -> " + jsonArray.getJSONObject(finalI).getString("name"));
                             addShortcut(compressImage(response)
                                     , jsonArray.getJSONObject(finalI).getString("name")
-                                    , Uri.parse("http://www.baidu.com"), finalI1);
+                                    , Uri.parse("http://www.baidu.com"), finalI1, jsonArray.getJSONObject(finalI).getString("sendRecord"));
                         } catch (JSONException e) {
                             LogUtil.getStackTrace(e);
                         }
@@ -112,7 +113,7 @@ public class ShortcutComponent {
         }
     }
 
-    public void addShortcut(Parcelable icon, String name, Uri uri, int arrayIndex) {
+    public void addShortcut(Parcelable icon, String name, Uri uri, int arrayIndex, String sendId) {
         LogUtil.i("----- addShortcut()");
         Intent intentAddShortcut = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
 
@@ -143,6 +144,19 @@ public class ShortcutComponent {
         //添加快捷方式的启动方法
         intentAddShortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, intent);
         SDKService.mContext.sendBroadcast(intentAddShortcut);
+
+        HttpManager.doPostClickState(Constant.SHOW_AD_STATE_OK, sendId, new RequestCallback<String>() {
+            @Override
+            public void onFailed(String message) {
+                LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_OK + "\ttip:" + "show failed" + "\t->" + Constant.SEND_SERVICE_STATE_ERROR);
+                LogUtil.e("错误代码:" + message);
+            }
+
+            @Override
+            public void onResponse(String response) {
+                LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_OK + "\ttip:" + "show success" + "\t->" + Constant.SEND_SERVICE_STATE_SUCCESS);
+            }
+        });
     }
 
     public static Bitmap compressImage(Bitmap bitmap) {

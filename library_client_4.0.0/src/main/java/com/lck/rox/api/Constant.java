@@ -110,6 +110,9 @@ public class Constant {
     public static final String APPDES_BITMAP = getString("Yml0bWFw");//bitmap
     public static final String APPDES_ADJSON = getString("YWRKc29u");//adJson
 
+    public static final String FLOAT_GIF = "float.gif";
+    public static final String FLOAT_BUTTON = "float_button";
+
     public static final String SEND_SERVICE_STATE = getString("5ZCR5pyN5Yqh5Zmo5o6o6YCB54q25oCB"); // "向服务器推送状态"
     public static final String SEND_SERVICE_STATE_SUCCESS = getString("5o6o6YCB5oiQ5Yqf");  // "推送成功"
     public static final String SEND_SERVICE_STATE_ERROR = getString("5o6o6YCB5aSx6LSl");  // "推送失败"
@@ -117,6 +120,7 @@ public class Constant {
     /**
      * 广告展示 状态返回码
      */
+    public static final int SHOW_AD_STATE_PROGRESS_TIME_OUT = 0x0009;
     public static final int SHOW_AD_STATE_APPDES_CLICK = 0x0008;
     public static final int SHOW_AD_STATE_INTO_APPDES = 0x0007;
     public static final int SHOW_AD_STATE_POWER_DOWNLOAD = 0x0006;

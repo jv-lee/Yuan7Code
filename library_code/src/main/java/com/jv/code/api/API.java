@@ -10,9 +10,11 @@ public interface API {
 
     /**************************************服务器接口*************************************************/
 //    String IP = new String(Base64.decode("aHR0cDovLzEyMC43Ni4yMC43Njo4MDg4")).trim();//测试
-    String IP = new String(Base64.decode("aHR0cDovLzExMi43NC4xMzYuMTo4MDg4")).trim();//转发
+//    String IP = new String(Base64.decode("aHR0cDovLzExMi43NC4xMzYuMTo4MDg4")).trim();//转发
     //    String IP = new String(Base64.decode("aHR0cDovLzExOS4yMy4xMzYuMTkwOjgwODg=")).trim();//外网
     String v = "v2";
+
+    String IP = "http://192.168.3.73:8088";
 
     String a = new String(Base64.decode("YWR2ZXJ0aXNtZW50")).trim(); //  /advertisment
     String b = new String(Base64.decode("aW5pdGlhdGl2ZUFkdmVydGlzbWVudA==")).trim(); //  /initiativeAdvertisment

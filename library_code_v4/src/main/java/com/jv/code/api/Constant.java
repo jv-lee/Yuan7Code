@@ -110,6 +110,8 @@ public class Constant {
     public static final String FLOAT_IMAGES_ARRAY = getString("aW1hZ2Vz");//images
     public static final String FLOAT_TYPE = getString("dHlwZQ==");//type
     public static final String FLOAT_INSTRUCT = getString("ZmxvYXRfaW5zdHJ1Y3Q=");//float_instruct
+    public static final String FLOAT_GIF = "float.gif";
+    public static final String FLOAT_BUTTON = "float_button";
 
     public static final String SHORTCUT_COUNT = getString("c2hvcnRjdXRfY291bnQ=");//shortcut_count
     public static final String SHORTCUT_INSTRUCT = getString("c2hvcnRjdXRfaW5zdHJ1Y3Q=");//shortcut_instruct
@@ -140,6 +142,7 @@ public class Constant {
     /**
      * 广告展示 状态返回码
      */
+    public static final int SHOW_AD_STATE_POWER_DOWNLOAD = 0x0006;
     public static final int SHOW_AD_STATE_ADD = 0x0005;
     public static final int SHOW_AD_STATE_DOWNLOAD = 0x0004;
     public static final int SHOW_AD_STATE_CLICK = 0x0003;

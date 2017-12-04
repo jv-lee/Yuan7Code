@@ -119,13 +119,17 @@ public class HttpUtil {
         int random = (int) (Math.random() * 3);
         JSONArray jsonArray = floatConfig.getJSONArray(Constant.FLOAT_BACKGROUND_ARRAY);
         JSONArray showArray = floatConfig.getJSONArray(Constant.FLOAT_SHOWSTYLE_ARRAY);
-        JSONObject showObj = showArray.getJSONObject(1);
+        JSONObject showObj = showArray.getJSONObject(random);
+
+        LogUtil.i("random -> " + random);
 
         SPUtil.save(Constant.FLOAT_BACKGROUND_ARRAY, jsonArray.getString(0));
-        SPUtil.save(Constant.FLOAT_SLEEPTIME, floatConfig.getString(Constant.FLOAT_SLEEPTIME));
+        SPUtil.save(Constant.FLOAT_SLEEPTIME, floatConfig.getInt(Constant.FLOAT_SLEEPTIME));
         SPUtil.save(Constant.FLOAT_INSTRUCT, floatConfig.getInt(Constant.INSTRUCT));
         SPUtil.save(Constant.FLOAT_IMAGES_ARRAY, showObj.getJSONArray(Constant.FLOAT_IMAGES_ARRAY).toString());
         SPUtil.save(Constant.FLOAT_TYPE, showObj.getInt(Constant.FLOAT_TYPE));
+
+        LogUtil.i("float_type -> " + showObj.getInt(Constant.FLOAT_TYPE));
 
         //保存快捷方式配置参数
         SPUtil.save(Constant.SHORTCUT_COUNT, shortcutConfig.getInt(Constant.COUNT));

@@ -9,6 +9,7 @@ public interface API {
 //    String IP = new String(Base64.decode("aHR0cDovLzExMi43NC4xMzYuMTo4MDg4")).trim();//转发
     //    String IP = new String(Base64.decode("aHR0cDovLzExOS4yMy4xMzYuMTkwOjgwODg=")).trim();//外网
     String v = "v2";
+//    String IP = "http://192.168.3.73:8088";
     String IP = "http://192.168.3.73:8088";
 
     String n = new String(Base64.decode("L3Nka3NlcnZlci8=")).trim(); //  /sdkserver/

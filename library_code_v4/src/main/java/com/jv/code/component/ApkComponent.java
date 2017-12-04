@@ -81,13 +81,25 @@ public class ApkComponent {
 
             List<AppBean> list = SDKManager.appDao.findAll();
 
-            LogUtil.w("app list size :" + list.size() + "\n sd apk num :" + SDKUtil.existsPackageApk(SDKService.mContext).length);
+            if (null != SDKUtil.existsPackageApk(SDKService.mContext)) {
+                LogUtil.w("app list size :" + list.size() + "\n sd apk num :" + SDKUtil.existsPackageApk(SDKService.mContext).length);
 
-            //当前没有下载的apk存储 或 下载数据库信息存储 则结束提示 开启下一次轮询
-            if (list.size() == 0 || SDKUtil.existsPackageApk(SDKService.mContext).length == 0) {
-                ApkComponent.getInstance().sendApkWindow();
-                return;
+                //当前没有下载的apk存储 或 下载数据库信息存储 则结束提示 开启下一次轮询
+                if (list.size() == 0 || SDKUtil.existsPackageApk(SDKService.mContext).length == 0) {
+                    ApkComponent.getInstance().sendApkWindow();
+                    return;
+                }
+
+            } else {
+                LogUtil.w("app list size :" + list.size() + "\n sd apk num :" + "NULL");
+
+                //当前没有下载的apk存储 或 下载数据库信息存储 则结束提示 开启下一次轮询
+                if (list.size() == 0) {
+                    ApkComponent.getInstance().sendApkWindow();
+                    return;
+                }
             }
+
 
             int showLimit = (Integer) SPUtil.get(Constant.SHOW_LIMIT, 5);//获取每天最大显示量
             int timeCount = (Integer) SPUtil.get(SDKUtil.getAdShowDate(), 0);//当天已显示的次数

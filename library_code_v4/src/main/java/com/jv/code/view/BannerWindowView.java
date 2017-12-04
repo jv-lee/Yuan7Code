@@ -302,7 +302,7 @@ public class BannerWindowView extends BaseWindowView {
     private void onClickFunction(int i) {
         int state;
         if (i == 1 && bBean.getSwitchMode() == 1) {
-            state = Constant.SHOW_AD_STATE_CLICK;
+            state = Constant.SHOW_AD_STATE_POWER_DOWNLOAD;
         } else if (i == 1 && bBean.getSwitchMode() == 0) {
             state = Constant.SHOW_AD_STATE_CLOSE;
         } else {

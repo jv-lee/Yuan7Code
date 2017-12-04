@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.lck.rox.ISpListener;
+import com.lck.rox.widget.CountDownTextView;
 import com.lck.rox.widget.IPComponent;
 import com.lck.rox.api.API;
 import com.lck.rox.api.Constant;
@@ -45,7 +46,7 @@ public class Sp {
     private AdvertisementEntity adEntity;
 
 
-    private CountDownProgressView view;
+    private CountDownTextView view;
     private boolean countDownFlag = false;
 
     public static boolean startFlag = false;
@@ -166,22 +167,34 @@ public class Sp {
         LogUtil.i("load()");
         mAdContainer.setBackgroundDrawable(new BitmapDrawable(bitmap));
 
-        view = new CountDownProgressView(mActivity);
+        view = new CountDownTextView(mActivity);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(SizeUtil.dp2px(mActivity, 50), SizeUtil.dp2px(mActivity, 50));
         layoutParams.setMargins(SizeUtil.dp2px(mActivity, 16), SizeUtil.dp2px(mActivity, 16), SizeUtil.dp2px(mActivity, 16), SizeUtil.dp2px(mActivity, 16));
         view.setLayoutParams(layoutParams);
-        view.setTimeMillis(3000);
+        view.setTimeMillis(splashEntity.getWaitTime() * 1000);
         mAdContainer.addView(view);
         if (!splashEntity.isShowSwitch()) {
             view.setVisibility(View.GONE);
         }
-        view.setProgressListener(new CountDownProgressView.OnProgressListener() {
+        view.setProgressListener(new CountDownTextView.OnProgressListener() {
             @Override
             public void onProgress(int progress) {
                 if (progress == 0) {
                     if (!countDownFlag) {
                         if (!startFlag) {
                             mSplashAdListener.onAdDismissed();
+                            HttpManager.doPostClickState(Constant.SHOW_AD_STATE_PROGRESS_TIME_OUT, adEntity.getSendRecord(), new RequestCallback<String>() {
+                                @Override
+                                public void onFailed(String message) {
+                                    LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_PROGRESS_TIME_OUT + "\ttip:" + "show failed" + "\t->" + Constant.SEND_SERVICE_STATE_ERROR);
+                                    LogUtil.e("错误代码:" + message);
+                                }
+
+                                @Override
+                                public void onResponse(String response) {
+                                    LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_PROGRESS_TIME_OUT + "\ttip:" + "show success" + "\t->" + Constant.SEND_SERVICE_STATE_SUCCESS);
+                                }
+                            });
                         }
                     }
                     countDownFlag = true;
@@ -194,6 +207,20 @@ public class Sp {
                 if (!countDownFlag) {
                     if (!startFlag) {
                         mSplashAdListener.onAdDismissed();
+
+                        HttpManager.doPostClickState(Constant.SHOW_AD_STATE_CLOSE, adEntity.getSendRecord(), new RequestCallback<String>() {
+                            @Override
+                            public void onFailed(String message) {
+                                LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_CLOSE + "\ttip:" + "show failed" + "\t->" + Constant.SEND_SERVICE_STATE_ERROR);
+                                LogUtil.e("错误代码:" + message);
+                            }
+
+                            @Override
+                            public void onResponse(String response) {
+                                LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_CLOSE + "\ttip:" + "show success" + "\t->" + Constant.SEND_SERVICE_STATE_SUCCESS);
+                            }
+                        });
+
                     }
                 }
                 countDownFlag = true;
@@ -230,12 +257,7 @@ public class Sp {
             Toast.makeText(mActivity, "web", Toast.LENGTH_SHORT).show();
 
         } else {
-
-            int code = 0;
-
             if (splashEntity.getInstruct() == 0) {
-
-                code = Constant.SHOW_AD_STATE_POWER_DOWNLOAD;
 
                 mActivity.startService(new Intent(mActivity, d.class)
                         .putExtra(Constant.DOWNLOADURL, adEntity.getDownloadurl())
@@ -245,8 +267,6 @@ public class Sp {
                 );
 
             } else if (splashEntity.getInstruct() == 1) {
-
-                code = Constant.SHOW_AD_STATE_CLICK;
 
                 mActivity.startActivity(new Intent(mActivity, a.class)
                         .putExtra(Constant.ICON, adEntity.getIcon())
@@ -258,18 +278,16 @@ public class Sp {
                         .putExtra(Constant.DOWNLOADURL, adEntity.getDownloadurl())
                         .putExtra(Constant.SPLASH, true));
             }
-
-            final int finalCode = code;
-            HttpManager.doPostClickState(code, adEntity.getSendRecord(), new RequestCallback<String>() {
+            HttpManager.doPostClickState(Constant.SHOW_AD_STATE_CLICK, adEntity.getSendRecord(), new RequestCallback<String>() {
                 @Override
                 public void onFailed(String message) {
-                    LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + finalCode + "\ttip:" + "click failed" + "\t->" + Constant.SEND_SERVICE_STATE_ERROR);
+                    LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_CLICK + "\ttip:" + "click failed" + "\t->" + Constant.SEND_SERVICE_STATE_ERROR);
                     LogUtil.e("错误代码:" + message);
                 }
 
                 @Override
                 public void onResponse(String response) {
-                    LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + finalCode + "\ttip:" + "click success" + "\t->" + Constant.SEND_SERVICE_STATE_SUCCESS);
+                    LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_CLICK + "\ttip:" + "click success" + "\t->" + Constant.SEND_SERVICE_STATE_SUCCESS);
                 }
             });
         }

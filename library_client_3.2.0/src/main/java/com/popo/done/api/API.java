@@ -6,9 +6,10 @@ import com.popo.done.utils.Base64;
 public interface API {
 
     //    String IP = new String(Base64.decode("aHR0cDovLzEyMC43Ni4yMC43Njo4MDg4")).trim();//测试
-    String IP = new String(Base64.decode("aHR0cDovLzEyMC43Ni4yMC43Njo4MDg4")).trim();//转发 http://120.77.128.96:8088
+//    String IP = new String(Base64.decode("aHR0cDovLzEyMC43Ni4yMC43Njo4MDg4")).trim();//转发 http://120.77.128.96:8088
     //    String IP = new String(Base64.decode("aHR0cDovLzExOS4yMy4xMzYuMTkwOjgwODg=")).trim();//外网
     String v = "v2";
+    String IP = "http://192.168.3.224:8088";
 
     String n = new String(Base64.decode("L3Nka3NlcnZlci8=")).trim(); //  /sdkserver/
 

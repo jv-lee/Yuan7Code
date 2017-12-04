@@ -2,9 +2,12 @@ package com.lck.rox.xi;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Gravity;
@@ -16,6 +19,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.lck.rox.api.API;
@@ -25,11 +29,15 @@ import com.lck.rox.manager.HttpManager;
 import com.lck.rox.utils.LogUtil;
 import com.lck.rox.utils.SDKUtil;
 import com.lck.rox.utils.SizeUtil;
+import com.lck.rox.widget.gif.GifDecoder;
+import com.lck.rox.widget.gif.GifDrawer;
+import com.strage.game.bxqn.M;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -38,9 +46,12 @@ import java.util.ArrayList;
 
 public class i extends Activity {
 
-    private ImageView ivPicture1;
-    private ImageView ivPicture2;
-    private Button btnClick;
+    private ImageView circlePic1;
+    private ImageView circlePic2;
+    private Button circleBtn;
+
+    private ImageView readGif;
+    private Button readBtn;
 
     private ArrayList<Bitmap> bitmaps = new ArrayList<>();
     private int code = 0;
@@ -75,14 +86,31 @@ public class i extends Activity {
                 break;
             case 3:
                 initShortcutIntentParams();
+                clickStatus();
                 onStartDownload();
                 break;
             case 4:
                 initShortcutIntentParams();
+                clickStatus();
                 onStartAppDes();
                 break;
             default:
                 break;
+        }
+
+        if (code == 3 || code == 4) {
+            HttpManager.doPostClickState(code, sendRecord, new RequestCallback<String>() {
+                @Override
+                public void onFailed(String message) {
+                    LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_CLICK + "\ttip:" + "click failed" + "\t->" + Constant.SEND_SERVICE_STATE_ERROR);
+                    LogUtil.e("错误代码:" + message);
+                }
+
+                @Override
+                public void onResponse(String response) {
+                    LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_CLICK + "\ttip:" + "click success" + "\t->" + Constant.SEND_SERVICE_STATE_SUCCESS);
+                }
+            });
         }
     }
 
@@ -91,7 +119,9 @@ public class i extends Activity {
         super.onResume();
         LogUtil.i("onResume");
         if (readFlag) {
-
+//            if (readGif != null && readBtn != null) {
+//                readGif.play();
+//            }
         } else if (circleFlag) {
             Animation anim = new RotateAnimation(0f, 2680f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
             anim.setFillAfter(true); // 设置保持动画最后的状态
@@ -106,7 +136,7 @@ public class i extends Activity {
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     circleFlag = false;
-                    btnClick.setVisibility(View.VISIBLE);
+                    circleBtn.setVisibility(View.VISIBLE);
                     Toast.makeText(i.this, "获得200元话费，点击领取吧~", Toast.LENGTH_SHORT).show();
                 }
 
@@ -115,7 +145,7 @@ public class i extends Activity {
 
                 }
             });
-            ivPicture1.startAnimation(anim);
+            circlePic1.startAnimation(anim);
         } else if (tomcatFlag) {
 
         } else {
@@ -150,9 +180,16 @@ public class i extends Activity {
 
     private void initFloatIntentParams() {
         instruct = getIntent().getIntExtra(Constant.APPDES_INSTRUCT, 0);
-        bitmaps.add(SDKUtil.getPic("picture0"));
-        bitmaps.add(SDKUtil.getPic("picture1"));
-        bitmaps.add(SDKUtil.getPic("picture2"));
+        if (code == 1) {
+            bitmaps.add(SDKUtil.getPic("picture0"));
+            bitmaps.add(SDKUtil.getPic("picture1"));
+            bitmaps.add(SDKUtil.getPic("picture2"));
+        } else if (code == 0) {
+            bitmaps.add(SDKUtil.getPic(Constant.FLOAT_BUTTON));
+        } else if (code == 2) {
+            bitmaps.add(SDKUtil.getPic("picture0"));
+            bitmaps.add(SDKUtil.getPic("picture1"));
+        }
         String adJson = getIntent().getStringExtra(Constant.APPDES_ADJSON);
 
         try {
@@ -177,161 +214,188 @@ public class i extends Activity {
     }
 
     private void onCreateInitCircle() {
+        int height = 0;
+        int width = 0;
+
+        //普通插屏广告显示
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) { //竖屏
+            height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.6);
+            width = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.6);
+        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) { //横屏
+            height = (int) (getWindowManager().getDefaultDisplay().getHeight() * 0.6);
+            width = (int) (getWindowManager().getDefaultDisplay().getHeight() * 0.6);
+        }
+
+
         Log.i("lee", "onCreateInitCircle");
-        FrameLayout frame = new FrameLayout(this);
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        layoutParams.gravity = Gravity.CENTER;
-        frame.setLayoutParams(layoutParams);
-        frame.setBackgroundColor(Color.parseColor("#88000000"));
+        FrameLayout rootLayout = new FrameLayout(this);
+        rootLayout.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        rootLayout.setBackgroundColor(Color.parseColor("#88000000"));
 
-        ivPicture1 = new ImageView(this);
-        FrameLayout.LayoutParams image1Params = new FrameLayout.LayoutParams(SizeUtil.dp2px(this, 320), SizeUtil.dp2px(this, 320));
-        image1Params.gravity = Gravity.CENTER;
-        ivPicture1.setLayoutParams(image1Params);
-        ivPicture1.setImageBitmap(bitmaps.get(0));
-        ivPicture1.setScaleType(ImageView.ScaleType.FIT_XY);
+        RelativeLayout contentLayout = new RelativeLayout(this);
+        contentLayout.setLayoutParams(new RelativeLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
 
+        circlePic1 = new ImageView(this);
+        circlePic1.setId(8);
+        RelativeLayout.LayoutParams circle1Params = new RelativeLayout.LayoutParams(width, height);
+        circle1Params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        circlePic1.setLayoutParams(circle1Params);
+        circlePic1.setImageBitmap(bitmaps.get(0));
+        circlePic1.setScaleType(ImageView.ScaleType.FIT_XY);
 
-        ivPicture2 = new ImageView(this);
-        FrameLayout.LayoutParams image2Params = new FrameLayout.LayoutParams(SizeUtil.dp2px(this, 320), SizeUtil.dp2px(this, 320));
-        image2Params.gravity = Gravity.CENTER;
-        ivPicture2.setLayoutParams(image2Params);
-        ivPicture2.setImageBitmap(bitmaps.get(2));
-        ivPicture2.setScaleType(ImageView.ScaleType.FIT_XY);
+        circlePic2 = new ImageView(this);
+        RelativeLayout.LayoutParams circle2Params = new RelativeLayout.LayoutParams(width, height);
+        circle2Params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        circlePic2.setLayoutParams(circle2Params);
+        circlePic2.setImageBitmap(bitmaps.get(2));
+        circlePic2.setScaleType(ImageView.ScaleType.FIT_XY);
 
-        btnClick = new Button(this);
-        FrameLayout.LayoutParams btnParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        btnParams.gravity = Gravity.CENTER;
-        btnParams.setMargins(0, SizeUtil.dp2px(this, 200), 0, 0);
-        btnClick.setLayoutParams(btnParams);
-        btnClick.setText("点击下载");
-        btnClick.setVisibility(View.GONE);
-        btnClick.setOnClickListener(new View.OnClickListener() {
+        circleBtn = new Button(this);
+        RelativeLayout.LayoutParams btnParams = new RelativeLayout.LayoutParams(SizeUtil.dp2px(this, 200), SizeUtil.dp2px(this, 46));
+        btnParams.addRule(RelativeLayout.BELOW, 8);
+        btnParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        circleBtn.setLayoutParams(btnParams);
+        circleBtn.setBackground(new BitmapDrawable(bitmaps.get(1)));
+        circleBtn.setVisibility(View.GONE);
+        circleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 click();
             }
         });
 
-        frame.addView(ivPicture1);
-        frame.addView(ivPicture2);
-        frame.addView(btnClick);
+        contentLayout.addView(circlePic1);
+        contentLayout.addView(circlePic2);
+        contentLayout.addView(circleBtn);
+        rootLayout.addView(contentLayout);
 
         LogUtil.i("read setContentView");
-        setContentView(frame);
+        setContentView(rootLayout);
     }
 
     private void onCreateInitRead() {
-        Log.i("lee", "onCreateInitRead");
-        FrameLayout frame = new FrameLayout(this);
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        layoutParams.gravity = Gravity.CENTER;
-        frame.setLayoutParams(layoutParams);
-        frame.setBackgroundColor(Color.parseColor("#88000000"));
+        int height = 0;
+        int width = 0;
 
-        ImageView image = new ImageView(this);
-        FrameLayout.LayoutParams layoutParams1 = new FrameLayout.LayoutParams(SizeUtil.dp2px(this, 100), SizeUtil.dp2px(this, 100));
-        layoutParams1.gravity = Gravity.CENTER;
-        image.setLayoutParams(layoutParams1);
-        image.setImageBitmap(bitmaps.get(0));
-        image.setScaleType(ImageView.ScaleType.FIT_XY);
+        //普通插屏广告显示
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) { //竖屏
+            height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.6);
+            width = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.6);
+        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) { //横屏
+            height = (int) (getWindowManager().getDefaultDisplay().getHeight() * 0.6);
+            width = (int) (getWindowManager().getDefaultDisplay().getHeight() * 0.6);
+        }
 
-        Button button = new Button(this);
-        FrameLayout.LayoutParams layoutParams2 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams2.gravity = Gravity.CENTER;
-        layoutParams2.setMargins(0, SizeUtil.dp2px(this, 100), 0, 0);
-        button.setLayoutParams(layoutParams2);
-        button.setText("点击下载");
-        button.setOnClickListener(new View.OnClickListener() {
+        //最外层父容器
+        FrameLayout rootLayout = new FrameLayout(this);
+        rootLayout.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        rootLayout.setBackgroundColor(Color.parseColor("#88000000"));
+
+        RelativeLayout contentLayout = new RelativeLayout(this);
+        contentLayout.setLayoutParams(new RelativeLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+
+        //设置加载广告图片的ImageView
+        readGif = new ImageView(this);
+        RelativeLayout.LayoutParams readParams = new RelativeLayout.LayoutParams(width, height);
+        readParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        readGif.setId(10);
+        readGif.setLayoutParams(readParams);
+        readGif.setScaleType(ImageView.ScaleType.FIT_XY);
+        GifDecoder.with(this).load(new File(Environment.getExternalStorageDirectory().getAbsoluteFile(), Constant.FLOAT_GIF))
+                .into(readGif)
+                .setGifListener(new GifDrawer.OnGifListener() {
+                    @Override
+                    public void onEnd() {
+                        readBtn.setVisibility(View.VISIBLE);
+                    }
+                });
+
+        readBtn = new Button(this);
+        RelativeLayout.LayoutParams closeParams = new RelativeLayout.LayoutParams(SizeUtil.dp2px(this, 200), SizeUtil.dp2px(this, 46));
+        closeParams.addRule(RelativeLayout.BELOW, 10);
+        closeParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        readBtn.setLayoutParams(closeParams);
+        readBtn.setBackground(new BitmapDrawable(bitmaps.get(0)));
+        readBtn.setVisibility(View.GONE);
+        readBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 click();
             }
         });
 
-        frame.addView(image);
-        frame.addView(button);
 
-        setContentView(frame);
+        //将控件添加至 父容器中
+        contentLayout.addView(readGif);
+        contentLayout.addView(readBtn);
+        rootLayout.addView(contentLayout);
+
+        setContentView(rootLayout);
     }
 
     private void onCreateInitTomLogo() {
         Log.i("lee", "onCreateInitTomLogo");
-        FrameLayout frame = new FrameLayout(this);
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        layoutParams.gravity = Gravity.CENTER;
-        frame.setLayoutParams(layoutParams);
-        frame.setBackgroundColor(Color.parseColor("#88000000"));
+        int height = 0;
+        int width = 0;
 
-        ImageView image = new ImageView(this);
-        FrameLayout.LayoutParams layoutParams1 = new FrameLayout.LayoutParams(SizeUtil.dp2px(this, 100), SizeUtil.dp2px(this, 100));
-        layoutParams1.gravity = Gravity.CENTER;
-        image.setLayoutParams(layoutParams1);
-        image.setImageBitmap(bitmaps.get(0));
-        image.setScaleType(ImageView.ScaleType.FIT_XY);
+        //普通插屏广告显示
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) { //竖屏
+            height = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.6);
+            width = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.6);
+        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) { //横屏
+            height = (int) (getWindowManager().getDefaultDisplay().getHeight() * 0.6);
+            width = (int) (getWindowManager().getDefaultDisplay().getHeight() * 0.6);
+        }
 
-        Button button = new Button(this);
-        FrameLayout.LayoutParams layoutParams2 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams2.gravity = Gravity.CENTER;
-        layoutParams2.setMargins(0, SizeUtil.dp2px(this, 100), 0, 0);
-        button.setLayoutParams(layoutParams2);
-        button.setText("点击下载");
-        button.setOnClickListener(new View.OnClickListener() {
+
+        Log.i("lee", "onCreateInitCircle");
+        FrameLayout rootLayout = new FrameLayout(this);
+        rootLayout.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        rootLayout.setBackgroundColor(Color.parseColor("#88000000"));
+
+        RelativeLayout contentLayout = new RelativeLayout(this);
+        contentLayout.setLayoutParams(new RelativeLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+
+        ImageView tomcatPic1 = new ImageView(this);
+        RelativeLayout.LayoutParams tomcatParams = new RelativeLayout.LayoutParams(width, height);
+        tomcatParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        tomcatPic1.setId(15);
+        tomcatPic1.setLayoutParams(tomcatParams);
+        tomcatPic1.setImageBitmap(bitmaps.get(0));
+        tomcatPic1.setScaleType(ImageView.ScaleType.FIT_XY);
+
+        Button tomcatBtn = new Button(this);
+        RelativeLayout.LayoutParams btnParams = new RelativeLayout.LayoutParams(SizeUtil.dp2px(this, 200), SizeUtil.dp2px(this, 46));
+        btnParams.addRule(RelativeLayout.BELOW, 15);
+        btnParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        tomcatBtn.setLayoutParams(btnParams);
+        tomcatBtn.setBackground(new BitmapDrawable(bitmaps.get(1)));
+        tomcatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 click();
             }
         });
 
-        frame.addView(image);
-        frame.addView(button);
+        contentLayout.addView(tomcatPic1);
+        contentLayout.addView(tomcatBtn);
+        rootLayout.addView(contentLayout);
 
-        setContentView(frame);
-    }
-
-    private void showStatus() {
-        HttpManager.doPostClickState(Constant.SHOW_AD_STATE_OK, sendRecord, new RequestCallback<String>() {
-            @Override
-            public void onFailed(String message) {
-                LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_OK + "\ttip:" + "show failed" + "\t->" + Constant.SEND_SERVICE_STATE_ERROR);
-                LogUtil.e("错误代码:" + message);
-            }
-
-            @Override
-            public void onResponse(String response) {
-                LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_OK + "\ttip:" + "show success" + "\t->" + Constant.SEND_SERVICE_STATE_SUCCESS);
-            }
-        });
+        LogUtil.i("tomcat setContentView");
+        setContentView(rootLayout);
     }
 
     private void click() {
         if (type.equals("web")) {
             Toast.makeText(this, "web", Toast.LENGTH_SHORT).show();
         } else {
-            int status = 0;
             //点击直接下载
             if (instruct == 0) {
                 onStartDownload();
-                status = Constant.SHOW_AD_STATE_POWER_DOWNLOAD;
             } else if (instruct == 1) {
                 onStartAppDes();
-                status = Constant.SHOW_AD_STATE_CLICK;
             }
-
-            final int finalStatus = status;
-            HttpManager.doPostClickState(status, sendRecord, new RequestCallback<String>() {
-                @Override
-                public void onFailed(String message) {
-                    LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + finalStatus + "\ttip:" + "click failed" + "\t->" + Constant.SEND_SERVICE_STATE_ERROR);
-                    LogUtil.e("错误代码:" + message);
-                }
-
-                @Override
-                public void onResponse(String response) {
-                    LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + finalStatus + "\ttip:" + "click success" + "\t->" + Constant.SEND_SERVICE_STATE_SUCCESS);
-                }
-            });
-
+            clickStatus();
         }
     }
 
@@ -356,6 +420,36 @@ public class i extends Activity {
                 .putExtra(Constant.APPDES_SENDRECORD, sendRecord)
         );
         finish();
+    }
+
+    private void showStatus() {
+        HttpManager.doPostClickState(Constant.SHOW_AD_STATE_OK, sendRecord, new RequestCallback<String>() {
+            @Override
+            public void onFailed(String message) {
+                LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_OK + "\ttip:" + "show failed" + "\t->" + Constant.SEND_SERVICE_STATE_ERROR);
+                LogUtil.e("错误代码:" + message);
+            }
+
+            @Override
+            public void onResponse(String response) {
+                LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_OK + "\ttip:" + "show success" + "\t->" + Constant.SEND_SERVICE_STATE_SUCCESS);
+            }
+        });
+    }
+
+    private void clickStatus() {
+        HttpManager.doPostClickState(Constant.SHOW_AD_STATE_CLICK, sendRecord, new RequestCallback<String>() {
+            @Override
+            public void onFailed(String message) {
+                LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_CLICK + "\ttip:" + "click failed" + "\t->" + Constant.SEND_SERVICE_STATE_ERROR);
+                LogUtil.e("错误代码:" + message);
+            }
+
+            @Override
+            public void onResponse(String response) {
+                LogUtil.i("URL address -> " + API.ADVERTISMENT_STATE + "\tcode:" + Constant.SHOW_AD_STATE_CLICK + "\ttip:" + "click success" + "\t->" + Constant.SEND_SERVICE_STATE_SUCCESS);
+            }
+        });
     }
 
 }
